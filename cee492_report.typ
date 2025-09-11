@@ -7,7 +7,7 @@
   ],
   authors: (
     (
-      name: "Author 1",
+      name: "Zhixing Wang",
       department: [Department 1],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
