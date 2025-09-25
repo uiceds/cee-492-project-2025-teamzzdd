@@ -102,10 +102,10 @@ Filtering may be applied to eliminate less effective variables, such as postcode
 Date, record type, latitude, longitude, type of incident, and BIN (business effect case, combined with other data).
 
 == Mathematical Formulation
-$ aligned(
-  Injury/Fatality\ Index &=  \\
-  & \beta_0 + \beta_1 (type\ of\ events) + \beta_2 (time) + \beta_3 (some\ other\ variable)
-) $
+$$
+Injury/Fatality\ Index = \beta_0 + \beta_1 (type\ of\ events) + \beta_2 (time) \\
++ \beta_3 (other\ variables)
+$$
 
 
 
@@ -113,6 +113,7 @@ If injury numbers are used as dependent variables, Poisson or negative binomial 
 
 == Significance
 The purpose of the model is to help avoid incidents and accidents by identifying the dominant attributes influencing outcomes, thereby guiding proactive protection measures in construction management.
+
 
 
 
