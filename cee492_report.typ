@@ -8,28 +8,28 @@
   authors: (
     (
       name: "Zhixing Wang",
-      department: [Department 1],
+      department: [Civil and Environmental Engineering],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
       email: "zw88@illinois.edu",
     ),
     (
       name: "Zain Sitabkhan",
-      department: [Department 2],
+      department: [Civil and Environmental Engineering],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
       email: "zsita@illinois.edu",
     ),
     (
       name: "Deago Sirenden",
-      department: [Department 3],
+      department: [Civil and Environmental Engineering],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
       email: "deagofs2@illinois.edu",
     ),
     (
       name: "Zach Da",
-      department: [Department 3],
+      department: [Civil and Environmental Engineering],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
       email: "zhihuid2@illinois.edu",
@@ -102,7 +102,11 @@ Filtering may be applied to eliminate less effective variables, such as postcode
 Date, record type, latitude, longitude, type of incident, and BIN (business effect case, combined with other data).
 
 == Mathematical Formulation
-$ #text("Injury/Fatality Index") = \beta_0 + \beta_1 #text("(type of events)") + \beta_2 #text("(time)") + \beta_3 #text("(other variables)") $
+$$
+Injury/Fatality\ Index = \beta_0 + \beta_1 (type\ of\ events) + \beta_2 (time) \\
++ \beta_3 (other\ variables)
+$$
+
 
 If injury numbers are used as dependent variables, Poisson or negative binomial regression may be applied.
 
