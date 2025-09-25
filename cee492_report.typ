@@ -1,6 +1,6 @@
 #import "@preview/charged-ieee:0.1.4": ieee
 
-#show: ieee.with(
+#show: ieee.with
   title: [CEE 492 Proje],
   abstract: [
     This is where you put your abstract. Abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract.
@@ -37,7 +37,6 @@
 )
   index-terms: ("Optional", "Keywords", "Here"),
   bibliography: bibliography("refs.bib"),
-)
 
 = First Section
 
