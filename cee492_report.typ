@@ -1,9 +1,9 @@
 #import "@preview/charged-ieee:0.1.4": ieee
 
 #show: ieee.with(
-  title: [CEE 492 Proje],
+  title: [Risk Prediction and Assessment in the Construction Industry],
   abstract: [
-    This is where you put your abstract. Abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract.
+    This project focuses on risk prediction and assessment in the construction industry using incident and accident data from New York City. By applying regression-based models, the objective is to predict fatality and injury outcomes, as well as generate a weighted index to evaluate the severity of such events. The study contributes to understanding which attributes most strongly influence construction-related incidents and provides insights that may improve safety measures in the industry.
   ],
   authors: (
     (
@@ -11,7 +11,7 @@
       department: [Department 1],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
-      email: "author1@illinois.edu",
+      email: "zw88@illinois.edu",
     ),
     (
       name: "Zain Sitabkhan",
@@ -22,35 +22,38 @@
     ),
     (
       name: "Deago Sirenden",
-      department: [Department 2],
+      department: [Department 3],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
-      email: "???@illinois.edu",
+      email: "deagofs2@illinois.edu",
     ),
-  index-terms: ("Optional", "Keywords", "Here"),
+    (
+      name: "Zach Da",
+      department: [Department 3],
+      organization: [University of Illinois Urbana-Champaign],
+      location: [Urbana, IL, USA],
+      email: "zhihuid2@illinois.edu",
+    ),
+  ),
+  index-terms: ("Construction Safety", "Risk Prediction", "Accident Reports", "Regression Analysis"),
   bibliography: bibliography("refs.bib"),
-)
+)  // ← 这一行结束 ieee.with
 
-= Risk Prediction and Assessment in the Construction Industry
-== Team Member(Team ZZDD)
-ZHIXING WANG, DEAGO SIRENDEN, ZAIN SITABKHAN,ZACH DA
 
-== Data Description
+= Data Description
 
-=== Construction Management Related
-1. Construction Related Incidents in New York (Big Dataset and csv file) (choose)  
-2. Construction Fatalities in New York (Smaller Dataset and csv file)
+== Construction Management Related
+The dataset consists of construction-related incidents and accidents in New York City. It provides a large-scale CSV file suitable for predictive analysis.
 
-=== File content
+== File Content
 
-==== Source
-New York City Building Incident and Accident Reports
+=== Source
+New York City Building Incident and Accident Reports.
 
-==== Format and Size
-(row: 958): accident or incident record,  
-(column: 20): attribute fields of the record
+=== Format and Size
+The dataset includes approximately 958 rows, each representing an accident or incident record, and 20 columns containing attribute fields of these records.
 
-==== Attribute
+=== Attributes
 #table(
   columns: 3,
   align: (left, left, left),
@@ -80,25 +83,28 @@ New York City Building Incident and Accident Reports
   [Neighborhood Tabulation Area (NTA) (2020)], [Text], [Neighborhood Tabulation Area (NTA) code from 2020],
 )
 
-== Proposal
+Proposal for attribute usage will be made, focusing on those with predictive relevance.
 
-=== Objectives
-By using a regression model to predict the fatality, injury, and index of those events based on time, etc.
+= Proposal
 
-=== Preprocessing
-We might use a filter to eliminate fewer effective variables, including postcode.
+== Objectives
+The objective is to use regression models to predict fatality, injury, and an index of severity for construction incidents based on temporal and spatial variables.
 
-=== Output
-Fatality, injury. We are supposed to generate an index dependent on fatality and injury.  
-(like grade for these events, 10 for heavy, 1 for less heavy).
+== Preprocessing
+Filtering may be applied to eliminate less effective variables, such as postcode, to improve model performance.
 
-=== Input
-Date, Record type, latitude, longitude, type of incident, and BIN (business effect case combined with another data).
+== Output
+- Fatality count  
+- Injury count  
+- Computed severity index (e.g., grade scale from 1 = less severe to 10 = highly severe)
 
-=== Mathematical formulation
-Injury/Fatality index = β₀ + β₁ (type of events) + β₂ (time) + β₃ (some other variable)
+== Input
+Date, record type, latitude, longitude, type of incident, and BIN (business effect case, combined with other data).
 
-If using an injury number, then use Poisson or negative Binomial regression.  
+== Mathematical Formulation
+$ #text("Injury/Fatality Index") = \beta_0 + \beta_1 #text("(type of events)") + \beta_2 #text("(time)") + \beta_3 #text("(other variables)") $
 
-As you can see, its meaning is to help avoid incidents or accidents and add more protection during that period.  
-The model seems good to find which attributes dominate the incident based on a linear or other regression model.
+If injury numbers are used as dependent variables, Poisson or negative binomial regression may be applied.
+
+== Significance
+The purpose of the model is to help avoid incidents and accidents by identifying the dominant attributes influencing outcomes, thereby guiding proactive protection measures in construction management.
