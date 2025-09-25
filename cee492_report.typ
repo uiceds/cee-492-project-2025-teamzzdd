@@ -20,6 +20,13 @@
       location: [Urbana, IL, USA],
       email: "zsita@illinois.edu",
     ),
+    (
+      name: "Deago Sirenden",
+      department: [Department 2],
+      organization: [University of Illinois Urbana-Champaign],
+      location: [Urbana, IL, USA],
+      email: "???@illinois.edu",
+    ),
   ),
   index-terms: ("Optional", "Keywords", "Here"),
   bibliography: bibliography("refs.bib"),

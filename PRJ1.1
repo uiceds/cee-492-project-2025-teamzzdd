@@ -1,0 +1,71 @@
+= Risk Prediction and Assessment in the Construction Industry
+== Team Member(Team ZZDD)
+ZHIXING WANG, DEAGO SIRENDEN, ZAIN SITABKHAN,ZACH DA
+
+== Data Description
+
+=== Construction Management Related
+1. Construction Related Incidents in New York (Big Dataset and csv file) (choose)  
+2. Construction Fatalities in New York (Smaller Dataset and csv file)
+
+=== File content
+
+==== Source
+New York City Building Incident and Accident Reports
+
+==== Format and Size
+(row: 958): accident or incident record,  
+(column: 20): attribute fields of the record
+
+==== Attribute
+#table(
+  columns: 3,
+  align: (left, left, left),
+  inset: 5pt,
+  stroke: 0.5pt,
+
+  [Attribute Name], [Unit/Type], [Description],
+  [BIN], [Integer], [Building Identification Number (unique ID for each building)],
+  [Accident Report ID], [Integer], [Unique identifier of each accident report],
+  [Incident Date], [Date], [Date of the incident or accident],
+  [Record Type Description], [Category (Text)], [Record type, distinguishing Incident from Accident],
+  [Check2 Description], [Category (Text)], [Detailed category of the incident, e.g., Construction Related, Mechanical Equipment, Worker Fall],
+  [Fatality], [Integer], [Number of fatalities],
+  [Injury], [Integer], [Number of injuries],
+  [House Number], [Text/Number], [House number of the incident location],
+  [Street Name], [Text], [Street name of the incident location],
+  [Borough], [Category], [Administrative borough (e.g., Manhattan, Bronx, Brooklyn)],
+  [Block], [Integer], [Geographic block number],
+  [Lot], [Integer], [Lot number within the block],
+  [Postcode], [Integer], [Postal code of the location],
+  [Latitude], [Float], [Latitude coordinate of the incident location],
+  [Longitude], [Float], [Longitude coordinate of the incident location],
+  [Community Board], [Integer], [Community board identifier],
+  [Council District], [Integer], [City council district identifier],
+  [BBL], [Integer], [Borough-Block-Lot unique cadastral identifier],
+  [Census Tract (2020)], [Integer], [Census tract number from the 2020 census],
+  [Neighborhood Tabulation Area (NTA) (2020)], [Text], [Neighborhood Tabulation Area (NTA) code from 2020],
+)
+
+== Proposal
+
+=== Objectives
+By using a regression model to predict the fatality, injury, and index of those events based on time, etc.
+
+=== Preprocessing
+We might use a filter to eliminate fewer effective variables, including postcode.
+
+=== Output
+Fatality, injury. We are supposed to generate an index dependent on fatality and injury.  
+(like grade for these events, 10 for heavy, 1 for less heavy).
+
+=== Input
+Date, Record type, latitude, longitude, type of incident, and BIN (business effect case combined with another data).
+
+=== Mathematical formulation
+Injury/Fatality index = β₀ + β₁ (type of events) + β₂ (time) + β₃ (some other variable)
+
+If using an injury number, then use Poisson or negative Binomial regression.  
+
+As you can see, its meaning is to help avoid incidents or accidents and add more protection during that period.  
+The model seems good to find which attributes dominate the incident based on a linear or other regression model.
