@@ -27,13 +27,14 @@
       location: [Urbana, IL, USA],
       email: "deagofs2@illinois.edu",
     ),
-(
+    (
       name: "Zach Da",
       department: [Department 3],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
       email: "zhihuid2@illinois.edu",
     ),
+)
   index-terms: ("Optional", "Keywords", "Here"),
   bibliography: bibliography("refs.bib"),
 )
