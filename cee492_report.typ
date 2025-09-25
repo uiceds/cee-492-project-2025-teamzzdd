@@ -1,7 +1,7 @@
 #import "@preview/charged-ieee:0.1.4": ieee
 
 #show: ieee.with(
-  title: [Report Template],
+  title: [CEE 492 Proje],
   abstract: [
     This is where you put your abstract. Abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract.
   ],
@@ -14,11 +14,11 @@
       email: "author1@illinois.edu",
     ),
     (
-      name: "Author 2",
+      name: "Zain Sitabkhan",
       department: [Department 2],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
-      email: "author2@illinois.edu",
+      email: "zsita@illinois.edu",
     ),
   ),
   index-terms: ("Optional", "Keywords", "Here"),
