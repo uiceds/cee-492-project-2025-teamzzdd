@@ -42,18 +42,16 @@
 
 = Data Description
 
-== Construction Management Related
-The dataset consists of construction-related incidents and accidents in New York City. It provides a large-scale CSV file suitable for predictive analysis.
-
 == File Content
+The dataset consists of construction-related incidents and accidents at New York City in each of the five boroughs. It provides a large-scale CSV file suitable for predictive analysis.
 
-=== Source
-New York City Building Incident and Accident Reports.
+== Source
+Department of Buildings (DOB) Incident Database
 
-=== Format and Size
+== Format and Size
 The dataset includes approximately 958 rows, each representing an accident or incident record, and 20 columns containing attribute fields of these records.
 
-=== Attributes
+= Attributes
 #table(
   columns: 3,
   align: (left, left, left),
@@ -88,29 +86,22 @@ Proposal for attribute usage will be made, focusing on those with predictive rel
 = Proposal
 
 == Objectives
-The objective is to use regression models to predict fatality, injury, and an index of severity for construction incidents based on temporal and spatial variables.
+Our main objective is to analyze different types of construction incidents at New York City that happened within 1 or 2 years from now. For this project, we would mainly be examining the nature of construction related incidents and accidents as well as performing correlations with the data by examining the prevalence of each incident and accident at each of the five boroughs of New York City. We would want to see where each type of incident has the highest probability of occurring, and where specifically measures should be implemented to prevent these types of incidents. Finally, keeping track of when these incidents occurred will also be critical as the data could also be used to calculate the frequency of accidents over time.
 
 == Preprocessing
-Filtering may be applied to eliminate less effective variables, such as postcode, to improve model performance.
+Filtering may be applied to eliminate less effective or redundant variables, such as postcode or latitude, to improve model performance. Tidying and cleaning the data is also necessary before analyzing and correlating the data. We would probably need to order our data in terms of when they happen as well as categorizing the incidents/accidents that happened at each borough.
 
 == Output
-- Fatality count  
-- Injury count  
-- Computed severity index (e.g., grade scale from 1 = less severe to 10 = highly severe)
+- Incident vs accident count over time (could be in spans of 1 month)
+- How many construction incidents and accidents happened at each month 
+- Computed severity index at each borough (e.g., grade scale from 1 = less severe to 10 = highly severe)
 
 == Input
 Date, record type, latitude, longitude, type of incident, and BIN (business effect case, combined with other data).
 
-== Mathematical Formulation
-Injury/Fatality Index = a + b (type of events) + c (time) + d (other variables)
-
-
-
-
-If injury numbers are used as dependent variables, Poisson or negative binomial regression may be applied.
-
 == Significance
-The purpose of the model is to help avoid incidents and accidents by identifying the dominant attributes influencing outcomes, thereby guiding proactive protection measures in construction management.
+The purpose of the model is to help avoid incidents and accidents at New York City by identifying the dominant attributes influencing outcomes, thereby guiding proactive protection measures in construction management.
+
 
 
 
