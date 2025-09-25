@@ -27,13 +27,6 @@
       location: [Urbana, IL, USA],
       email: "???@illinois.edu",
     ),
-(
-name: "Zhihui Da",
-department: [Department 2],
-organization: [University of Illinois Urbana-Champaign],
-location: [Urbana, IL, USA],
-email: "zhihuid2@illinois.edu",
-  ),
   index-terms: ("Optional", "Keywords", "Here"),
   bibliography: bibliography("refs.bib"),
 )
