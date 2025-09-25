@@ -11,7 +11,7 @@
       department: [Department 1],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
-      email: "author1@illinois.edu",
+      email: "zw88@illinois.edu",
     ),
     (
       name: "Zain Sitabkhan",
@@ -22,10 +22,17 @@
     ),
     (
       name: "Deago Sirenden",
-      department: [Department 2],
+      department: [Department 3],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
-      email: "???@illinois.edu",
+      email: "deagofs2@illinois.edu",
+    ),
+(
+      name: "Zach Da",
+      department: [Department 3],
+      organization: [University of Illinois Urbana-Champaign],
+      location: [Urbana, IL, USA],
+      email: "zhihuid2@illinois.edu",
     ),
   index-terms: ("Optional", "Keywords", "Here"),
   bibliography: bibliography("refs.bib"),
