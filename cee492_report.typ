@@ -1,6 +1,6 @@
 #import "@preview/charged-ieee:0.1.4": ieee
 
-#show: ieee.with
+#show: ieee.with(
   title: [CEE 492 Proje],
   abstract: [
     This is where you put your abstract. Abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract.
@@ -11,7 +11,7 @@
       department: [Department 1],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
-      email: "zw88@illinois.edu",
+      email: "author1@illinois.edu",
     ),
     (
       name: "Zain Sitabkhan",
@@ -22,82 +22,83 @@
     ),
     (
       name: "Deago Sirenden",
-      department: [Department 3],
+      department: [Department 2],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
-      email: "deagofs2@illinois.edu",
+      email: "???@illinois.edu",
     ),
-    (
-      name: "Zach Da",
-      department: [Department 3],
-      organization: [University of Illinois Urbana-Champaign],
-      location: [Urbana, IL, USA],
-      email: "zhihuid2@illinois.edu",
-    ),
-)
   index-terms: ("Optional", "Keywords", "Here"),
   bibliography: bibliography("refs.bib"),
+)
 
-= First Section
+= Risk Prediction and Assessment in the Construction Industry
+== Team Member(Team ZZDD)
+ZHIXING WANG, DEAGO SIRENDEN, ZAIN SITABKHAN,ZACH DA
 
-To add citations to the report, go to https://scholar.google.com, search for a paper, click on the quotation mark icon below the search result, and copy the BibTeX entry. Then paste it into the `refs.bib` file. You can cite papers using the `@` symbol followed by the citation key, e.g., @lowry1951protein.
+== Data Description
 
-Other options to get BibTeX entries for your references include https://www.bibtex.com/converters/ and asking ChatGPT to generate the a BibTeX entry for you. (If you use ChatGPT, make sure to verify the generated BibTeX entry for correctness.)
+=== Construction Management Related
+1. Construction Related Incidents in New York (Big Dataset and csv file) (choose)  
+2. Construction Fatalities in New York (Smaller Dataset and csv file)
 
-More information about citations can be found in the Typst documentation: https://typst.app/docs/reference/model/cite.
+=== File content
 
-== First Subsection
+==== Source
+New York City Building Incident and Accident Reports
 
-To add figures to your report, save the image file in the `figures` folder and use the `#figure` command as shown below to include it in your document. You can specify the width of the image and add a caption. Then you can reference the figure like this: @proofread.
+==== Format and Size
+(row: 958): accident or incident record,  
+(column: 20): attribute fields of the record
 
-#figure(
-  image("figures/proof-read.png", width: 80%),
-  caption: [A humble request. (Copyright: University of the Fraser Valley.)],
-) <proofread>
+==== Attribute
+#table(
+  columns: 3,
+  align: (left, left, left),
+  inset: 5pt,
+  stroke: 0.5pt,
 
-=== First Subsubsection
+  [Attribute Name], [Unit/Type], [Description],
+  [BIN], [Integer], [Building Identification Number (unique ID for each building)],
+  [Accident Report ID], [Integer], [Unique identifier of each accident report],
+  [Incident Date], [Date], [Date of the incident or accident],
+  [Record Type Description], [Category (Text)], [Record type, distinguishing Incident from Accident],
+  [Check2 Description], [Category (Text)], [Detailed category of the incident, e.g., Construction Related, Mechanical Equipment, Worker Fall],
+  [Fatality], [Integer], [Number of fatalities],
+  [Injury], [Integer], [Number of injuries],
+  [House Number], [Text/Number], [House number of the incident location],
+  [Street Name], [Text], [Street name of the incident location],
+  [Borough], [Category], [Administrative borough (e.g., Manhattan, Bronx, Brooklyn)],
+  [Block], [Integer], [Geographic block number],
+  [Lot], [Integer], [Lot number within the block],
+  [Postcode], [Integer], [Postal code of the location],
+  [Latitude], [Float], [Latitude coordinate of the incident location],
+  [Longitude], [Float], [Longitude coordinate of the incident location],
+  [Community Board], [Integer], [Community board identifier],
+  [Council District], [Integer], [City council district identifier],
+  [BBL], [Integer], [Borough-Block-Lot unique cadastral identifier],
+  [Census Tract (2020)], [Integer], [Census tract number from the 2020 census],
+  [Neighborhood Tabulation Area (NTA) (2020)], [Text], [Neighborhood Tabulation Area (NTA) code from 2020],
+)
 
-You can make sub, sub-sub, and sub-sub-sub sections by adding `=` signs in front of the section title. There needs to be a space between the last `=` sign and the title text.
+== Proposal
 
-= Second Section
+=== Objectives
+By using a regression model to predict the fatality, injury, and index of those events based on time, etc.
 
-You can add tables using the `#table` command. Here is an example table:
+=== Preprocessing
+We might use a filter to eliminate fewer effective variables, including postcode.
 
-#figure(
-  caption: [Example Table],
-  table(
-    columns: (auto, auto, auto),
-    table.header([*Column 1*], [*Column 2*], [*Column 3*]),
-    "Row 1", "Data 1", [Data 2],
-    image("figures/proof-read.png", width: 40%), "Data 3", "Data 4",
-  ),
-) <table-example>
+=== Output
+Fatality, injury. We are supposed to generate an index dependent on fatality and injury.  
+(like grade for these events, 10 for heavy, 1 for less heavy).
 
-You can reference the table like this: @table-example.
+=== Input
+Date, Record type, latitude, longitude, type of incident, and BIN (business effect case combined with another data).
 
-== Various Text Formatting Options
+=== Mathematical formulation
+Injury/Fatality index = β₀ + β₁ (type of events) + β₂ (time) + β₃ (some other variable)
 
-You can make text _italic_ by surrounding it with `_` symbols, *bold* by surrounding it with `*` symbols, and _*bold italic*_ by combining both. You can also use `#code` to format inline code snippets.
+If using an injury number, then use Poisson or negative Binomial regression.  
 
-You can create bullet point lists using `-` or `*` symbols:
-- Bullet point 1
-- Bullet point 2
-  - Sub bullet point 1
-  - Sub bullet point 2
-
-
-You can create numbered lists using numbers followed by a period:
-1. First item
-2. Second item
-  1. Sub item 1
-  2. Sub item 2
-
-
-
-== Equations
-
-You can create equations using `$` symbols. For example, you can make an inline equation like this $E=m c^2$ or a displayed equation like this:
-
-$ x < y => x gt.eq.not y $ <eq1>
-
-You can reference the equation like this: Eq. @eq1.
+As you can see, its meaning is to help avoid incidents or accidents and add more protection during that period.  
+The model seems good to find which attributes dominate the incident based on a linear or other regression model.
