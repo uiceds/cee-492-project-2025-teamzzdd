@@ -1,6 +1,7 @@
 #import "@preview/charged-ieee:0.1.4": ieee
 
 #show: ieee.with(
+  columns: 1,  // ← 这一行控制整篇单栏显示
   title: [Risk Prediction and Assessment in the Construction Industry],
   abstract: [
     This project focuses on risk prediction and assessment in the construction industry using incident and accident data from New York City. By applying regression-based models, the objective is to predict fatality and injury outcomes, as well as generate a weighted index to evaluate the severity of such events. The study contributes to understanding which attributes most strongly influence construction-related incidents and provides insights that may improve safety measures in the industry.
@@ -37,7 +38,7 @@
   ),
   index-terms: ("Construction Safety", "Risk Prediction", "Accident Reports", "Regression Analysis"),
   bibliography: bibliography("refs.bib"),
-)  // ← 这一行结束 ieee.with
+)
 
 
 = Data Description
@@ -430,6 +431,7 @@ Hilbe (2011), Negative Binomial Regression.
  Cameron & Trivedi (2013), Regression Analysis of Count Data.
 Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). Applied Logistic Regression (3rd ed.). Wiley.
 Cameron, A. C., & Trivedi, P. K. (2013). Regression Analysis of Count Data (2nd ed.). Cambridge University Press.
+
 
 
 
