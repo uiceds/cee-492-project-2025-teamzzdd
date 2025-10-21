@@ -1,9 +1,9 @@
-#import "@preview/charged-ieee:0.1.4": ieee
+#import "@preview/charged-ieee:0.1.4": ieee-onecolumn
 
-#show: ieee.with(
+#show: ieee-onecolumn.with(
   title: [Risk Prediction and Assessment in the Construction Industry],
   abstract: [
-    This project focuses on risk prediction and assessment in the construction industry using incident and accident data from New York City. By applying regression-based models, the objective is to predict fatality and injury outcomes, as well as generate a weighted index to evaluate the severity of such events. The study contributes to understanding which attributes most strongly influence construction-related incidents and provides insights that may improve safety measures in the industry.
+    This project focuses on risk prediction and assessment in the construction industry using incident and accident data from New York City. ...
   ],
   authors: (
     (
@@ -37,7 +37,8 @@
   ),
   index-terms: ("Construction Safety", "Risk Prediction", "Accident Reports", "Regression Analysis"),
   bibliography: bibliography("refs.bib"),
-)  // ← 这一行结束 ieee.with
+)
+
 
 
 = Data Description
