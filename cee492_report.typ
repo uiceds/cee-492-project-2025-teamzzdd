@@ -117,112 +117,282 @@ HVI join: Join ZIPs to 5 digits; left-joined HVI onto incidents
 Climate join: Monthly "Baseline" normals parsed and mapped 1 to 12 month; units normalized from string to numeric
 Study window: Incidents filtered to 2024-01 to 2025-09 to reflect current activity.
 
-== Borough x Month Aggregation
-We compute borough-month totals and means needed for the rate-based modeling. the exported panel (n=93 borough-months) includes:
+== Borough × Month Aggregation
+We compute borough–month totals and means needed for the rate-based modeling.  
+The exported panel (n = 715 borough-months) includes:
+
 #table(
-columns: 7, align: (left, right, right, right, right, right, right), inset: 4pt, stroke: 0.5pt,
-[Borough], [Year], [Month], [Injury], [Fatality], [SeverityIndex (mean)], [TotalIncidents],
-[Bronx], [2024], [1], [4], [0], [0.167], [4],
-[Bronx], [2024], [6], [9], [1], [0.233], [10],
-[Bronx], [2024], [8], [7], [0], [0.130], [9],
-[Bronx], [2024], [9], [4], [0], [0.133], [5],
-[Bronx], [2024], [10], [4], [0], [0.167], [4],
+  columns: 6,
+  align: (left, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+
+  [Borough], [Postcode], [YearMonth], [IncidentCount], [Fatality], [Injury],
+  [Bronx], [10451], [Feb-24], [1], [0], [1],
+  [Bronx], [10451], [Mar-24], [1], [0], [1],
+  [Bronx], [10451], [Apr-24], [1], [0], [1],
+  [Bronx], [10451], [Jun-24], [3], [1], [2],
+  [Bronx], [10451], [Jul-24], [1], [0], [1],
+  [Bronx], [10451], [Aug-24], [1], [0], [1],
+  [Bronx], [10451], [Dec-24], [1], [0], [1],
+  [Bronx], [10451], [Jan-25], [1], [0], [1],
+  [Bronx], [10451], [Feb-25], [2], [1], [0],
+  [Bronx], [10451], [Jun-25], [1], [0], [1],
+  [Bronx], [10451], [Aug-25], [1], [0], [1],
 )
-excert; full panel saved as borough_month_aggregated.csv
+
+Excerpt shown above; full panel saved as `monthly_borough.csv`.
+== Temperature Precipitation and HVI added
+We compute borough month totals and means needed for the rate-based modeling.  
+After merging with climate and HVI data, records with missing HVI values for certain postcodes were removed.  
+The resulting dataset contains n = 415 borough month observations.
+
+#table(
+  columns: 9,
+  align: (left, right, right, right, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+
+  [Borough], [Postcode], [YearMonth], [IncidentCount], [Fatality], [Injury], [AvgTemp], [AvgPrecip], [HVI],
+  [Bronx], [10451], [Feb-24], [1], [0], [1], [35.5], [3.1], [5],
+  [Bronx], [10451], [Mar-24], [1], [0], [1], [42.7], [4.4], [5],
+  [Bronx], [10451], [Apr-24], [1], [0], [1], [53.3], [4.5], [5],
+  [Bronx], [10451], [Jun-24], [3], [1], [2], [71.7], [4.4], [5],
+  [Bronx], [10451], [Jul-24], [1], [0], [2], [76.7], [4.6], [5],
+  [Bronx], [10451], [Aug-24], [1], [0], [1], [75.5], [4.4], [5],
+  [Bronx], [10451], [Dec-24], [1], [0], [1], [37.8], [4.0], [5],
+  [Bronx], [10452], [Apr-24], [2], [0], [2], [53.3], [4.5], [5],
+  [Bronx], [10452], [May-24], [3], [0], [3], [62.6], [4.2], [5],
+  [Bronx], [10452], [Jun-24], [2], [0], [2], [71.7], [4.4], [5],
+  [Bronx], [10452], [Jul-24], [2], [0], [1], [76.7], [4.6], [5],
+  [Bronx], [10452], [Oct-24], [1], [0], [1], [57.2], [4.4], [5],
+  [Bronx], [10453], [Mar-24], [1], [0], [1], [42.7], [4.4], [5],
+)
+
+Excerpt shown above; the full cleaned panel is exported as `final_df`.
+== Information before correlation
+#table(
+  columns: 6,
+  align: (left, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+
+  [Borough], [AvgFatality], [AvgInjury], [AvgIncident], [FatalityRate%], [InjuryRate%],
+  [Bronx], [0.019231], [1.096154], [1.307692], [1.47], [83.82],
+  [Brooklyn], [0.012422], [1.037267], [1.434783], [0.87], [72.29],
+  [Manhattan], [0.016667], [1.138889], [1.311111], [1.27], [86.86],
+  [Queens], [0.017857], [1.321429], [1.660714], [1.08], [79.57],
+  [Staten Island], [0.000000], [0.000000], [1.200000], [0.00], [0.00],
+)
+
+#table(
+  columns: 5,
+  align: (left, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+
+  [YearMonth], [TotalFatality], [TotalInjury], [TotalIncident], [FatalityRate%],
+  [2024-01], [0], [50], [57], [0.00],
+  [2024-02], [2], [42], [53], [3.77],
+  [2024-03], [0], [53], [59], [0.00],
+  [2024-04], [0], [51], [64], [0.00],
+  [2024-05], [0], [46], [62], [0.00],
+  [2024-06], [2], [55], [74], [2.70],
+  [2024-07], [1], [42], [54], [1.85],
+  [2024-08], [0], [43], [49], [0.00],
+  [2024-09], [0], [33], [41], [0.00],
+  [2024-10], [1], [33], [44], [2.27],
+  [2024-11], [0], [22], [37], [0.00],
+  [2024-12], [1], [33], [40], [2.50],
+)
+= Monthly Rate Trends
+
+#figure(
+  image("figures/month_rate_line.jpg", width: 80%),
+  caption: [Month-level fatality and injury rate trends],
+)
+#table(
+  columns: 7,
+  align: (left, left, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+
+  [Borough], [YearMonth], [TotalFatality], [TotalInjury], [TotalIncident], [FatalityRate%], [InjuryRate%],
+  [Bronx], [2024-01], [0], [4], [4], [0.0], [100.00],
+  [Bronx], [2024-02], [0], [2], [3], [0.0], [66.67],
+  [Bronx], [2024-03], [0], [6], [6], [0.0], [100.00],
+  [Bronx], [2024-04], [0], [6], [7], [0.0], [85.71],
+  [Bronx], [2024-05], [0], [7], [8], [0.0], [87.50],
+)
+Excerpt shown above; the full cleaned panel is exported as `borough_month_summary`.
+#figure(
+  image("figures/fatality_rate_heatmap.jpg", width: 80%),
+  caption: [Month-level fatality and injury rate trends],
+)
+
+
+== Weighted HVI
+Weighted averaging is used when different observations contribute unequally to an aggregate measure.
+Here, each record represents a borough–month, and each has:
+
+a Heat Vulnerability Index (HVI), and
+
+a number of incidents (IncidentCount).
+
+Since a borough-month with 100 incidents carries more information about actual human exposure than one with only 2 incidents, we weight the mean by IncidentCount rather than giving all months equal influence.
+
 
 == Global Correlation
-We used event-level variables SeverityIndex, AvgTemp, AvgPrecip, and HVI. the Pearson correlation are small in magnitude:
- #table(
-columns: 5, align: (left, right, right, right, right), inset: 4pt, stroke: 0.5pt,
-[ ], [SeverityIndex], [AvgTemp], [AvgPrecip], [HVI],
-[SeverityIndex], [1.000], [-0.034], [-0.038], [-0.008],
-[AvgTemp], [-0.034], [1.000], [0.707], [0.029],
-[AvgPrecip], [-0.038], [0.707], [1.000], [0.010],
-[HVI], [-0.008], [0.029], [0.010], [1.000],
+
+#table(
+  columns: 6,
+  align: (left, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [ ], [TotalIncidents], [Fatality], [Injury], [AvgTemp], [AvgPrecip],
+  [TotalIncidents], [1.000], [0.120], [0.958], [0.025], [0.023],
+  [Fatality], [0.120], [1.000], [0.075], [-0.007], [-0.153],
+  [Injury], [0.958], [0.075], [1.000], [0.020], [0.019],
+  [AvgTemp], [0.025], [-0.007], [0.020], [1.000], [0.707],
+  [AvgPrecip], [0.023], [-0.153], [0.019], [0.707], [1.000],
 )
+
+#v(0.6em)
+
+#table(
+  columns: 6,
+  align: (left, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [ ], [HVI_w], [Brooklyn], [Manhattan], [Queens], [Staten Island],
+  [TotalIncidents], [-0.573], [0.485], [0.513], [-0.305], [-0.387],
+  [Fatality], [-0.093], [0.045], [0.161], [-0.071], [-0.099],
+  [Injury], [-0.596], [0.347], [0.606], [-0.287], [-0.417],
+  [AvgTemp], [-0.000], [-0.011], [-0.011], [-0.011], [0.067],
+  [AvgPrecip], [0.005], [-0.012], [-0.012], [-0.012], [0.074],
+)
+
+#v(0.6em)
+
+#table(
+  columns: 6,
+  align: (left, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [ ], [HVI_w], [Brooklyn], [Manhattan], [Queens], [Staten Island],
+  [HVI_w], [1.000], [-0.047], [-0.759], [0.201], [-0.205],
+  [Brooklyn], [-0.047], [1.000], [-0.300], [-0.300], [-0.158],
+  [Manhattan], [-0.759], [-0.300], [1.000], [-0.300], [-0.158],
+  [Queens], [0.201], [-0.300], [-0.300], [1.000], [-0.158],
+  [Staten Island], [-0.205], [-0.158], [-0.158], [-0.158], [1.000],
+)
+
 
 Figure 1. Correlation heatmap
 
-Implication. Severity shows near-zero linear association with temperature, precipitation, or HVI at the individual-event level; temperature and precipitation co-vary (r ≈ 0.71).
-
-== Borough × Month Correlation
-Aggregating by Borough × Year × Month highlights structure relevant to operations:
-#table(
-columns: 8, align: (left, right, right, right, right, right, right, right), inset: 4pt, stroke: 0.5pt,
-[ ], [TotalIncidents], [Injury], [Fatality], [SeverityIndex], [AvgTemp], [AvgPrecip], [HVI],
-[TotalIncidents], [1.000], [0.961], [0.072], [0.094], [-0.029], [0.043], [-0.386],
-[Injury], [0.961], [1.000], [0.018], [0.185], [-0.053], [0.043], [-0.398],
-[Fatality], [0.072], [0.018], [1.000], [0.557], [-0.060], [-0.136], [-0.053],
-[SeverityIndex], [0.094], [0.185], [0.557], [1.000], [-0.069], [-0.042], [0.179],
-[AvgTemp], [-0.029], [-0.053], [-0.060], [-0.069], [1.000], [0.716], [-0.008],
-[AvgPrecip], [0.043], [0.043], [-0.136], [-0.042], [0.716], [1.000], [0.016],
-[HVI], [-0.386], [-0.398], [-0.053], [0.179], [-0.008], [0.016], [1.000],
+#figure(
+  image("figures/global_correlation_heatmap.jpg", width: 80%),
+  caption: [Month-level fatality and injury rate trends],
 )
-Figure 2. Correlation heatmap (borough-month).
-Implications: 
-Operational load dominates injuries: TotalIncidents ↔ Injury (r = 0.961).
-Severity co-moves with fatalities (r = 0.557).
-HVI relates negatively to overall activity and injuries (r ≈ −0.39), suggesting fewer incidents recorded in hotter-risk ZIPs, potentially due to spatial activity patterns rather than climate stress per se.
 
-== Distribution Transforms
-We stabilize skew via log(1+x) for counts and standardize climate/HVI (z-score). Correlations persist:
-#table(
-columns: 7, align: (left, right, right, right, right, right, right), inset: 4pt, stroke: 0.5pt,
-[ ], [log_Injury], [log_Fatality], [log_TotalIncidents], [z_AvgTemp], [z_AvgPrecip], [z_HVI],
-[log_Injury], [1.000], [0.066], [0.951], [-0.065], [0.040], [-0.190],
-[log_Fatality], [0.066], [1.000], [0.127], [-0.047], [-0.113], [-0.057],
-[log_TotalIncidents], [0.951], [0.127], [1.000], [-0.054], [0.025], [-0.247],
-[z_AvgTemp], [-0.065], [-0.047], [-0.054], [1.000], [0.716], [-0.008],
-[z_AvgPrecip], [0.040], [-0.113], [0.025], [0.716], [1.000], [0.016],
-[z_HVI], [-0.190], [-0.057], [-0.247], [-0.008], [0.016], [1.000],
+== Log map
+#figure(
+  image("figures/log_scaled_correlation_heatmap.jpg", width: 80%),
+  caption: [Month-level fatality and injury rate trends],
 )
-Figure 3. Correlation heatmap after log/z transforms.
-Implication. The exposure signal remains (log incidents ↔ log injuries ≈ 0.95); climate/HVI associations remain weak.
+In order to get rid of log(0) just delete some meaningless parameter.
+
+== regression model and plane
+=== Poisson for Injury
+#table(
+  columns: 7,
+  align: (left, right, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+
+  [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
+  [Intercept], [0.1547], [1.059], [0.146], [0.884], [-1.921], [2.230],
+  [Brooklyn], [-0.2823], [0.307], [-0.919], [0.358], [-0.884], [0.320],
+  [Manhattan], [-0.2225], [0.528], [-0.421], [0.674], [-1.258], [0.813],
+  [Queens], [-0.1458], [0.254], [-0.574], [0.566], [-0.643], [0.352],
+  [Staten Island], [-21.7844], [1.33e+04], [-0.002], [0.999], [-2.6e+04], [2.6e+04],
+  [AvgTemp], [-0.0019], [0.004], [-0.445], [0.650], [-0.010], [0.006],
+  [AvgPrecip], [0.0521], [0.154], [0.337], [0.736], [-0.255], [0.359],
+  [HVI_w], [-0.0965], [0.193], [-0.500], [0.617], [-0.475], [0.282],
+)
+
+#figure(
+  image("figures/poisson_injury_coefficients.jpg", width: 80%),
+  caption: [Month-level fatality and injury rate trends],
+)
+=== Negative Binomial for fatality
+
+#table(
+  columns: 7,
+  align: (left, right, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+
+  [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
+  [Intercept], [-9.6771], [10.237], [-0.945], [0.345], [-29.742], [10.387],
+  [Brooklyn], [2.6615], [3.226], [0.825], [0.409], [-3.662], [8.985],
+  [Manhattan], [6.3483], [5.632], [1.127], [0.260], [-4.690], [17.387],
+  [Queens], [2.0102], [2.608], [0.771], [0.441], [-3.101], [7.121],
+  [Staten Island], [-12.8188], [1.26e+04], [-0.001], [0.999], [-2.46e+04], [2.46e+04],
+  [AvgTemp], [0.0391], [0.044], [0.881], [0.379], [-0.048], [0.126],
+  [AvgPrecip], [-1.8932], [1.459], [-1.298], [0.194], [-4.753], [0.966],
+  [HVI_w], [2.3466], [2.061], [1.139], [0.255], [-1.693], [6.386],
+)
+
+#figure(
+  image("figures/neg_bin_fatality_coefficients.jpg", width: 80%),
+  caption: [Month-level fatality and injury rate trends],
+)
+=== logistical modeling
+#table(
+  columns: 7,
+  align: (left, right, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+
+  [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
+  [Intercept], [-8.1713], [8.01e+06], [-1.02e−06], [1.000], [-1.57e+07], [1.57e+07],
+  [Brooklyn], [5.1530], [5.176], [0.996], [0.319], [-4.992], [15.298],
+  [Manhattan], [12.6504], [10.640], [1.189], [0.234], [-8.204], [33.504],
+  [Queens], [4.0825], [4.332], [0.942], [0.346], [-4.427], [12.592],
+  [Staten Island], [-11.9435], [1.46e+04], [-0.001], [0.999], [-2.86e+04], [2.86e+04],
+  [Month_2], [21.5534], [3.45e+07], [0.000], [1.000], [-8.82e+07], [8.82e+07],
+  [Month_3], [1.5652], [1e+09], [1.56e−09], [1.000], [-1.96e+09], [1.96e+09],
+  [Month_4], [-1.2629], [7.31e+07], [−1.73e−08], [1.000], [−1.43e+08], [1.43e+08],
+  [Month_5], [−0.1959], [5.55e+07], [−3.53e−09], [1.000], [−1.09e+08], [1.09e+08],
+  [Month_6], [14.1388], [5.82e+07], [2.44e−07], [1.000], [−1.14e+08], [1.14e+08],
+  [Month_7], [11.9547], [5.97e+07], [2.00e−07], [1.000], [−1.17e+08], [1.17e+08],
+  [Month_8], [−11.5953], [5.93e+07], [−1.96e−07], [1.000], [−1.16e+08], [1.16e+08],
+  [Month_9], [−13.6277], [9.72e+07], [−1.40e−07], [1.000], [−1.91e+08], [1.91e+08],
+  [Month_10], [28.4699], [5.43e+07], [5.24e−07], [1.000], [−1.06e+08], [1.06e+08],
+  [Month_11], [−50.2970], [3.74e+07], [−1.34e−06], [1.000], [−1.39e+08], [1.39e+08],
+  [Month_12], [38.5362], [4.81e+07], [7.99e−07], [1.000], [−9.42e+07], [9.42e+07],
+  [AvgTemp], [1.0339], [3.304], [0.312], [0.755], [−5.442], [7.510],
+  [AvgPrecip], [−22.3676], [5.44e+06], [−4.12e−06], [1.000], [−1.07e+07], [1.07e+07],
+  [HVI_w], [3.6795], [3.579], [1.028], [0.304], [−3.336], [10.695],
+)
 
 == Visual Summaries (referenced figures)
-Figure 1. Event-level correlations (Severity vs. climate/HVI).
-Figure 2. Borough-month correlations (Injury/Severity vs. exposure, climate, HVI).
-Figure 3. Transformed correlations (log counts; standardized climate/HVI).
-Figure 4. Coefficient contrast: Poisson (injury) vs. NegBin (fatality).
-Figure 5. Predicted injury rate vs. temperature (Poisson; Manhattan; offset = 1).
-Figure 6. Logistic predicted probabilities vs. temperature (injury & fatality).
-Figure 7. Borough heatmaps of predicted injury/fatality rates.
-(All figures follow Science figure prep guidance: no titles, captions here; text size matches body; subfigures labeled where applicable.)
 
 
-= Predictive Modeling
-A section entitled "Predictive Modeling", including a brief plan for the predictive model you will create for Deliverable 3.
+#figure(
+  image("figures\coef_comparison.jpg", width: 80%),
+  caption: [Month-level fatality and injury rate trends],
+)
 
-We model injury risk and severity at the borough-month level that counts with axposure and event-level occurrence (binary outcomes). Exposure is proxied by TotalIncidents using a log offset.
-== Count Models (Borough × Month)
-
-Specification:
-i. Injury (Poisson GLM): Injury ~ AvgTemp + HVI + C(Borough) with offset logExp = log(TotalIncidents)
-ii. Fatality (NegBin GLM): Fatality ~ AvgTemp + HVI + C(Borough) with the same offset
-
-Key results (n = 93 borough-months):
-Poisson—Injury (Pseudo  ≈ 0.128):
-Staten Island effect is significant and negative (coef −1.559, p = 0.018).
-AvgTemp (p = 0.722) and HVI (p = 0.347) are not significant once exposure and borough are controlled.
-
-NegBin—Fatality (Pseudo ≈ 0.010):
-No covariates reach significance; fatal events are rare and noisy at this aggregation, favoring either longer horizons or pooling strategies.
-Interpretation. Spatial effects dominate: conditioning on exposure, borough differences explain most variation in injuries; climate and HVI do not add predictive power in this window.
-
-Figures:
-Figure 4. Coefficient bars (Poisson vs. NegBin).
-Figure 5. Predicted injury rate vs temperature (holding HVI at mean, borough = Manhattan).
-Figure 7. Borough-level predicted injury/fatality heatmaps (model means).
-
-== Event-Level Logistic Models
-Specification:
-- HasInjury ~ AvgTemp + HVI + C(Borough) + C(Month) (n = 949; Pseudo R² = 0.0337, LLR p = 0.0045).
-- HasFatal ~ AvgTemp + HVI + C(Borough) + C(Month) (optimization warning; quasi-separation).
-Key results:
-- Injury model: Brooklyn has lower odds vs. reference (coef −0.804, p = 0.006); month and climate/HVI terms are not robustly significant.
-- Fatality model: Non-convergence and quasi-separation indicate extremely sparse positives; standard logit is unreliable without penalization/rare-event adjustments.
-
-Figure 6. Predicted probabilities vs. temperature (injury and fatality logit curves; hold HVI at mean, borough = Manhattan, month = July).
+#figure(
+  image("figures\pred_fatal_heatmap.jpg", width: 80%),
+  caption: [Month-level fatality and injury rate trends],
+)
+#figure(
+  image("figures\pred_fatal_spatial.jpg", width: 80%),
+  caption: [Month-level fatality and injury rate trends],
+)
 
 == Plan for Deliverable 3
 Targets:
@@ -250,6 +420,16 @@ Next Steps:
 1. Add exposure controls beyond raw counts (e.g., permits, active sites) if obtainable.
 2. Consider hierarchical (mixed) models with borough random effects to share strength and stabilize fatality estimates.
 3. Extend window or pool across years to increase fatality signal for NegBin/logit.
+
+== Reference 
+=== data reference 
+
+
+=== formula reference
+Hilbe (2011), Negative Binomial Regression.
+ Cameron & Trivedi (2013), Regression Analysis of Count Data.
+Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). Applied Logistic Regression (3rd ed.). Wiley.
+Cameron, A. C., & Trivedi, P. K. (2013). Regression Analysis of Count Data (2nd ed.). Cambridge University Press.
 
 
 
