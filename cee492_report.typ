@@ -1,31 +1,43 @@
-// --- Single-column article setup (no IEEE columns) ---
-#set page(width: 8.5in, height: 11in, margin: 1in)
-#set text(font: "Times New Roman", size: 10.5pt)
+#import "@preview/charged-ieee:0.1.4": ieee
 
-// 标题区
-#align(center)[
-  #text(size: 16pt, weight: "bold")[Risk Prediction and Assessment in the Construction Industry]
-  #v(6pt)
-  Zhixing Wang · Zain Sitabkhan · Deago Sirenden · Zach Da
-  #v(4pt)
-  Civil and Environmental Engineering, University of Illinois Urbana-Champaign · Urbana, IL, USA
-  #v(2pt)
-  zw88@illinois.edu · zsita@illinois.edu · deagofs2@illinois.edu · zhihuid2@illinois.edu
-]
-
-#v(10pt)
-#text(weight: "bold")[Abstract]  
-This project focuses on risk prediction and assessment in the construction industry using incident and accident data from New York City. By applying regression-based models, the objective is to predict fatality and injury outcomes, as well as generate a weighted index to evaluate the severity of such events. The study contributes to understanding which attributes most strongly influence construction-related incidents and provides insights that may improve safety measures in the industry.
-
-#v(10pt)
-// 关键词（选）
-#text(weight: "bold")[Index Terms:] Construction Safety; Risk Prediction; Accident Reports; Regression Analysis
-#bibliography("refs.bib")
-
-// ---- 正文从这里开始，保持你原有的 = / == 标题、表格与图片语法 ----
-
-
-
+#show: ieee.with(
+  title: [Risk Prediction and Assessment in the Construction Industry],
+  abstract: [
+    This project focuses on risk prediction and assessment in the construction industry using incident and accident data from New York City. By applying regression-based models, the objective is to predict fatality and injury outcomes, as well as generate a weighted index to evaluate the severity of such events. The study contributes to understanding which attributes most strongly influence construction-related incidents and provides insights that may improve safety measures in the industry.
+  ],
+  authors: (
+    (
+      name: "Zhixing Wang",
+      department: [Civil and Environmental Engineering],
+      organization: [University of Illinois Urbana-Champaign],
+      location: [Urbana, IL, USA],
+      email: "zw88@illinois.edu",
+    ),
+    (
+      name: "Zain Sitabkhan",
+      department: [Civil and Environmental Engineering],
+      organization: [University of Illinois Urbana-Champaign],
+      location: [Urbana, IL, USA],
+      email: "zsita@illinois.edu",
+    ),
+    (
+      name: "Deago Sirenden",
+      department: [Civil and Environmental Engineering],
+      organization: [University of Illinois Urbana-Champaign],
+      location: [Urbana, IL, USA],
+      email: "deagofs2@illinois.edu",
+    ),
+    (
+      name: "Zach Da",
+      department: [Civil and Environmental Engineering],
+      organization: [University of Illinois Urbana-Champaign],
+      location: [Urbana, IL, USA],
+      email: "zhihuid2@illinois.edu",
+    ),
+  ),
+  index-terms: ("Construction Safety", "Risk Prediction", "Accident Reports", "Regression Analysis"),
+  bibliography: bibliography("refs.bib"),
+)  // ← 这一行结束 ieee.with
 
 = Data Description
 
@@ -417,6 +429,7 @@ Hilbe (2011), Negative Binomial Regression.
  Cameron & Trivedi (2013), Regression Analysis of Count Data.
 Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). Applied Logistic Regression (3rd ed.). Wiley.
 Cameron, A. C., & Trivedi, P. K. (2013). Regression Analysis of Count Data (2nd ed.). Cambridge University Press.
+
 
 
 
