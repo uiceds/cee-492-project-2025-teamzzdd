@@ -381,16 +381,16 @@ In order to get rid of log(0) just delete some meaningless parameter.
 
 
 #figure(
-  image("figures\coef_comparison.jpg", width: 80%),
+  image("figures/coef_comparison.jpg", width: 80%),
   caption: [Month-level fatality and injury rate trends],
 )
 
 #figure(
-  image("figures\pred_fatal_heatmap.jpg", width: 80%),
+  image("figures/pred_fatal_heatmap.jpg", width: 80%),
   caption: [Month-level fatality and injury rate trends],
 )
 #figure(
-  image("figures\pred_fatal_spatial.jpg", width: 80%),
+  image("figures/pred_fatal_spatial.jpg", width: 80%),
   caption: [Month-level fatality and injury rate trends],
 )
 
@@ -430,6 +430,7 @@ Hilbe (2011), Negative Binomial Regression.
  Cameron & Trivedi (2013), Regression Analysis of Count Data.
 Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). Applied Logistic Regression (3rd ed.). Wiley.
 Cameron, A. C., & Trivedi, P. K. (2013). Regression Analysis of Count Data (2nd ed.). Cambridge University Press.
+
 
 
 
