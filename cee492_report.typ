@@ -116,6 +116,7 @@ Climate join: Monthly "Baseline" normals parsed and mapped 1 to 12 month; units 
 Study window: Incidents filtered to 2024-01 to 2025-09 to reflect current activity.
 
 == Borough × Month Aggregation
+我首先进行了数据删选并且用combine grouby的形式提取重要信息，分别以borough（Area),月份 postcode 进行提炼。其中postcode直接相关HVI。
 We compute borough–month totals and means needed for the rate-based modeling.  
 The exported panel (n = 715 borough-months) includes:
 
@@ -141,6 +142,7 @@ The exported panel (n = 715 borough-months) includes:
 
 Excerpt shown above; full panel saved as `monthly_borough.csv`.
 == Temperature Precipitation and HVI added
+我讲HVI和postcode结合并且将部分postcode以及对应的整行信息直接删除因为没有HVI。重新整合HVI，temperature，precipitation.
 We compute borough month totals and means needed for the rate-based modeling.  
 After merging with climate and HVI data, records with missing HVI values for certain postcodes were removed.  
 The resulting dataset contains n = 415 borough month observations.
@@ -169,6 +171,10 @@ The resulting dataset contains n = 415 borough month observations.
 
 Excerpt shown above; the full cleaned panel is exported as `final_df`.
 == Information before correlation
+在建立回归模型前，对各行政区与月份的事故数据进行了统计汇总与描述性分析，以检验数据分布及其合理性。首先计算了各行政区的平均死亡率、平均受伤率及平均事故发生次数，并进一步得到伤亡率百分比（FatalityRate%、InjuryRate%），用于比较不同区域间的事故严重程度。随后，对按月份聚合的数据计算了每月的死亡、受伤及事故总数，
+并绘制了月度死亡率与受伤率趋势图，以反映事故严重程度的时间变化趋势。这些处理后的指标和趋势结果构成了后续相关性分析与回归建模的基础数据。
+
+各行政区（Borough）在样本期间的平均死亡数、平均受伤数、平均事故数及相应比例，反映区域间事故严重程度的差异。
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -182,7 +188,7 @@ Excerpt shown above; the full cleaned panel is exported as `final_df`.
   [Queens], [0.017857], [1.321429], [1.660714], [1.08], [79.57],
   [Staten Island], [0.000000], [0.000000], [1.200000], [0.00], [0.00],
 )
-
+各月份的事故总量、死亡总数、受伤总数及死亡率百分比，用于展示时间维度上的总体变化趋势。
 #table(
   columns: 5,
   align: (left, right, right, right, right),
@@ -204,11 +210,13 @@ Excerpt shown above; the full cleaned panel is exported as `final_df`.
   [2024-12], [1], [33], [40], [2.50],
 )
 = Monthly Rate Trends
-
+月度死亡率与受伤率的变化曲线，直观显示全年事故严重程度随时间的波动趋势。
 #figure(
   image("figures/month_rate_line.jpg", width: 80%),
   caption: [Month-level fatality and injury rate trends],
 )
+
+以 Bronx 为例展示的行政区–月份级别的详细数据，包括各月的死亡数、受伤数、事故总数及对应的比率，是清洗后汇总面板（borough_month_summary）的部分样例。
 #table(
   columns: 7,
   align: (left, left, right, right, right, right, right),
@@ -223,6 +231,7 @@ Excerpt shown above; the full cleaned panel is exported as `final_df`.
   [Bronx], [2024-05], [0], [7], [8], [0.0], [87.50],
 )
 Excerpt shown above; the full cleaned panel is exported as `borough_month_summary`.
+图 2 显示各行政区在不同月份的死亡率分布热图，用颜色深浅反映死亡率高低，直观展示了事故严重程度在时间与区域上的差异。
 #figure(
   image("figures/fatality_rate_heatmap.jpg", width: 80%),
   caption: [Month-level fatality and injury rate trends],
@@ -231,6 +240,7 @@ Excerpt shown above; the full cleaned panel is exported as `borough_month_summar
 
 == Weighted HVI
 Weighted averaging is used when different observations contribute unequally to an aggregate measure.
+我们选择根据具体发生的injury加权获得更合理的HVI而不是直接通过postcode平均的方式。
 Here, each record represents a borough–month, and each has:
 
 a Heat Vulnerability Index (HVI), and
@@ -241,7 +251,7 @@ Since a borough-month with 100 incidents carries more information about actual h
 
 
 == Global Correlation
-
+table显示主要变量（事故数、死亡、受伤、气温、降水量、HVI 及各行政区）之间的相关系数，用于评估事故发生与环境及区域因素的线性关系。
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -292,15 +302,26 @@ Figure 1. Correlation heatmap
   image("figures/global_correlation_heatmap.jpg", width: 80%),
   caption: [Month-level fatality and injury rate trends],
 )
+死亡数与其他变量相关性较弱（r ≈ 0.1），表明死亡事件多为偶发极端情况；
+
+HVI 与事故、受伤呈中度负相关（r ≈ −0.57 ~ −0.60），暗示热脆弱性高的地区事故率较低；
+
+气温与降水量之间显著正相关（r ≈ 0.71），但与事故关系较弱；
+
+Brooklyn 与 Manhattan 的事故趋势与总体事故呈正相关，而 Queens 与 Staten Island 略呈负相关，反映出区域差异。
+总体而言，气候因素影响有限，而区域及热脆弱性差异在事故发生率上表现出显著分布特征。
 
 == Log map
+我们希望通过log来提出0相关parameter 类似于log0 会报错。就可以删除。我们的项目没有
 #figure(
   image("figures/log_scaled_correlation_heatmap.jpg", width: 80%),
   caption: [Month-level fatality and injury rate trends],
 )
 In order to get rid of log(0) just delete some meaningless parameter.
 
-== regression model and plane
+== regression model and plan
+由于我们不是continuous 模型，所以不能用传统linear regression model 类似高斯分布，因此我们的计划是选择
+possion  Negative binomial 以及 logit.这一部分仅仅展示计划，因此不确定图是否对，所以没有加以描述。（因为属于下一部分）
 === Poisson for Injury
 #table(
   columns: 7,
@@ -391,6 +412,18 @@ In order to get rid of log(0) just delete some meaningless parameter.
   image("figures/pred_fatal_spatial.jpg", width: 80%),
   caption: [Month-level fatality and injury rate trends],
 )
+综合总结（Summary of Analysis）
+
+回归模型比较（Poisson, Negative Binomial, Logistic）
+
+分别建立 Poisson、负二项（NegBin）及 Logistic 模型，对受伤与死亡事件进行解释。
+
+从系数图可看出：不同区域和月份对事故结果的影响存在显著差异，部分月份（如 7、11、12 月）死亡率偏高，反映出季节性风险。
+
+通过 NegBin 模型生成 月度–区域死亡率热力图（Fig. 8），识别出 Bronx、Brooklyn 和 Manhattan 在年初至年中存在较高的预测死亡率。
+
+绘制 空间分布图（Fig. 9），将预测死亡事件映射到地理坐标，直观展现高风险区域集中于城市北部和中部。
+
 
 == Plan for Deliverable 3
 Targets:
@@ -428,6 +461,7 @@ Hilbe (2011), Negative Binomial Regression.
  Cameron & Trivedi (2013), Regression Analysis of Count Data.
 Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). Applied Logistic Regression (3rd ed.). Wiley.
 Cameron, A. C., & Trivedi, P. K. (2013). Regression Analysis of Count Data (2nd ed.). Cambridge University Press.
+
 
 
 
