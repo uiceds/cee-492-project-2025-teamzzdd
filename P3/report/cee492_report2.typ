@@ -88,7 +88,7 @@ Proposal for attribute usage will be made, focusing on those with predictive rel
 Our main objective is to analyze different types of construction incidents at New York City that happened within 1 or 2 years from now. For this project, we would mainly be examining the nature of construction related incidents and accidents as well as performing correlations with the data by examining the prevalence of each incident and accident at each of the five boroughs of New York City. We would want to see where each type of incident has the highest probability of occurring, and where specifically measures should be implemented to prevent these types of incidents. Finally, keeping track of when these incidents occurred will also be critical as the data could also be used to calculate the frequency of accidents over time.
 
 == Preprocessing
-Filtering may be applied to eliminate less effective or redundant variables, such as postcode or latitude, to improve model performance. Tidying and cleaning the data is also necessary before analyzing and correlating the data. We would probably need to order our data in terms of when they happen as well as categorizing the incidents/accidents that happened at each borough.
+Filtering may be applied to eliminate less effective or redundant variables, such as postcode or latitude, to improve model performance. Tidying and cleaning the data is also necessary before analyzing and correlating the data. We would need to order our data in terms of when they happened as well as categorizing the incidents/accidents that happened at each borough.
 
 == Output
 - Incident vs accident count over time (could be in spans of 1 month)
@@ -202,7 +202,7 @@ Excerpt shown above; the full cleaned panel is exported as `final_df`.
   [2024-11], [0], [22], [37], [0.00],
   [2024-12], [1], [33], [40], [2.50],
 )
-= Monthly Rate Trends
+= Monthly Fatality&Injury Rate Trends
 
 #figure(
   image("figures/month_rate_line.jpg", width: 80%),
