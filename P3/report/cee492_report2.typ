@@ -103,8 +103,6 @@ The purpose of the model is to help avoid incidents and accidents at New York Ci
 
 
 = Exploratory Data Analysis
-A narrative description and characterization of your dataset, interspersed with
-summary statistics and plots.
 
 We analyze DOB construction incidents across NYC's five boroughs(Bronx, Brooklyn, Manhattan, Queens, and State Island), evaluating each record with a Heat Vulnerability Index (HVI) at ZIP/ZCTA level and baseline monthly climate normals such as mean temperature and precipitation that mapped by month. After cleaning data by parsing dates, removing duplicate Accident Report ID, and restricting the time window to 2024-01-01 through 2025-09-30, we normalized and calculate the Severity Index:
 SeverityIndex = 10Fatality + 2Injury - min / (max - min)
@@ -429,6 +427,7 @@ Hilbe (2011), Negative Binomial Regression.
 Cameron & Trivedi (2013), Regression Analysis of Count Data.
 Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). Applied Logistic Regression (3rd ed.). Wiley.
 Cameron, A. C., & Trivedi, P. K. (2013). Regression Analysis of Count Data (2nd ed.). Cambridge University Press.
+
 
 
 
