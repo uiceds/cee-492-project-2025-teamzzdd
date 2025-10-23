@@ -426,9 +426,10 @@ Next Steps:
 
 === formula reference
 Hilbe (2011), Negative Binomial Regression.
- Cameron & Trivedi (2013), Regression Analysis of Count Data.
+Cameron & Trivedi (2013), Regression Analysis of Count Data.
 Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). Applied Logistic Regression (3rd ed.). Wiley.
 Cameron, A. C., & Trivedi, P. K. (2013). Regression Analysis of Count Data (2nd ed.). Cambridge University Press.
+
 
 
 
