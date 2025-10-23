@@ -322,6 +322,10 @@ In order to get rid of log(0) just delete some meaningless parameter.
 == regression model and plan
 由于我们不是continuous 模型，所以不能用传统linear regression model 类似高斯分布，因此我们的计划是选择
 possion  Negative binomial 以及 logit.这一部分仅仅展示计划，因此不确定图是否对，所以没有加以描述。（因为属于下一部分）
+Regression modeling was performed using Poisson, Negative Binomial, and Logistic regressions,
+which are standard approaches for count and binary outcomes in risk and safety studies
+[@Cameron2013; @Hilbe2011; @Hosmer2013].
+
 === Poisson for Injury
 #table(
   columns: 7,
@@ -461,6 +465,7 @@ Hilbe (2011), Negative Binomial Regression.
  Cameron & Trivedi (2013), Regression Analysis of Count Data.
 Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). Applied Logistic Regression (3rd ed.). Wiley.
 Cameron, A. C., & Trivedi, P. K. (2013). Regression Analysis of Count Data (2nd ed.). Cambridge University Press.
+
 
 
 
