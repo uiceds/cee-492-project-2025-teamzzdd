@@ -51,34 +51,41 @@ Department of Buildings (DOB) Incident Database
 The dataset includes approximately 958 rows, each representing an accident or incident record, and 20 columns containing attribute fields of these records.
 
 = Attributes
-#table(
-  columns: 3,
-  align: (left, left, left),
-  inset: 5pt,
-  stroke: 0.5pt,
+#figure(
+  block: true,     // ✅ 跨两栏
+  caption: [],     // ✅ 不显示标题（用空内容代替，而非 none）
+  [
+    #table(
+      columns: 3,
+      align: (left, left, left),
+      inset: 5pt,
+      stroke: 0.5pt,
 
-  [Attribute Name], [Unit/Type], [Description],
-  [BIN], [Integer], [Building Identification Number (unique ID for each building)],
-  [Accident Report ID], [Integer], [Unique identifier of each accident report],
-  [Incident Date], [Date], [Date of the incident or accident],
-  [Record Type Description], [Category (Text)], [Record type, distinguishing Incident from Accident],
-  [Check2 Description], [Category (Text)], [Detailed category of the incident, e.g., Construction Related, Mechanical Equipment, Worker Fall],
-  [Fatality], [Integer], [Number of fatalities],
-  [Injury], [Integer], [Number of injuries],
-  [House Number], [Text/Number], [House number of the incident location],
-  [Street Name], [Text], [Street name of the incident location],
-  [Borough], [Category], [Administrative borough (e.g., Manhattan, Bronx, Brooklyn)],
-  [Block], [Integer], [Geographic block number],
-  [Lot], [Integer], [Lot number within the block],
-  [Postcode], [Integer], [Postal code of the location],
-  [Latitude], [Float], [Latitude coordinate of the incident location],
-  [Longitude], [Float], [Longitude coordinate of the incident location],
-  [Community Board], [Integer], [Community board identifier],
-  [Council District], [Integer], [City council district identifier],
-  [BBL], [Integer], [Borough-Block-Lot unique cadastral identifier],
-  [Census Tract (2020)], [Integer], [Census tract number from the 2020 census],
-  [Neighborhood Tabulation Area (NTA) (2020)], [Text], [Neighborhood Tabulation Area (NTA) code from 2020],
+      [Attribute Name], [Unit/Type], [Description],
+      [BIN], [Integer], [Building Identification Number (unique ID for each building)],
+      [Accident Report ID], [Integer], [Unique identifier of each accident report],
+      [Incident Date], [Date], [Date of the incident or accident],
+      [Record Type Description], [Category (Text)], [Record type, distinguishing Incident from Accident],
+      [Check2 Description], [Category (Text)], [Detailed category of the incident, e.g., Construction Related, Mechanical Equipment, Worker Fall],
+      [Fatality], [Integer], [Number of fatalities],
+      [Injury], [Integer], [Number of injuries],
+      [House Number], [Text/Number], [House number of the incident location],
+      [Street Name], [Text], [Street name of the incident location],
+      [Borough], [Category], [Administrative borough (e.g., Manhattan, Bronx, Brooklyn)],
+      [Block], [Integer], [Geographic block number],
+      [Lot], [Integer], [Lot number within the block],
+      [Postcode], [Integer], [Postal code of the location],
+      [Latitude], [Float], [Latitude coordinate of the incident location],
+      [Longitude], [Float], [Longitude coordinate of the incident location],
+      [Community Board], [Integer], [Community board identifier],
+      [Council District], [Integer], [City council district identifier],
+      [BBL], [Integer], [Borough-Block-Lot unique cadastral identifier],
+      [Census Tract (2020)], [Integer], [Census tract number from the 2020 census],
+      [Neighborhood Tabulation Area (NTA) (2020)], [Text], [Neighborhood Tabulation Area (NTA) code from 2020],
+    )
+  ]
 )
+
 
 Proposal for attribute usage will be made, focusing on those with predictive relevance.
 
@@ -462,6 +469,7 @@ Hilbe (2011), Negative Binomial Regression.
  Cameron & Trivedi (2013), Regression Analysis of Count Data.
 Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). Applied Logistic Regression (3rd ed.). Wiley.
 Cameron, A. C., & Trivedi, P. K. (2013). Regression Analysis of Count Data (2nd ed.). Cambridge University Press.
+
 
 
 
