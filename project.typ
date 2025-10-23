@@ -1,6 +1,6 @@
 #align(center, [= Risk Prediction and Assessment in the Construction Industry])
 
-#v(4em)
+#v(5em)
 
 #align(center, [
   #grid(
@@ -242,6 +242,7 @@ Add exposure controls (permits, active sites), extend years, and consider hierar
 [1] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
 [2] Cameron, A. C., & Trivedi, P. K. (2013). *Regression analysis of count data* (2nd ed.). Cambridge University Press. \
 [3] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
+
 
 
 
