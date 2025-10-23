@@ -374,7 +374,7 @@ In order to get rid of log(0) just delete some meaningless parameter.
   [AvgPrecip], [−22.3676], [5.44e+06], [−4.12e−06], [1.000], [−1.07e+07], [1.07e+07],
   [HVI_w], [3.6795], [3.579], [1.028], [0.304], [−3.336], [10.695],
 )
-
+@Hilbe2011
 == Visual Summaries (referenced figures)
 
 
@@ -428,6 +428,7 @@ Hilbe (2011), Negative Binomial Regression.
  Cameron & Trivedi (2013), Regression Analysis of Count Data.
 Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). Applied Logistic Regression (3rd ed.). Wiley.
 Cameron, A. C., & Trivedi, P. K. (2013). Regression Analysis of Count Data (2nd ed.). Cambridge University Press.
+
 
 
 
