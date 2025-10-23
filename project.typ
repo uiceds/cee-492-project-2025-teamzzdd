@@ -1,0 +1,246 @@
+#align(center, [= Risk Prediction and Assessment in the Construction Industry])
+
+#v(5em)
+
+#align(center, [
+  #grid(
+    columns: 2,
+    gutter: 1.5em,
+    row-gutter: 1em,
+    [
+      **Zhixing Wang**  
+      Department of Civil and Environmental Engineering  
+      University of Illinois Urbana–Champaign  
+      Urbana, IL, USA  
+      *zw88\@illinois.edu*
+    ],
+    [
+      **Zain Sitabkhan**  
+      Department of Civil and Environmental Engineering  
+      University of Illinois Urbana–Champaign  
+      Urbana, IL, USA  
+      *zsita\@illinois.edu*
+    ],
+    [
+      **Deago Sirenden**  
+      Department of Civil and Environmental Engineering  
+      University of Illinois Urbana–Champaign  
+      Urbana, IL, USA  
+      *deagofs2\@illinois.edu*
+    ],
+    [
+      **Zach Da**  
+      Department of Civil and Environmental Engineering  
+      University of Illinois Urbana–Champaign  
+      Urbana, IL, USA  
+      *zhihuid2\@illinois.edu*
+    ],
+  )
+])
+
+#v(8em)
+
+= Abstract
+This project focuses on risk prediction and assessment in the construction industry using incident and accident data from New York City. By applying regression-based models, the objective is to predict fatality and injury outcomes, as well as generate a weighted index to evaluate the severity of such events. The study contributes to understanding which attributes most strongly influence construction-related incidents and provides insights that may improve safety measures in the industry.
+
+keywords:"Construction Safety", "Risk Prediction", "Accident Reports", "Regression Analysis"
+#pagebreak()
+
+= 1. Data Description(Project 1)
+#v(2em)
+== 1.1 File Content
+
+The dataset consists of construction-related incidents and accidents at New York City in each of the five boroughs. It provides a large-scale CSV file suitable for predictive analysis.
+
+== 1.2 Source
+Department of Buildings (DOB) Incident Database
+
+== 1.3 Format and Size
+The dataset includes approximately 958 rows, each representing an accident or incident record, and 20 columns containing attribute fields of these records.
+#v(2em)
+= 2. Attributes
+#v(2em)
+Table 1.
+#table(
+  columns: 3,
+  align: (left, left, left),
+  inset: 5pt,
+  stroke: 0.5pt,
+
+  [Attribute Name], [Unit/Type], [Description],
+  [BIN], [Integer], [Building Identification Number (unique ID for each building)],
+  [Accident Report ID], [Integer], [Unique identifier of each accident report],
+  [Incident Date], [Date], [Date of the incident or accident],
+  [Record Type Description], [Category (Text)], [Record type, distinguishing Incident from Accident],
+  [Check2 Description], [Category (Text)], [Detailed category of the incident, e.g., Construction Related, Mechanical Equipment, Worker Fall],
+  [Fatality], [Integer], [Number of fatalities],
+  [Injury], [Integer], [Number of injuries],
+  [House Number], [Text/Number], [House number of the incident location],
+  [Street Name], [Text], [Street name of the incident location],
+  [Borough], [Category], [Administrative borough (e.g., Manhattan, Bronx, Brooklyn)],
+  [Block], [Integer], [Geographic block number],
+  [Lot], [Integer], [Lot number within the block],
+  [Postcode], [Integer], [Postal code of the location],
+  [Latitude], [Float], [Latitude coordinate of the incident location],
+  [Longitude], [Float], [Longitude coordinate of the incident location],
+  [Community Board], [Integer], [Community board identifier],
+  [Council District], [Integer], [City council district identifier],
+  [BBL], [Integer], [Borough-Block-Lot unique cadastral identifier],
+  [Census Tract (2020)], [Integer], [Census tract number from the 2020 census],
+  [Neighborhood Tabulation Area (NTA) (2020)], [Text], [Neighborhood Tabulation Area (NTA) code from 2020],
+)
+
+Proposal for attribute usage will be made, focusing on those with predictive relevance.
+
+= 3. Proposal
+
+== 3.1 Objectives
+Our main objective is to analyze different types of construction incidents at New York City that happened within 1 or 2 years from now. For this project, we would mainly be examining the nature of construction related incidents and accidents as well as performing correlations with the data by examining the prevalence of each incident and accident at each of the five boroughs of New York City. We would want to see where each type of incident has the highest probability of occurring, and where specifically measures should be implemented to prevent these types of incidents. Finally, keeping track of when these incidents occurred will also be critical as the data could also be used to calculate the frequency of accidents over time.
+
+== 3.2 Preprocessing
+Filtering may be applied to eliminate less effective or redundant variables, such as postcode or latitude, to improve model performance. Tidying and cleaning the data is also necessary before analyzing and correlating the data. We would probably need to order our data in terms of when they happen as well as categorizing the incidents/accidents that happened at each borough.
+
+== 3.3 Output
+- Incident vs accident count over time (could be in spans of 1 month)  
+- How many construction incidents and accidents happened at each month  
+- Computed severity index at each borough (e.g., grade scale from 1 = less severe to 10 = highly severe)
+
+== 3.4 Input
+Date, record type, latitude, longitude, type of incident, and BIN (business effect case, combined with other data).
+
+== 3.5 Significance
+The purpose of the model is to help avoid incidents and accidents at New York City by identifying the dominant attributes influencing outcomes, thereby guiding proactive protection measures in construction management.
+
+#v(2em)
+= 4. Exploratory Data Analysis(Project 2)
+#v(2em)
+== 4.1 Data Integration and Cohort
+我首先进行了数据删选并且用combine grouby的形式提取重要信息，分别以borough（Area)、月份、postcode进行提炼，其中postcode直接相关HVI。
+
+== 4.2 Borough × Month Aggregation
+#table(
+  columns: 6,
+  align: (left, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [Borough], [Postcode], [YearMonth], [IncidentCount], [Fatality], [Injury],
+  [Bronx], [10451], [Feb-24], [1], [0], [1],
+  [Bronx], [10451], [Mar-24], [1], [0], [1],
+  [Bronx], [10451], [Apr-24], [1], [0], [1],
+  [Bronx], [10451], [Jun-24], [3], [1], [2],
+)
+Excerpt shown above; full panel saved as `monthly_borough.csv`.
+
+== 4.3 Temperature, Precipitation, and HVI Added
+我将HVI与postcode结合，并删除缺失值。合并气候变量后得到415条有效观测。
+
+#table(
+  columns: 9,
+  align: (left, right, right, right, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [Borough], [Postcode], [YearMonth], [IncidentCount], [Fatality], [Injury], [AvgTemp], [AvgPrecip], [HVI],
+  [Bronx], [10451], [Jun-24], [3], [1], [2], [71.7], [4.4], [5],
+)
+
+== 4.4 Descriptive Summary
+我计算了各行政区的平均死亡率、受伤率与事故数，以及月度趋势。
+
+#table(
+  columns: 6,
+  align: (left, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [Borough], [AvgFatality], [AvgInjury], [AvgIncident], [FatalityRate%], [InjuryRate%],
+  [Bronx], [0.019], [1.10], [1.31], [1.47], [83.82],
+)
+#v(2em)
+= 5. Correlation Analysis
+#v(2em)
+== 5.1 Weighted HVI
+Weighted averaging is used when different observations contribute unequally to an aggregate measure.
+
+== 5.2 Global Correlation
+#table(
+  columns: 6,
+  align: (left, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [ ], [TotalIncidents], [Fatality], [Injury], [AvgTemp], [AvgPrecip],
+  [TotalIncidents], [1.000], [0.120], [0.958], [0.025], [0.023],
+  [Fatality], [0.120], [1.000], [0.075], [-0.007], [-0.153],
+)
+死亡数与其他变量相关性较弱（r≈0.1），HVI 与事故、受伤呈中度负相关（r≈−0.57~−0.60）。
+#v(2em)
+== 5.3 Log-scaled Correlation
+#figure(
+  image("figures/log_scaled_correlation_heatmap.jpg", width: 80%),
+  caption: [Correlation heatmap after log scaling],
+)
+#v(2em)
+= 6. Regression Models and Results
+#v(2em)
+== 6.1 Poisson Model (Injury)
+#table(
+  columns: 7,
+  align: (left, right, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
+  [Intercept], [0.1547], [1.059], [0.146], [0.884], [-1.921], [2.230],
+)
+#figure(image("figures/poisson_injury_coefficients.jpg", width: 80%), caption: [Poisson injury model coefficients])
+
+== 6.2 Negative Binomial Model (Fatality)
+#table(
+  columns: 7,
+  align: (left, right, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
+  [Intercept], [-9.6771], [10.237], [-0.945], [0.345], [-29.742], [10.387],
+)
+#figure(image("figures/neg_bin_fatality_coefficients.jpg", width: 80%), caption: [Negative binomial fatality model coefficients])
+
+== 6.3 Logistic Model
+#table(
+  columns: 7,
+  align: (left, right, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
+  [Intercept], [-8.1713], [8.01e+06], [-1e-06], [1.000], [-1.57e+07], [1.57e+07],
+)
+
+== 6.4 Visual Summaries
+#figure(image("figures/coef_comparison.jpg", width: 80%), caption: [Coefficient comparison])
+#figure(image("figures/pred_fatal_heatmap.jpg", width: 80%), caption: [Predicted fatality heatmap])
+#figure(image("figures/pred_fatal_spatial.jpg", width: 80%), caption: [Spatial fatality prediction map])
+
+= 7. Plan for Deliverable 3
+
+== 7.1 Targets
+1. Binary injury risk per event 
+2. Count severity per borough-month (injury counts or SeverityIndex)
+
+== 7.2 Models
+- Poisson vs. Negative Binomial  
+- Regularized logistic for rare events
+
+== 7.3 Validation
+- Temporal split  
+- Rolling origin CV  
+- AUROC/AUPRC, Brier, MAE/RMSE metrics
+
+== 7.4 Interpretability & Fairness
+Inspect borough effects and error parity across high-HVI ZIPs.
+
+== 7.5 Next Steps
+Add exposure controls (permits, active sites), extend years, and consider hierarchical models.
+
+= 8. References
+[1] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
+[2] Cameron, A. C., & Trivedi, P. K. (2013). *Regression analysis of count data* (2nd ed.). Cambridge University Press. \
+[3] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
+
+
