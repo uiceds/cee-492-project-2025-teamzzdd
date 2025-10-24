@@ -60,7 +60,7 @@ The dataset includes approximately 958 rows, each representing an accident or in
 #v(2em)
 = 2. Attributes
 #v(2em)
-Table 1. Attribute Definitions and Descriptions
+#align(center, [Table 1. Attribute Definitions and Descriptions])
 #table(
   columns: 3,
   align: (left, left, left),
@@ -120,7 +120,8 @@ For the data integration and cohort definition, we first filtered the dataset. W
 
 == 4.2 Borough × Month Aggregation
 To explore trends over time, the data were aggregated by borough and month. The aggregation reveals that incidents tend to cluster during the spring and summer months, aligning with increased construction activity. 
-Table 2. Monthly Aggregation of Incidents by Borough and Postcode 
+#v(1em)
+#align(center, [Table 2. Monthly Aggregation of Incidents by Borough and Postcode])
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -133,10 +134,10 @@ Table 2. Monthly Aggregation of Incidents by Borough and Postcode
   [Bronx], [10451], [Jun-24], [3], [1], [2],
 )
 Excerpt shown above; full panel saved as `monthly_borough.csv`.
-
+#align(center, [
 == 4.3 Temperature, Precipitation, and HVI Added
 我将HVI与postcode结合，并删除缺失值。合并气候变量后得到415条有效观测。
-
+#align(center, [Table 3. Integrated Dataset with Climate and HVI Variables])
 #table(
   columns: 9,
   align: (left, right, right, right, right, right, right, right, right),
@@ -166,7 +167,7 @@ Preliminary inspection indicates that higher-HVI areas (typically in the Bronx a
 #figure(image("figures/cumul_injury_zs.jpg", width: 80%), caption: [Fatalities Each Month])
 
 == 4.5 Averaging the Data
-Table 4. Average Incident and Injury Rates by Borough
+#align(center, [Table 4. Average Incident and Injury Rates by Borough])
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -187,7 +188,7 @@ Weighted averaging is used when different observations contribute unequally to a
 
 == 5.2 Global Correlation
 A global correlation analysis was conducted among key variables: TotalIncidents, Fatality, Injury, AvgTemp, AvgPrecip, and HVI.
-Table 5. Correlation Matrix of Incident, Climate, and Vulnerability Variables
+#align(center, [Table 5. Correlation Matrix of Incident, Climate, and Vulnerability Variables])
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -212,7 +213,7 @@ Regression modeling was performed using Poisson, Negative Binomial, and Logistic
 which are standard approaches for count and binary outcomes in risk and safety studies.
 #v(2em)
 == 6.1 Poisson Model (Injury)
-Table 6. Poisson Regression Model Results for Injury Counts
+#align(center, [Table 6. Poisson Regression Model Results for Injury Counts])
 #table(
   columns: 7,
   align: (left, right, right, right, right, right, right),
@@ -224,7 +225,7 @@ Table 6. Poisson Regression Model Results for Injury Counts
 #figure(image("figures/poisson_injury_coefficients.jpg", width: 80%), caption: [Poisson injury model coefficients])
 
 == 6.2 Negative Binomial Model (Fatality)
-Table 7. Negative Binomial Regression Model Results for Fatalities
+#align(center, [Table 7. Negative Binomial Regression Model Results for Fatalities])
 #table(
   columns: 7,
   align: (left, right, right, right, right, right, right),
@@ -236,7 +237,7 @@ Table 7. Negative Binomial Regression Model Results for Fatalities
 #figure(image("figures/neg_bin_fatality_coefficients.jpg", width: 80%), caption: [Negative binomial fatality model coefficients])
 
 == 6.3 Logistic Model
-Table 8. Logistic Regression Results for Binary Fatality Events
+#align(center, [Table 8. Logistic Regression Results for Binary Fatality Events])
 #table(
   columns: 7,
   align: (left, right, right, right, right, right, right),
@@ -281,6 +282,7 @@ Steps we could eventually take are adding exposure controls (permits, active sit
 [1] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
 [2] Cameron, A. C., & Trivedi, P. K. (2013). *Regression analysis of count data* (2nd ed.). Cambridge University Press. \
 [3] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
+
 
 
 
