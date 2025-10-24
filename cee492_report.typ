@@ -134,7 +134,6 @@ To explore trends over time, the data were aggregated by borough and month. The 
   [Bronx], [10451], [Jun-24], [3], [1], [2],
 )
 Excerpt shown above; full panel saved as `monthly_borough.csv`.
-#align(center, [
 == 4.3 Temperature, Precipitation, and HVI Added
 我将HVI与postcode结合，并删除缺失值。合并气候变量后得到415条有效观测。
 #align(center, [Table 3. Integrated Dataset with Climate and HVI Variables])
@@ -282,6 +281,7 @@ Steps we could eventually take are adding exposure controls (permits, active sit
 [1] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
 [2] Cameron, A. C., & Trivedi, P. K. (2013). *Regression analysis of count data* (2nd ed.). Cambridge University Press. \
 [3] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
+
 
 
 
