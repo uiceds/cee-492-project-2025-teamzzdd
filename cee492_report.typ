@@ -114,6 +114,7 @@ The purpose of the model is to help avoid incidents and accidents at New York Ci
 #v(2em)
 = 4. Exploratory Data Analysis(Project 2)
 #v(2em)
+This section will mainly focus on introductory data analysis with some preliminary tables and plots describing critical aspects of the data. Visible patterns will be discussed with the data that has been formulated and the coming sections below will describe how we plan on applying and modelling this data.
 == 4.1 Data Integration and Cohort
 我首先进行了数据删选并且用combine grouby的形式提取重要信息，分别以borough（Area)、月份、postcode进行提炼，其中postcode直接相关HVI。
 
@@ -161,8 +162,7 @@ Excerpt shown above; full panel saved as `monthly_borough.csv`.
 
 #figure(image("figures/cumul_injury_zs.jpg", width: 80%), caption: [Fatalities Each Month])
 
-== 4.5 Descriptive Summary
-我计算了各行政区的平均死亡率、受伤率与事故数，以及月度趋势。
+== 4.5 Averaging the Data
 
 #table(
   columns: 6,
@@ -172,6 +172,11 @@ Excerpt shown above; full panel saved as `monthly_borough.csv`.
   [Borough], [AvgFatality], [AvgInjury], [AvgIncident], [FatalityRate%], [InjuryRate%],
   [Bronx], [0.019], [1.10], [1.31], [1.47], [83.82],
 )
+
+== 4.6 Overall Summary
+我计算了各行政区的平均死亡率、受伤率与事故数，以及月度趋势。
+
+
 #v(2em)
 = 5. Correlation Analysis
 #v(2em)
@@ -237,29 +242,35 @@ Weighted averaging is used when different observations contribute unequally to a
 
 = 7. Plan for Deliverable 3
 
-== 7.1 Targets
-1. Binary injury risk per event 
-2. Count severity per borough-month (injury counts or SeverityIndex)
+This section will describe how we plan on creating more complex models pertaining to our data, such as predictive modelling. This aspect is necessary in terms of understanding important patterns and information that cannot be simply derived by just correlating two variables.
+
+== 7.1 Objectives
+Here are objectives we want to achieve if predictive modelling would be implemented:
+1. Know when and where injuries and fatalities are the most severe around New York City 
+2. Know the most prevalent underlying causes with injuries and fatalities through check descriptions
+3. Thoroughly investigate each borough or districts if we want to take this further to thoroughly detect where these incidents are occuring
+4. Figure out how much weather (e.g. precipitation, temperature) affects the prevalence of construction incidents
+5. Know how create more complex models with this data
 
 == 7.2 Models
-- Poisson vs. Negative Binomial  
-- Regularized logistic for rare events
-
-== 7.3 Validation
-- Temporal split  
-- Rolling origin CV  
-- AUROC/AUPRC, Brier, MAE/RMSE metrics
+Here are some examples of models we may implement:
+1. Binary injury risk per event 
+2. Count severity per borough-month (injury counts or SeverityIndex)
+3. Poisson vs. Negative Binomial
+4. Regularized logistic for rare events
+5. Heatmap or spatial distribution (longitude and latitude) detailing fatalities or injuries around New York City (may need to include detail with which borough)
 
 == 7.4 Interpretability & Fairness
-Inspect borough effects and error parity across high-HVI ZIPs.
+This would include inspecting borough effects and error parity across high-HVI ZIPs.
 
 == 7.5 Next Steps
-Add exposure controls (permits, active sites), extend years, and consider hierarchical models.
+Steps we could eventually take are adding exposure controls (permits, active sites), extending years, and considering hierarchical models if time allows.
 
 = 8. References
 [1] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
 [2] Cameron, A. C., & Trivedi, P. K. (2013). *Regression analysis of count data* (2nd ed.). Cambridge University Press. \
 [3] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
+
 
 
 
