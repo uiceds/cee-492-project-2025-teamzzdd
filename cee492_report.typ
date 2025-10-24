@@ -177,7 +177,7 @@ Table 4. Average Incident and Injury Rates by Borough
   [Bronx], [0.019], [1.10], [1.31], [1.47], [83.82],
 )
 On average, 83.8% of incidents resulted in at least one reported injury, whereas fatalities were rare (around 1.5% of all cases). The Bronx recorded the highest injury rate, followed closely by Brooklyn.
-== 4.6 Overall Summary
+== 4.6 Summary
 This section synthesizes the primary findings from our exploratory data analysis. We aggregated the data to compute and examine key descriptive statistics. Specifically, we calculated the average number of fatalities, average number of injuries, and average incident counts for each of the five boroughs. From this, we also derived the fatality and injury rates (as percentages) per borough to better understand the proportional risk. Furthermore, our summary includes an analysis of temporal patterns. We investigated monthly trends by charting the frequency and cumulative totals of both fatalities and injuries over the study period. These initial summaries provide a foundational understanding of which areas are most affected and how incident severity fluctuates over time.
 
 #v(2em)
@@ -208,6 +208,11 @@ We conducted a global correlation analysis to understand the initial linear rela
 #v(2em)
 Results show a strong positive correlation between TotalIncidents and Injury (r ≈ 0.96) and a negative correlation between HVI and Fatality (r ≈ –0.57). Although counterintuitive at first glance, this may reflect underreporting or mitigation interventions in high-vulnerability areas.
 These relationships were visualized using a log-scaled correlation heatmap, emphasizing nonlinear dependencies that justify the use of both Poisson and Negative Binomial regression models in the next section.
+
+== 5.4 Summary
+
+These visual representations are only preliminary and can be used as inspiration for the plots in the actual predictive modelling phase.
+
 = 6. Regression Models and Results
 Regression modeling was performed using Poisson, Negative Binomial, and Logistic regressions,
 which are standard approaches for count and binary outcomes in risk and safety studies.
@@ -247,10 +252,14 @@ Table 8. Logistic Regression Results for Binary Fatality Events
   [Intercept], [-8.1713], [8.01e+06], [-1e-06], [1.000], [-1.57e+07], [1.57e+07],
 )
 
-== 6.4 Visual Summaries
+== 6.4 Visual Comparisons
 #figure(image("figures/coef_comparison.jpg", width: 80%), caption: [Coefficient comparison])
 #figure(image("figures/pred_fatal_heatmap.jpg", width: 80%), caption: [Predicted fatality heatmap])
 #figure(image("figures/pred_fatal_spatial.jpg", width: 80%), caption: [Spatial fatality prediction map])
+
+== 6.5 Summary
+
+These visual representations are only preliminary and can be used as inspiration for the plots in the actual predictive modelling phase.
 
 = 7. Plan for Deliverable 3
 
@@ -284,6 +293,7 @@ Steps we could eventually take are adding exposure controls (permits, active sit
 [3] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
 [4] Cameron, A. C., & Trivedi, P. K. (2013). *Regression analysis of count data* (2nd ed.). Cambridge University Press. \
 [5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
+
 
 
 
