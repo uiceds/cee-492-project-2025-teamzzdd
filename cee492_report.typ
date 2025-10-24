@@ -60,7 +60,7 @@ The dataset includes approximately 958 rows, each representing an accident or in
 #v(2em)
 = 2. Attributes
 #v(2em)
-Table 1.
+Table 1. Attribute Definitions and Descriptions
 #table(
   columns: 3,
   align: (left, left, left),
@@ -119,6 +119,8 @@ This section will mainly focus on introductory data analysis with some prelimina
 我首先进行了数据删选并且用combine grouby的形式提取重要信息，分别以borough（Area)、月份、postcode进行提炼，其中postcode直接相关HVI。
 
 == 4.2 Borough × Month Aggregation
+To explore trends over time, the data were aggregated by borough and month. The aggregation reveals that incidents tend to cluster during the spring and summer months, aligning with increased construction activity. 
+Table 2. Monthly Aggregation of Incidents by Borough and Postcode 
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -131,10 +133,11 @@ This section will mainly focus on introductory data analysis with some prelimina
   [Bronx], [10451], [Jun-24], [3], [1], [2],
 )
 Excerpt shown above; full panel saved as `monthly_borough.csv`.
-
-== 4.3 Temperature, Precipitation, and HVI Added
+Based on the data aggregation, Bronx and Brooklyn boroughs consistently have higher monthly counts, particularly between March 2024 and June 2024, with several incidents involving minor injuries. This finding suggests a possible link between seasonal workload and risk exposure, which will be explored further in predictive modeling.
+== 4.3 Temperature, Precipitation, and Heat Vulnerability Index (HVI) Added
+Next, we integrated average temperature, precipitation, and the HVI at the ZIP-code level to capture environmental stressors potentially contributing to incident frequency.
 我将HVI与postcode结合，并删除缺失值。合并气候变量后得到415条有效观测。
-
+Table 3. Integrated Dataset with Climate and HVI Variables
 #table(
   columns: 9,
   align: (left, right, right, right, right, right, right, right, right),
@@ -143,6 +146,7 @@ Excerpt shown above; full panel saved as `monthly_borough.csv`.
   [Borough], [Postcode], [YearMonth], [IncidentCount], [Fatality], [Injury], [AvgTemp], [AvgPrecip], [HVI],
   [Bronx], [10451], [Jun-24], [3], [1], [2], [71.7], [4.4], [5],
 )
+Preliminary inspection indicates that higher-HVI areas (typically in the Bronx and parts of Brooklyn) correspond to marginally elevated injury counts, hinting at interactions between heat exposure and worker safety.
 
 == 4.4 Injury & Fatality Plots
 
@@ -163,7 +167,7 @@ Excerpt shown above; full panel saved as `monthly_borough.csv`.
 #figure(image("figures/cumul_injury_zs.jpg", width: 80%), caption: [Fatalities Each Month])
 
 == 4.5 Averaging the Data
-
+Table 4. Average Incident and Injury Rates by Borough
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -172,7 +176,7 @@ Excerpt shown above; full panel saved as `monthly_borough.csv`.
   [Borough], [AvgFatality], [AvgInjury], [AvgIncident], [FatalityRate%], [InjuryRate%],
   [Bronx], [0.019], [1.10], [1.31], [1.47], [83.82],
 )
-
+On average, 83.8% of incidents resulted in at least one reported injury, whereas fatalities were rare (around 1.5% of all cases). The Bronx recorded the highest injury rate, followed closely by Brooklyn.
 == 4.6 Overall Summary
 我计算了各行政区的平均死亡率、受伤率与事故数，以及月度趋势。
 
@@ -184,6 +188,8 @@ Excerpt shown above; full panel saved as `monthly_borough.csv`.
 Weighted averaging is used when different observations contribute unequally to an aggregate measure.
 
 == 5.2 Global Correlation
+A global correlation analysis was conducted among key variables: TotalIncidents, Fatality, Injury, AvgTemp, AvgPrecip, and HVI.
+Table 5. Correlation Matrix of Incident, Climate, and Vulnerability Variables
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -201,9 +207,14 @@ Weighted averaging is used when different observations contribute unequally to a
   caption: [Correlation heatmap after log scaling],
 )
 #v(2em)
+Results show a strong positive correlation between TotalIncidents and Injury (r ≈ 0.96) and a negative correlation between HVI and Fatality (r ≈ –0.57). Although counterintuitive at first glance, this may reflect underreporting or mitigation interventions in high-vulnerability areas.
+These relationships were visualized using a log-scaled correlation heatmap, emphasizing nonlinear dependencies that justify the use of both Poisson and Negative Binomial regression models in the next section.
 = 6. Regression Models and Results
+Regression modeling was performed using Poisson, Negative Binomial, and Logistic regressions,
+which are standard approaches for count and binary outcomes in risk and safety studies.
 #v(2em)
 == 6.1 Poisson Model (Injury)
+Table 6. Poisson Regression Model Results for Injury Counts
 #table(
   columns: 7,
   align: (left, right, right, right, right, right, right),
@@ -215,6 +226,7 @@ Weighted averaging is used when different observations contribute unequally to a
 #figure(image("figures/poisson_injury_coefficients.jpg", width: 80%), caption: [Poisson injury model coefficients])
 
 == 6.2 Negative Binomial Model (Fatality)
+Table 7. Negative Binomial Regression Model Results for Fatalities
 #table(
   columns: 7,
   align: (left, right, right, right, right, right, right),
@@ -226,6 +238,7 @@ Weighted averaging is used when different observations contribute unequally to a
 #figure(image("figures/neg_bin_fatality_coefficients.jpg", width: 80%), caption: [Negative binomial fatality model coefficients])
 
 == 6.3 Logistic Model
+Table 8. Logistic Regression Results for Binary Fatality Events
 #table(
   columns: 7,
   align: (left, right, right, right, right, right, right),
@@ -270,6 +283,7 @@ Steps we could eventually take are adding exposure controls (permits, active sit
 [1] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
 [2] Cameron, A. C., & Trivedi, P. K. (2013). *Regression analysis of count data* (2nd ed.). Cambridge University Press. \
 [3] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
+
 
 
 
