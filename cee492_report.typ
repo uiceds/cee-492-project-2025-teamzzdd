@@ -18,7 +18,7 @@
       **Zain Sitabkhan**  
       Department of Civil and Environmental Engineering  
       University of Illinois Urbana–Champaign  
-      Urbana, IL, USA  
+      Urbana, IL, USA 
       *zsita\@illinois.edu*
     ],
     [
@@ -143,7 +143,25 @@ Excerpt shown above; full panel saved as `monthly_borough.csv`.
   [Bronx], [10451], [Jun-24], [3], [1], [2], [71.7], [4.4], [5],
 )
 
-== 4.4 Descriptive Summary
+== 4.4 Injury & Fatality Plots
+
+#figure(image("figures/borough_fatality_bar_zs.jpg", width: 80%), caption: [Average Fatalities at Each Borough])
+
+#figure(image("figures/borough_injury_bar_zs.jpg", width: 80%), caption: [Average Injuries at Each Borough])
+
+#figure(image("figures/district_fatality_bar_zs.jpg", width: 80%), caption: [Average Fatalities at Each District])
+
+#figure(image("figures/district_injury_bar_zs.jpg", width: 80%), caption: [Average Injuries at Each District])
+
+#figure(image("figures/monthly_fatality_bar_zs.jpg", width: 80%), caption: [Cumulative Fatalities Overtime])
+
+#figure(image("figures/monthly_injury_bar_zs.jpg", width: 80%), caption: [Cumulative Injuries Overtime])
+
+#figure(image("figures/cumul_fatality_zs.jpg", width: 80%), caption: [Fatalities Each Month])
+
+#figure(image("figures/cumul_injury_zs.jpg", width: 80%), caption: [Fatalities Each Month])
+
+== 4.5 Descriptive Summary
 我计算了各行政区的平均死亡率、受伤率与事故数，以及月度趋势。
 
 #table(
@@ -242,6 +260,7 @@ Add exposure controls (permits, active sites), extend years, and consider hierar
 [1] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
 [2] Cameron, A. C., & Trivedi, P. K. (2013). *Regression analysis of count data* (2nd ed.). Cambridge University Press. \
 [3] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
+
 
 
 
