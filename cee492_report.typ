@@ -277,8 +277,8 @@ This would include inspecting borough effects and error parity across high-HVI Z
 Steps we could eventually take are adding exposure controls (permits, active sites), extending years, and considering hierarchical models if time allows.
 
 = 8. References
-[1] New York City Department of Buildings. (n.d.). Incident Database [Data set]. \
-[2] Nayak, S. G., Shrestha, S., Kinney, P. L., Ross, Z., Sheridan, S. C., Pantea, C. I., Hsu, W. H., Muscatiello, N., & Hwang, S. A. (2018). Development of a heat vulnerability index for New York State. Public Health, 161, 127–137. \
+[1] New York City Department of Buildings. (n.d.). *Incident Database* [Data set]. \
+[2] Nayak, S. G., Shrestha, S., Kinney, P. L., Ross, Z., Sheridan, S. C., Pantea, C. I., Hsu, W. H., Muscatiello, N., & Hwang, S. A. (2018). *Development of a heat vulnerability index for New York State.* Public Health, 161, 127–137. \
 [3] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
 [4] Cameron, A. C., & Trivedi, P. K. (2013). *Regression analysis of count data* (2nd ed.). Cambridge University Press. \
 [5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
