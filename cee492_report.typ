@@ -53,14 +53,13 @@ keywords:"Construction Safety", "Risk Prediction", "Accident Reports", "Regressi
 The dataset consists of construction-related incidents and accidents at New York City in each of the five boroughs. It provides a large-scale CSV file suitable for predictive analysis.
 
 == 1.2 Source
-Department of Buildings (DOB) Incident Database
-
+We pull data from New York City Department of Buildings. (n.d.). Incident Database [Data set].
 == 1.3 Format and Size
 The dataset includes approximately 958 rows, each representing an accident or incident record, and 20 columns containing attribute fields of these records.
 #v(2em)
 = 2. Attributes
 #v(2em)
-#align(center, [Table 1. Attribute Definitions and Descriptions])
+Table 1. Attribute Definitions and Descriptions
 #table(
   columns: 3,
   align: (left, left, left),
@@ -116,12 +115,11 @@ The purpose of the model is to help avoid incidents and accidents at New York Ci
 #v(2em)
 This section will mainly focus on introductory data analysis with some preliminary tables and plots describing critical aspects of the data. Visible patterns will be discussed with the data that has been formulated and the coming sections below will describe how we plan on applying and modelling this data.
 == 4.1 Data Integration and Cohort
-For the data integration and cohort definition, we first filtered the dataset. We then applied groupby operations to extract and aggregate key information. This aggregation was performed by 'borough (Area)', month, and 'postcode'. The 'postcode' attribute serves as a critical key, as it is directly used to link and integrate the Heat Vulnerability Index (HVI) data.
+For the data integration and cohort definition, we first filtered the dataset. We then applied groupby operations to extract and aggregate key information. This aggregation was performed by 'borough (Area)', month, and 'postcode'. The 'postcode' attribute serves as a critical key, as it is directly used to link and integrate the Heat Vulnerability Index data (Nayak et al., 2018).
 
 == 4.2 Borough × Month Aggregation
 To explore trends over time, the data were aggregated by borough and month. The aggregation reveals that incidents tend to cluster during the spring and summer months, aligning with increased construction activity. 
-#v(1em)
-#align(center, [Table 2. Monthly Aggregation of Incidents by Borough and Postcode])
+Table 2. Monthly Aggregation of Incidents by Borough and Postcode 
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -134,9 +132,10 @@ To explore trends over time, the data were aggregated by borough and month. The 
   [Bronx], [10451], [Jun-24], [3], [1], [2],
 )
 Excerpt shown above; full panel saved as `monthly_borough.csv`.
+
 == 4.3 Temperature, Precipitation, and HVI Added
-我将HVI与postcode结合，并删除缺失值。合并气候变量后得到415条有效观测。
-#align(center, [Table 3. Integrated Dataset with Climate and HVI Variables])
+In this data integration step, we enriched the dataset by incorporating external environmental and vulnerability factors. The Heat Vulnerability Index (HVI) was integrated by joining it with the dataset using 'postcode' as the linking key. We then performed a data cleaning step to ensure data quality by removing records with missing values. Following this, climate variables, specifically 'AvgTemp' (Average Temperature) and 'AvgPrecip' (Average Precipitation), were merged into the dataset. This process of joining HVI, merging climate data, and handling missing values resulted in a final, refined dataset containing 415 valid observations, which was then used for the subsequent correlation and regression analyses
+
 #table(
   columns: 9,
   align: (left, right, right, right, right, right, right, right, right),
@@ -166,7 +165,7 @@ Preliminary inspection indicates that higher-HVI areas (typically in the Bronx a
 #figure(image("figures/cumul_injury_zs.jpg", width: 80%), caption: [Fatalities Each Month])
 
 == 4.5 Averaging the Data
-#align(center, [Table 4. Average Incident and Injury Rates by Borough])
+Table 4. Average Incident and Injury Rates by Borough
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -187,7 +186,7 @@ Weighted averaging is used when different observations contribute unequally to a
 
 == 5.2 Global Correlation
 A global correlation analysis was conducted among key variables: TotalIncidents, Fatality, Injury, AvgTemp, AvgPrecip, and HVI.
-#align(center, [Table 5. Correlation Matrix of Incident, Climate, and Vulnerability Variables])
+Table 5. Correlation Matrix of Incident, Climate, and Vulnerability Variables
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -212,7 +211,7 @@ Regression modeling was performed using Poisson, Negative Binomial, and Logistic
 which are standard approaches for count and binary outcomes in risk and safety studies.
 #v(2em)
 == 6.1 Poisson Model (Injury)
-#align(center, [Table 6. Poisson Regression Model Results for Injury Counts])
+Table 6. Poisson Regression Model Results for Injury Counts
 #table(
   columns: 7,
   align: (left, right, right, right, right, right, right),
@@ -224,7 +223,7 @@ which are standard approaches for count and binary outcomes in risk and safety s
 #figure(image("figures/poisson_injury_coefficients.jpg", width: 80%), caption: [Poisson injury model coefficients])
 
 == 6.2 Negative Binomial Model (Fatality)
-#align(center, [Table 7. Negative Binomial Regression Model Results for Fatalities])
+Table 7. Negative Binomial Regression Model Results for Fatalities
 #table(
   columns: 7,
   align: (left, right, right, right, right, right, right),
@@ -236,7 +235,7 @@ which are standard approaches for count and binary outcomes in risk and safety s
 #figure(image("figures/neg_bin_fatality_coefficients.jpg", width: 80%), caption: [Negative binomial fatality model coefficients])
 
 == 6.3 Logistic Model
-#align(center, [Table 8. Logistic Regression Results for Binary Fatality Events])
+Table 8. Logistic Regression Results for Binary Fatality Events
 #table(
   columns: 7,
   align: (left, right, right, right, right, right, right),
@@ -278,11 +277,11 @@ This would include inspecting borough effects and error parity across high-HVI Z
 Steps we could eventually take are adding exposure controls (permits, active sites), extending years, and considering hierarchical models if time allows.
 
 = 8. References
-[1] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
-[2] Cameron, A. C., & Trivedi, P. K. (2013). *Regression analysis of count data* (2nd ed.). Cambridge University Press. \
-[3] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
-
-
+[1] New York City Department of Buildings. (n.d.). Incident Database [Data set]. \
+[2] Nayak, S. G., Shrestha, S., Kinney, P. L., Ross, Z., Sheridan, S. C., Pantea, C. I., Hsu, W. H., Muscatiello, N., & Hwang, S. A. (2018). Development of a heat vulnerability index for New York State. Public Health, 161, 127–137. \
+[3] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
+[4] Cameron, A. C., & Trivedi, P. K. (2013). *Regression analysis of count data* (2nd ed.). Cambridge University Press. \
+[5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
 
 
 
