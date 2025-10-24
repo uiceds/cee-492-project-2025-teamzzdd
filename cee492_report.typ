@@ -116,7 +116,7 @@ The purpose of the model is to help avoid incidents and accidents at New York Ci
 #v(2em)
 This section will mainly focus on introductory data analysis with some preliminary tables and plots describing critical aspects of the data. Visible patterns will be discussed with the data that has been formulated and the coming sections below will describe how we plan on applying and modelling this data.
 == 4.1 Data Integration and Cohort
-我首先进行了数据删选并且用combine grouby的形式提取重要信息，分别以borough（Area)、月份、postcode进行提炼，其中postcode直接相关HVI。
+For the data integration and cohort definition, we first filtered the dataset. We then applied groupby operations to extract and aggregate key information. This aggregation was performed by 'borough (Area)', month, and 'postcode'. The 'postcode' attribute serves as a critical key, as it is directly used to link and integrate the Heat Vulnerability Index (HVI) data.
 
 == 4.2 Borough × Month Aggregation
 #table(
@@ -133,7 +133,7 @@ This section will mainly focus on introductory data analysis with some prelimina
 Excerpt shown above; full panel saved as `monthly_borough.csv`.
 
 == 4.3 Temperature, Precipitation, and HVI Added
-我将HVI与postcode结合，并删除缺失值。合并气候变量后得到415条有效观测。
+In this data integration step, we enriched the dataset by incorporating external environmental and vulnerability factors. The Heat Vulnerability Index (HVI) was integrated by joining it with the dataset using 'postcode' as the linking key. We then performed a data cleaning step to ensure data quality by removing records with missing values. Following this, climate variables, specifically 'AvgTemp' (Average Temperature) and 'AvgPrecip' (Average Precipitation), were merged into the dataset. This process of joining HVI, merging climate data, and handling missing values resulted in a final, refined dataset containing 415 valid observations, which was then used for the subsequent correlation and regression analyses.
 
 #table(
   columns: 9,
@@ -174,8 +174,7 @@ Excerpt shown above; full panel saved as `monthly_borough.csv`.
 )
 
 == 4.6 Overall Summary
-我计算了各行政区的平均死亡率、受伤率与事故数，以及月度趋势。
-
+This section synthesizes the primary findings from our exploratory data analysis. We aggregated the data to compute and examine key descriptive statistics. Specifically, we calculated the average number of fatalities, average number of injuries, and average incident counts for each of the five boroughs. From this, we also derived the fatality and injury rates (as percentages) per borough to better understand the proportional risk. Furthermore, our summary includes an analysis of temporal patterns. We investigated monthly trends by charting the frequency and cumulative totals of both fatalities and injuries over the study period. These initial summaries provide a foundational understanding of which areas are most affected and how incident severity fluctuates over time.
 
 #v(2em)
 = 5. Correlation Analysis
@@ -193,7 +192,7 @@ Weighted averaging is used when different observations contribute unequally to a
   [TotalIncidents], [1.000], [0.120], [0.958], [0.025], [0.023],
   [Fatality], [0.120], [1.000], [0.075], [-0.007], [-0.153],
 )
-死亡数与其他变量相关性较弱（r≈0.1），HVI 与事故、受伤呈中度负相关（r≈−0.57~−0.60）。
+We conducted a global correlation analysis to understand the initial linear relationships between the primary variables. The results, partially shown in the table1, reveal several key patterns.Most notably, there is a very strong positive correlation between TotalIncidents and Injury (Pearson $r = 0.958$), which is expected as most incidents involve injuries.In contrast, Fatality demonstrates a weak correlation with the other variables in the table. The correlation with TotalIncidents is low ($r = 0.120$), and it is even weaker with Injury ($r = 0.075$). The environmental variables, AvgTemp ($r = -0.007$) and AvgPrecip ($r = -0.153$), also show negligible linear relationships with fatalities.Furthermore, analysis of the Heat Vulnerability Index (HVI) indicated a moderate negative correlation with both incidents and injuries, with correlation coefficients (r) observed in the range of approximately -0.57 to -0.606. This suggests that areas with higher vulnerability scores may, counterintuitively, be associated with fewer reported incidents in this dataset, prompting the need for further, more nuanced analysis.
 #v(2em)
 == 5.3 Log-scaled Correlation
 #figure(
