@@ -119,7 +119,7 @@ For the data integration and cohort definition, we first filtered the dataset. W
 
 == 4.2 Borough × Month Aggregation
 To explore trends over time, the data were aggregated by borough and month. The aggregation reveals that incidents tend to cluster during the spring and summer months, aligning with increased construction activity. 
-Table 2. Monthly Aggregation of Incidents by Borough and Postcode 
+#align(center, [Table 2. Monthly Aggregation of Incidents by Borough and Postcode 
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -130,12 +130,12 @@ Table 2. Monthly Aggregation of Incidents by Borough and Postcode
   [Bronx], [10451], [Mar-24], [1], [0], [1],
   [Bronx], [10451], [Apr-24], [1], [0], [1],
   [Bronx], [10451], [Jun-24], [3], [1], [2],
-)
+))]
 Excerpt shown above; full panel saved as `monthly_borough.csv`.
 
 == 4.3 Temperature, Precipitation, and HVI Added
 In this data integration step, we enriched the dataset by incorporating external environmental and vulnerability factors. The Heat Vulnerability Index (HVI) was integrated by joining it with the dataset using 'postcode' as the linking key. We then performed a data cleaning step to ensure data quality by removing records with missing values. Following this, climate variables, specifically 'AvgTemp' (Average Temperature) and 'AvgPrecip' (Average Precipitation), were merged into the dataset. This process of joining HVI, merging climate data, and handling missing values resulted in a final, refined dataset containing 415 valid observations, which was then used for the subsequent correlation and regression analyses
-Table 3. Integrated Dataset with Climate and HVI Variables
+#align(center, [Table 3. Integrated Dataset with Climate and HVI Variables
 #table(
   columns: 9,
   align: (left, right, right, right, right, right, right, right, right),
@@ -143,7 +143,7 @@ Table 3. Integrated Dataset with Climate and HVI Variables
   stroke: 0.5pt,
   [Borough], [Postcode], [YearMonth], [IncidentCount], [Fatality], [Injury], [AvgTemp], [AvgPrecip], [HVI],
   [Bronx], [10451], [Jun-24], [3], [1], [2], [71.7], [4.4], [5],
-)
+)])
 Preliminary inspection indicates that higher-HVI areas (typically in the Bronx and parts of Brooklyn) correspond to marginally elevated injury counts, hinting at interactions between heat exposure and worker safety.
 
 == 4.4 Injury & Fatality Plots
@@ -167,7 +167,7 @@ Four of the preliminary plots below count incidents such as fatalities and injur
 #figure(image("figures/cumul_injury_zs.jpg", width: 80%), caption: [Fatalities Each Month])
 
 == 4.5 Averaging the Data
-Table 4. Average Incident and Injury Rates by Borough
+#align(center, [Table 4. Average Incident and Injury Rates by Borough
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -175,7 +175,7 @@ Table 4. Average Incident and Injury Rates by Borough
   stroke: 0.5pt,
   [Borough], [AvgFatality], [AvgInjury], [AvgIncident], [FatalityRate%], [InjuryRate%],
   [Bronx], [0.019], [1.10], [1.31], [1.47], [83.82],
-)
+)])
 On average, 83.8% of incidents resulted in at least one reported injury, whereas fatalities were rare (around 1.5% of all cases). The Bronx recorded the highest injury rate, followed closely by Brooklyn.
 == 4.6 Summary
 This section synthesizes the primary findings from our exploratory data analysis. We aggregated the data to compute and examine key descriptive statistics. Specifically, we calculated the average number of fatalities, average number of injuries, and average incident counts for each of the five boroughs. From this, we also derived the fatality and injury rates (as percentages) per borough to better understand the proportional risk. Furthermore, our summary includes an analysis of temporal patterns. We investigated monthly trends by charting the frequency and cumulative totals of both fatalities and injuries over the study period. These initial summaries provide a foundational understanding of which areas are most affected and how incident severity fluctuates over time.
@@ -188,7 +188,7 @@ Weighted averaging is used when different observations contribute unequally to a
 
 == 5.2 Global Correlation
 A global correlation analysis was conducted among key variables: TotalIncidents, Fatality, Injury, AvgTemp, AvgPrecip, and HVI.
-Table 5. Correlation Matrix of Incident, Climate, and Vulnerability Variables
+#align(center, [Table 5. Correlation Matrix of Incident, Climate, and Vulnerability Variables
 #table(
   columns: 6,
   align: (left, right, right, right, right, right),
@@ -197,7 +197,7 @@ Table 5. Correlation Matrix of Incident, Climate, and Vulnerability Variables
   [ ], [TotalIncidents], [Fatality], [Injury], [AvgTemp], [AvgPrecip],
   [TotalIncidents], [1.000], [0.120], [0.958], [0.025], [0.023],
   [Fatality], [0.120], [1.000], [0.075], [-0.007], [-0.153],
-)
+)])
 We conducted a global correlation analysis to understand the initial linear relationships between the primary variables. The results, partially shown in the table1, reveal several key patterns.Most notably, there is a very strong positive correlation between TotalIncidents and Injury (Pearson $r = 0.958$), which is expected as most incidents involve injuries.In contrast, Fatality demonstrates a weak correlation with the other variables in the table. The correlation with TotalIncidents is low ($r = 0.120$), and it is even weaker with Injury ($r = 0.075$). The environmental variables, AvgTemp ($r = -0.007$) and AvgPrecip ($r = -0.153$), also show negligible linear relationships with fatalities.Furthermore, analysis of the Heat Vulnerability Index (HVI) indicated a moderate negative correlation with both incidents and injuries, with correlation coefficients (r) observed in the range of approximately -0.57 to -0.606. This suggests that areas with higher vulnerability scores may, counterintuitively, be associated with fewer reported incidents in this dataset, prompting the need for further, more nuanced analysis.
 #v(2em)
 == 5.3 Log-scaled Correlation
@@ -218,7 +218,7 @@ Regression modeling was performed using Poisson, Negative Binomial, and Logistic
 which are standard approaches for count and binary outcomes in risk and safety studies.
 #v(2em)
 == 6.1 Poisson Model (Injury)
-Table 6. Poisson Regression Model Results for Injury Counts
+#align(center, [Table 6. Poisson Regression Model Results for Injury Counts
 #table(
   columns: 7,
   align: (left, right, right, right, right, right, right),
@@ -226,11 +226,11 @@ Table 6. Poisson Regression Model Results for Injury Counts
   stroke: 0.5pt,
   [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
   [Intercept], [0.1547], [1.059], [0.146], [0.884], [-1.921], [2.230],
-)
+)])
 #figure(image("figures/poisson_injury_coefficients.jpg", width: 80%), caption: [Poisson injury model coefficients])
 
 == 6.2 Negative Binomial Model (Fatality)
-Table 7. Negative Binomial Regression Model Results for Fatalities
+#align(center, [Table 7. Negative Binomial Regression Model Results for Fatalities
 #table(
   columns: 7,
   align: (left, right, right, right, right, right, right),
@@ -238,11 +238,11 @@ Table 7. Negative Binomial Regression Model Results for Fatalities
   stroke: 0.5pt,
   [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
   [Intercept], [-9.6771], [10.237], [-0.945], [0.345], [-29.742], [10.387],
-)
+)])
 #figure(image("figures/neg_bin_fatality_coefficients.jpg", width: 80%), caption: [Negative binomial fatality model coefficients])
 
 == 6.3 Logistic Model
-Table 8. Logistic Regression Results for Binary Fatality Events
+#align(center, [Table 8. Logistic Regression Results for Binary Fatality Events
 #table(
   columns: 7,
   align: (left, right, right, right, right, right, right),
@@ -250,7 +250,7 @@ Table 8. Logistic Regression Results for Binary Fatality Events
   stroke: 0.5pt,
   [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
   [Intercept], [-8.1713], [8.01e+06], [-1e-06], [1.000], [-1.57e+07], [1.57e+07],
-)
+)])
 
 == 6.4 Visual Comparisons
 #figure(image("figures/coef_comparison.jpg", width: 80%), caption: [Coefficient comparison])
@@ -298,6 +298,7 @@ Steps we could eventually take are adding exposure controls (permits, active sit
 
 
  
+
 
 
 
