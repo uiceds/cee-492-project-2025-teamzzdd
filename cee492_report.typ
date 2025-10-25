@@ -130,7 +130,7 @@ To explore trends over time, the data were aggregated by borough and month. The 
   [Bronx], [10451], [Mar-24], [1], [0], [1],
   [Bronx], [10451], [Apr-24], [1], [0], [1],
   [Bronx], [10451], [Jun-24], [3], [1], [2],
-))]
+)])
 Excerpt shown above; full panel saved as `monthly_borough.csv`.
 
 == 4.3 Temperature, Precipitation, and HVI Added
@@ -298,6 +298,7 @@ Steps we could eventually take are adding exposure controls (permits, active sit
 
 
  
+
 
 
 
