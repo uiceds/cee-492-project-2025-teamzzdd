@@ -59,7 +59,7 @@ The dataset includes approximately 958 rows, each representing an accident or in
 #v(2em)
 = 2. Attributes
 #v(2em)
-#align(center[Table 1. Attribute Definitions and Descriptions)
+#align(center,[Table 1. Attribute Definitions and Descriptions)
 #table(
   columns: 3,
   align: (left, left, left),
@@ -293,6 +293,7 @@ Steps we could eventually take are adding exposure controls (permits, active sit
 [3] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
 [4] Cameron, A. C., & Trivedi, P. K. (2013). *Regression analysis of count data* (2nd ed.). Cambridge University Press. \
 [5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
+
 
 
 
