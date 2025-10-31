@@ -210,60 +210,20 @@ Steps we could eventually take are adding exposure controls (permits, active sit
 
 = 6. Methodology for Deliverable 3
 
-= 7. Regression Models and Results
-Regression modeling was performed using Poisson, Negative Binomial, and Logistic regressions,
-which are standard approaches for count and binary outcomes in risk and safety studies.
+== 6.1 Correlation Models
+
+== 6.2 Regression Models (Predictive Modelling)
+
+== 6.3 K-Means Models (Mapping Information)
+
+== 6.4 Neural Network Models (???)
+
+= 7. Correlation Analysis
 #v(2em)
-== 7.1 Poisson Model (Injury)
-#align(center, [Table 6. Poisson Regression Model Results for Injury Counts
-#table(
-  columns: 7,
-  align: (left, right, right, right, right, right, right),
-  inset: 4pt,
-  stroke: 0.5pt,
-  [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
-  [Intercept], [0.1547], [1.059], [0.146], [0.884], [-1.921], [2.230],
-)])
-#figure(image("figures/poisson_injury_coefficients.jpg", width: 80%), caption: [Poisson injury model coefficients])
-
-== 7.2 Negative Binomial Model (Fatality)
-#align(center, [Table 7. Negative Binomial Regression Model Results for Fatalities
-#table(
-  columns: 7,
-  align: (left, right, right, right, right, right, right),
-  inset: 4pt,
-  stroke: 0.5pt,
-  [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
-  [Intercept], [-9.6771], [10.237], [-0.945], [0.345], [-29.742], [10.387],
-)])
-#figure(image("figures/neg_bin_fatality_coefficients.jpg", width: 80%), caption: [Negative binomial fatality model coefficients])
-
-== 7.3 Logistic Model
-#align(center, [Table 8. Logistic Regression Results for Binary Fatality Events
-#table(
-  columns: 7,
-  align: (left, right, right, right, right, right, right),
-  inset: 4pt,
-  stroke: 0.5pt,
-  [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
-  [Intercept], [-8.1713], [8.01e+06], [-1e-06], [1.000], [-1.57e+07], [1.57e+07],
-)])
-
-== 7.4 Visual Comparisons
-#figure(image("figures/coef_comparison.jpg", width: 80%), caption: [Coefficient comparison])
-#figure(image("figures/pred_fatal_heatmap.jpg", width: 80%), caption: [Predicted fatality heatmap])
-#figure(image("figures/pred_fatal_spatial.jpg", width: 80%), caption: [Spatial fatality prediction map])
-
-== 7.5 Summary
-
-These visual representations are only preliminary and can be used as inspiration for the plots in the actual predictive modelling phase.
-
-= 8. Correlation Analysis
-#v(2em)
-== 8.1 Weighted HVI
+== 7.1 Weighted HVI
 Weighted averaging is used when different observations contribute unequally to an aggregate measure.
 
-== 8.2 Global Correlation
+== 7.2 Global Correlation
 A global correlation analysis was conducted among key variables: TotalIncidents, Fatality, Injury, AvgTemp, AvgPrecip, and HVI.
 #align(center, [Table 5. Correlation Matrix of Incident, Climate, and Vulnerability Variables
 #table(
@@ -277,7 +237,7 @@ A global correlation analysis was conducted among key variables: TotalIncidents,
 )])
 We conducted a global correlation analysis to understand the initial linear relationships between the primary variables. The results, partially shown in the table1, reveal several key patterns.Most notably, there is a very strong positive correlation between TotalIncidents and Injury (Pearson $r = 0.958$), which is expected as most incidents involve injuries.In contrast, Fatality demonstrates a weak correlation with the other variables in the table. The correlation with TotalIncidents is low ($r = 0.120$), and it is even weaker with Injury ($r = 0.075$). The environmental variables, AvgTemp ($r = -0.007$) and AvgPrecip ($r = -0.153$), also show negligible linear relationships with fatalities.Furthermore, analysis of the Heat Vulnerability Index (HVI) indicated a moderate negative correlation with both incidents and injuries, with correlation coefficients (r) observed in the range of approximately -0.57 to -0.606. This suggests that areas with higher vulnerability scores may, counterintuitively, be associated with fewer reported incidents in this dataset, prompting the need for further, more nuanced analysis.
 #v(2em)
-== 8.3 Log-scaled Correlation
+== 7.3 Log-scaled Correlation
 #figure(
   image("figures/log_scaled_correlation_heatmap.jpg", width: 80%),
   caption: [Correlation heatmap after log scaling],
@@ -286,11 +246,80 @@ We conducted a global correlation analysis to understand the initial linear rela
 Results show a strong positive correlation between TotalIncidents and Injury (r ≈ 0.96) and a negative correlation between HVI and Fatality (r ≈ –0.57). Although counterintuitive at first glance, this may reflect underreporting or mitigation interventions in high-vulnerability areas.
 These relationships were visualized using a log-scaled correlation heatmap, emphasizing nonlinear dependencies that justify the use of both Poisson and Negative Binomial regression models in the next section.
 
-== 8.4 Summary
+== 7.4 Summary
 
 These visual representations are only preliminary and can be used as inspiration for the plots in the actual predictive modelling phase.
 
-= 9. References
+
+= 8. Regression Models and Results
+Regression modeling was performed using Poisson, Negative Binomial, and Logistic regressions,
+which are standard approaches for count and binary outcomes in risk and safety studies.
+#v(2em)
+== 8.1 Poisson Model (Injury)
+#align(center, [Table 6. Poisson Regression Model Results for Injury Counts
+#table(
+  columns: 7,
+  align: (left, right, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
+  [Intercept], [0.1547], [1.059], [0.146], [0.884], [-1.921], [2.230],
+)])
+#figure(image("figures/poisson_injury_coefficients.jpg", width: 80%), caption: [Poisson injury model coefficients])
+
+== 8.2 Negative Binomial Model (Fatality)
+#align(center, [Table 7. Negative Binomial Regression Model Results for Fatalities
+#table(
+  columns: 7,
+  align: (left, right, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
+  [Intercept], [-9.6771], [10.237], [-0.945], [0.345], [-29.742], [10.387],
+)])
+#figure(image("figures/neg_bin_fatality_coefficients.jpg", width: 80%), caption: [Negative binomial fatality model coefficients])
+
+== 8.3 Logistic Model
+#align(center, [Table 8. Logistic Regression Results for Binary Fatality Events
+#table(
+  columns: 7,
+  align: (left, right, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [Variable], [coef], [std err], [z], [P>|z|], [0.025], [0.975],
+  [Intercept], [-8.1713], [8.01e+06], [-1e-06], [1.000], [-1.57e+07], [1.57e+07],
+)])
+
+== 8.4 Visual Comparisons
+#figure(image("figures/coef_comparison.jpg", width: 80%), caption: [Coefficient comparison])
+#figure(image("figures/pred_fatal_heatmap.jpg", width: 80%), caption: [Predicted fatality heatmap])
+#figure(image("figures/pred_fatal_spatial.jpg", width: 80%), caption: [Spatial fatality prediction map])
+
+== 8.5 Summary
+
+These visual representations are only preliminary and can be used as inspiration for the plots in the actual predictive modelling phase.
+
+= 9. K-Means Models & Results
+
+== 9.1 Model #1
+
+== 9.2 Model #2
+
+== 9.3 Model #3
+
+== 9.4 Summary
+
+= 10. Neural Network Models and Results
+
+== 10.1 Model #1
+
+== 10.2 Model #2
+
+== 10.3 Model #3
+
+== 10.4 Summary
+
+= 11. References
 [1] New York City Department of Buildings. (n.d.). *Incident Database* [Data set]. \
 [2] Nayak, S. G., Shrestha, S., Kinney, P. L., Ross, Z., Sheridan, S. C., Pantea, C. I., Hsu, W. H., Muscatiello, N., & Hwang, S. A. (2018). *Development of a heat vulnerability index for New York State.* Public Health, 161, 127–137. \
 [3] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
@@ -298,6 +327,7 @@ These visual representations are only preliminary and can be used as inspiration
 [5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
 
  
+
 
 
 
