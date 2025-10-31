@@ -1,0 +1,20 @@
+,OddsRatio_Injury,OddsRatio_Fatality
+Intercept,26.423,0.0
+AvgTemp,0.991,2.812
+AvgPrecip,0.507,0.0
+HVI_w,2.375,39.627
+C(Borough)[T.Brooklyn],,172.951
+C(Borough)[T.Manhattan],,311889.367
+C(Borough)[T.Queens],,59.291
+C(Borough)[T.Staten Island],,0.0
+C(Month)[T.2],,2252329908.836
+C(Month)[T.3],,4.784
+C(Month)[T.4],,0.283
+C(Month)[T.5],,0.821
+C(Month)[T.6],,1452488.655
+C(Month)[T.7],,155549.73
+C(Month)[T.8],,0.0
+C(Month)[T.9],,0.0
+C(Month)[T.10],,2313761669425.536
+C(Month)[T.11],,0.0
+C(Month)[T.12],,5.445644351508847e+16
