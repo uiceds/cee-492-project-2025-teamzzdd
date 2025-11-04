@@ -309,15 +309,25 @@ These visual representations are only preliminary and can be used as inspiration
 
 == 9.4 Summary
 
-= 10. Neural Network Models and Results
+= 10. Regularization Models & Results
 
-== 10.1 Model #1
+== 9.1 Model #1
 
-== 10.2 Model #2
+== 9.2 Model #2
 
-== 10.3 Model #3
+== 9.3 Model #3
 
-== 10.4 Summary
+== 9.4 Summary
+
+= 11. Neural Network Models and Results
+
+== 11.1 Model #1
+
+== 11.2 Model #2
+
+== 11.3 Model #3
+
+== 11.4 Summary
 
 = 11. References
 [1] New York City Department of Buildings. (n.d.). *Incident Database* [Data set]. \
@@ -327,6 +337,7 @@ These visual representations are only preliminary and can be used as inspiration
 [5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
 
  
+
 
 
 
