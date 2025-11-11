@@ -182,48 +182,12 @@ This section synthesizes the primary findings from our exploratory data analysis
 
 #v(2em)
 
-= 5. Plan for Deliverable 3
-
-This section will describe how we plan on creating more complex models pertaining to our data, such as predictive modelling. This aspect is necessary in terms of understanding important patterns and information that cannot be simply derived by just correlating two variables.
-
-== 5.1 Objectives
-Here are objectives we want to achieve if predictive modelling would be implemented:
-1. Know when and where injuries and fatalities are the most severe around New York City 
-2. Know the most prevalent underlying causes with injuries and fatalities through check descriptions
-3. Thoroughly investigate each borough or districts if we want to take this further to thoroughly detect where these incidents are occuring
-4. Figure out how much weather (e.g. precipitation, temperature) affects the prevalence of construction incidents
-5. Know how create more complex models with this data
-
-== 5.2 Models
-Here are some examples of models we may implement:
-1. Binary injury risk per event 
-2. Count severity per borough-month (injury counts or SeverityIndex)
-3. Poisson vs. Negative Binomial
-4. Regularized logistic for rare events
-5. Heatmap or spatial distribution (longitude and latitude) detailing fatalities or injuries around New York City (may need to include detail with which borough)
-
-== 5.3 Interpretability & Fairness
-This would include inspecting borough effects and error parity across high-HVI ZIPs.
-
-== 5.4 Next Steps
-Steps we could eventually take are adding exposure controls (permits, active sites), extending years, and considering hierarchical models if time allows.
-
-= 6. Methodology for Deliverable 3
-
-== 6.1 Correlation Models
-
-== 6.2 Regression Models (Predictive Modelling)
-
-== 6.3 K-Means Models (Mapping Information)
-
-== 6.4 Neural Network Models (???)
-
-= 7. Correlation Analysis
+= 5. Correlation Plots
 #v(2em)
-== 7.1 Weighted HVI
+== 5.1 Weighted HVI
 Weighted averaging is used when different observations contribute unequally to an aggregate measure.
 
-== 7.2 Global Correlation
+== 5.2 Global Correlation
 A global correlation analysis was conducted among key variables: TotalIncidents, Fatality, Injury, AvgTemp, AvgPrecip, and HVI.
 #align(center, [Table 5. Correlation Matrix of Incident, Climate, and Vulnerability Variables
 #table(
@@ -237,7 +201,7 @@ A global correlation analysis was conducted among key variables: TotalIncidents,
 )])
 We conducted a global correlation analysis to understand the initial linear relationships between the primary variables. The results, partially shown in the table1, reveal several key patterns.Most notably, there is a very strong positive correlation between TotalIncidents and Injury (Pearson $r = 0.958$), which is expected as most incidents involve injuries.In contrast, Fatality demonstrates a weak correlation with the other variables in the table. The correlation with TotalIncidents is low ($r = 0.120$), and it is even weaker with Injury ($r = 0.075$). The environmental variables, AvgTemp ($r = -0.007$) and AvgPrecip ($r = -0.153$), also show negligible linear relationships with fatalities.Furthermore, analysis of the Heat Vulnerability Index (HVI) indicated a moderate negative correlation with both incidents and injuries, with correlation coefficients (r) observed in the range of approximately -0.57 to -0.606. This suggests that areas with higher vulnerability scores may, counterintuitively, be associated with fewer reported incidents in this dataset, prompting the need for further, more nuanced analysis.
 #v(2em)
-== 7.3 Log-scaled Correlation
+== 5.3 Log-scaled Correlation
 #figure(
   image("figures/log_scaled_correlation_heatmap.jpg", width: 80%),
   caption: [Correlation heatmap after log scaling],
@@ -246,16 +210,16 @@ We conducted a global correlation analysis to understand the initial linear rela
 Results show a strong positive correlation between TotalIncidents and Injury (r ≈ 0.96) and a negative correlation between HVI and Fatality (r ≈ –0.57). Although counterintuitive at first glance, this may reflect underreporting or mitigation interventions in high-vulnerability areas.
 These relationships were visualized using a log-scaled correlation heatmap, emphasizing nonlinear dependencies that justify the use of both Poisson and Negative Binomial regression models in the next section.
 
-== 7.4 Summary
+== 5.4 Summary
 
 These visual representations are only preliminary and can be used as inspiration for the plots in the actual predictive modelling phase.
 
 
-= 8. Regression Models and Results
+= 6. Regression Plots
 Regression modeling was performed using Poisson, Negative Binomial, and Logistic regressions,
 which are standard approaches for count and binary outcomes in risk and safety studies.
 #v(2em)
-== 8.1 Poisson Model (Injury)
+== 6.1 Poisson Model (Injury)
 #align(center, [Table 6. Poisson Regression Model Results for Injury Counts
 #table(
   columns: 7,
@@ -267,7 +231,7 @@ which are standard approaches for count and binary outcomes in risk and safety s
 )])
 #figure(image("figures/poisson_injury_coefficients.jpg", width: 80%), caption: [Poisson injury model coefficients])
 
-== 8.2 Negative Binomial Model (Fatality)
+== 6.2 Negative Binomial Model (Fatality)
 #align(center, [Table 7. Negative Binomial Regression Model Results for Fatalities
 #table(
   columns: 7,
@@ -279,7 +243,7 @@ which are standard approaches for count and binary outcomes in risk and safety s
 )])
 #figure(image("figures/neg_bin_fatality_coefficients.jpg", width: 80%), caption: [Negative binomial fatality model coefficients])
 
-== 8.3 Logistic Model
+== 6.3 Logistic Model
 #align(center, [Table 8. Logistic Regression Results for Binary Fatality Events
 #table(
   columns: 7,
@@ -290,44 +254,75 @@ which are standard approaches for count and binary outcomes in risk and safety s
   [Intercept], [-8.1713], [8.01e+06], [-1e-06], [1.000], [-1.57e+07], [1.57e+07],
 )])
 
-== 8.4 Visual Comparisons
+== 6.4 Visual Comparisons
 #figure(image("figures/coef_comparison.jpg", width: 80%), caption: [Coefficient comparison])
 #figure(image("figures/pred_fatal_heatmap.jpg", width: 80%), caption: [Predicted fatality heatmap])
 #figure(image("figures/pred_fatal_spatial.jpg", width: 80%), caption: [Spatial fatality prediction map])
 
-== 8.5 Summary
+== 6.5 Summary
 
 These visual representations are only preliminary and can be used as inspiration for the plots in the actual predictive modelling phase.
 
-= 9. K-Means Models & Results
+= 7. Plan for Deliverable 3
 
-== 9.1 Model #1
+This section will describe how we plan on creating more complex models pertaining to our data, such as predictive modelling. This aspect is necessary in terms of understanding important patterns and information that cannot be simply derived by just correlating two variables.
 
-== 9.2 Model #2
+== 7.1 Objectives
+Here are objectives we want to achieve if predictive modelling would be implemented:
+1. Know when and where injuries and fatalities are the most severe around New York City 
+2. Know the most prevalent underlying causes with injuries and fatalities through check descriptions
+3. Thoroughly investigate each borough or districts if we want to take this further to thoroughly detect where these incidents are occuring
+4. Figure out how much weather (e.g. precipitation, temperature) affects the prevalence of construction incidents
+5. Know how create more complex models with this data
 
-== 9.3 Model #3
+== 7.2 Models
+Here are some examples of models we may implement:
+1. Binary injury risk per event 
+2. Count severity per borough-month (injury counts or SeverityIndex)
+3. Poisson vs. Negative Binomial
+4. Regularized logistic for rare events
+5. Heatmap or spatial distribution (longitude and latitude) detailing fatalities or injuries around New York City (may need to include detail with which borough)
 
-== 9.4 Summary
+== 7.3 Interpretability & Fairness
+This would include inspecting borough effects and error parity across high-HVI ZIPs.
 
-= 10. Regularization Models & Results
+== 7.4 Next Steps
+Steps we could eventually take are adding exposure controls (permits, active sites), extending years, and considering hierarchical models if time allows.
 
-== 9.1 Model #1
+= 8. K-Means Models & Results
 
-== 9.2 Model #2
+== 8.1 Hypothesis
 
-== 9.3 Model #3
+If we have enough data of injuries mapped around the boroughs of NYC, we can determine, given the locations of each incident, which cities are the most prevalent in terms of injuries related to construction incidents
+o	Input: Longitude, Latitude, Injuries, Boroughs
+o	Output: Location of Cities (using graph)
 
-== 9.4 Summary
+== 8.2 Models
 
-= 11. Neural Network Models and Results
+#figure(image("figures/injury_scattermap_zs.jpg", width: 80%), caption: [Spatial Distribution of Injuries from Each Borough])
+#figure(image("figures/injury_scattermap_kmeans_zs.jpg", width: 80%), caption: [K-Means Model w/ Centroids])
 
-== 11.1 Model #1
+== 8.3 Summary
 
-== 11.2 Model #2
+= 9. Decision Tree Models & Results
 
-== 11.3 Model #3
+== 9.1 Hypothesis
 
-== 11.4 Summary
+We can guess the likelihood of injuries from the type of construction incident (Worker Fell, Scaffold/Shoring Installations, Mechanical Construction Equipment, Material Failure (Fell), Excavation/Soil Work, Other Construction Related)
+o	Input: Borough, Check Description
+o	Output: Injury Probability
+
+== 9.2 Model
+
+== 9.3 Summary
+
+= 10. Regression & Neural Network Models & Results
+
+== 10.1 Hypothesis
+
+== 10.2 Model
+
+== 10.3 Summary
 
 = 11. References
 [1] New York City Department of Buildings. (n.d.). *Incident Database* [Data set]. \
@@ -337,6 +332,7 @@ These visual representations are only preliminary and can be used as inspiration
 [5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
 
  
+
 
 
 
