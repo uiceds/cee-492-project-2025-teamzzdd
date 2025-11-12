@@ -500,6 +500,145 @@ Kingma, D. P., & Ba, J. (2015). Adam: A method for stochastic optimization. In I
 Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, 27(8), 861–874.
 
 
+= 11. Regression & Neural Network Models & Results
+
+== 11.1 Hypothesis
+
+本研究采用改进型神经网络回归模型（Improved Neural Network Regression）以预测施工过程中人员受伤数量（Injury Count），在模型结构中引入了数据去噪、标准化与非线性特征提取机制，以提高预测的稳定性与鲁棒性。
+
+一、数据准备与清洗
+缺失值处理：将 Injury 中的缺失值填充为0并转换为浮点型。
+
+特征构建：从 YearMonth 提取月份变量（Month），并对 Borough（行政区）进行独热编码（One-Hot Encoding）
+
+去噪处理：
+
+去除温度、降水、热脆弱指数（HVI_w）、违规次数（NoncompliantCount）、许可证数量（IssueNumber）和 Injury 中的极端值（1%–99%分位之外）。
+
+剔除同时存在极端高温与极端降雨的样本（可能为记录异常）。
+
+去除施工样本数极少的记录（IssueNumber低于5%分位）。
+
+限制 HVI 在合理上限。
+
+之所以没有加regularization是因为怕加了以后更难学习（原本的情况就很难，尤其是出现了R^2<0）
+
+对数平滑 (log-smoothing)：对高方差特征（NoncompliantCount、IssueNumber、AvgPrecip）取对数平滑，以防止单变量主导输入。
+数据清洗后仅保留有效样本，并输出剩余样本数以验证数据质量。
+
+二、特征标准化
+选取输入特征包括：AvgTemp、AvgPrecip、HVI_w（已经包含borough影响的加权）、NoncompliantCount、IssueNumber、Month 以及各 Borough 编码列。
+输入变量使用 StandardScaler 进行标准化，目标变量（Injury）进行均值–标准差归一化，以确保网络训练过程数值稳定、梯度收敛平稳。
+随后按 80% 训练集与 20% 验证集比例划分数据。
+
+三、模型结构
+定义名为 InjuryRegressor 的神经网络模型，采用多层非线性结构：
+
+输入层：对应全部输入特征；
+
+隐藏层1：32个神经元，LeakyReLU(0.1) 激活；
+
+Dropout层（比例0.1）防止过拟合；
+
+隐藏层2：16个神经元，LeakyReLU(0.1) 激活；
+
+隐藏层3：8个神经元，LeakyReLU(0.1) 激活；
+
+输出层：1个神经元，用于输出受伤人数预测值。
+LeakyReLU 能在负区间保持非零梯度，避免梯度消失问题，适用于稀疏数据的回归任务。
+
+四、损失函数与优化器
+模型采用均方误差损失函数（Mean Squared Error, MSE）作为训练目标，优化器使用 Adam（学习率 3×10⁻⁴）。
+Adam 能自动调整学习率，兼顾收敛速度与稳定性。训练过程中记录训练损失（Train Loss）与验证损失（Validation Loss），用于监测收敛趋势与泛化性能。
+（尚未使用其他nonlinear-possion 和Negtive bionomial 原本就出了问题）
+
+五、模型评估
+利用验证集预测结果计算以下回归性能指标：
+
+R²（决定系数）：衡量模型解释目标方差的能力；（如果R^2<0,则代表无法很好学习）
+
+RMSE（均方根误差）：反映预测偏差的平均幅度；
+
+MAE（平均绝对误差）：衡量预测结果的平均偏离程度。
+此外，通过绘制“预测值 vs 实际值”散点图评估模型的拟合程度，若点云接近对角线则说明预测效果良好。
+最终输出验证集前 15 组预测对比样本以供人工核对。
+
+六、改进
+一、Hybrid Lag + Group Bias Linear Model
+
+思路：在传统线性回归中加入时间滞后特征（Lag）和行政区分组偏置（Group Bias），以同时捕捉时间惯性与地区差异。
+
+特征处理：
+ - 筛选有施工记录的样本；
+ - 对 NoncompliantCount、IssueNumber、AvgPrecip 进行 log 平滑；
+ - 按 Borough 与 Month 生成一期滞后特征。
+
+模型结构：
+ 预测函数为 ŷ = X·w + bᵍ，其中 bᵍ 为 Borough 专属偏置项。
+
+结果：
+ 模型在解释不同地区基线风险方面表现良好，R²、RMSE、MAE 指标均显示具有合理的拟合能力。
+
+二、Two-Stage Hybrid Model（No Lag + Strict Denoise）
+
+思路：采用“先分类、后回归”的两阶段结构以提升稀疏样本的稳定性。
+
+阶段1（分类）：通过神经网络判断是否发生受伤事件（Injury > 0），输出概率作为第二阶段输入。
+
+阶段2（回归）：在有受伤样本中，基于线性模型 + Borough 偏置估计实际伤害人数。
+
+结果：
+ 分类准确率约 0.8–0.9；回归部分 R² 明显高于单阶段模型，说明该结构能有效分离“事件发生概率”和“伤害强度”两层信息。
+
+
+== 11.2 Model
+#figure(
+  image("figures/regression1.png", width: 80%),
+  caption: [],
+)
+#v(2em)
+
+#figure(
+  image("figures/regression2.png", width: 80%),
+  caption: [],
+)
+#v(2em)
+
+#figure(
+  image("figures/regression3.png", width: 80%),
+  caption: [],
+)
+#v(2em)
+
+#figure(
+  image("figures/regression4.png", width: 80%),
+  caption: [],
+)
+#v(2em)
+
+== 11.3 Summary&Discussion
+
+讨论（Discussion）
+
+本研究共测试了三种模型：(1) 神经网络回归（NN）、(2) Hybrid Lag + Group Bias 线性模型、(3) Two-Stage Hybrid Model（无滞后 + 严格去噪）。
+整体来看，这三种模型的预测效果都不理想，主要体现在 R² 值均为负或接近于零，说明模型的预测能力仍弱于简单的平均基线。
+
+首先，NN 回归模型难以学习有效关系。施工伤害数据高度稀疏，大部分月份为 0 或 1 起事故，只有极少数为 2 起以上。数据分布极不平衡，信号很弱，噪声却占主导，导致神经网络只能预测接近平均值的结果，因此 R² 为负。
+
+其次，Hybrid Lag + Group Bias 线性模型虽引入滞后项和区域偏置，希望捕捉时间延迟与地区差异，但伤害事件的时间相关性较弱，滞后变量反而带来额外噪声，使模型出现过拟合，预测效果并未改善。
+
+最后，**Two-Stage Hybrid Model（无滞后 + 去噪）**在分类阶段表现相对较好，能识别出高风险月份；但在回归阶段，由于仅保留 “有事故” 的样本，并在去噪后进一步减少数据量，有效样本数量非常有限。样本太少使模型难以学习到规律，R² 仍然为负，说明噪声和随机性依然主导结果。
+
+综上，三种模型表现不佳的核心原因在于：
+
+数据稀疏、离散化严重；
+
+噪声比例高，特征与伤害事件相关性弱；
+
+去噪和筛选后样本过少，导致模型无法泛化。
+
+后续研究可考虑增加样本量或引入更平滑的时序与风险特征，以提高模型稳定性。
+
 
 
 
@@ -511,6 +650,7 @@ Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters
 [5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
 
  
+
 
 
 
