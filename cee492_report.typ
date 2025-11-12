@@ -316,13 +316,171 @@ o	Output: Injury Probability
 
 == 9.3 Summary
 
-= 10. Regression & Neural Network Models & Results
+= 10. Classification & Neural Network Models & Results
 
-== 10.1 Hypothesis
+== 10.1 Methodolgy 
+一、数据准备
+从原始数据集 df_final 中提取五个输入特征：平均温度（AvgTemp）、平均降水量（AvgPrecip）、热脆弱指数（HVI_w）、不合规次数（NoncompliantCount）以及施工许可证编号（IssueNumber）。
+目标变量为受伤事件（Injury），其数值大于零的样本被视为“发生受伤”（标记为1），否则标记为0。
+为了消除量纲差异，使用 StandardScaler 对输入特征进行标准化处理。
+数据随后以 80% 训练集和 20% 验证集的比例随机划分。
+
+二、模型结构
+
+采用三层前馈神经网络（Feedforward Neural Network, FNN）作为预测模型，其结构如下：
+
+输入层（对应五个输入特征）；
+
+第一隐藏层：16个神经元，ReLU激活函数；
+
+Dropout层（比例0.1），用于缓解过拟合；
+
+第二隐藏层：8个神经元，ReLU激活函数；
+
+输出层：1个神经元，输出为未归一化的logit值，通过Sigmoid函数转化为受伤概率。
+
+该模型结构具有非线性表达能力，适合捕捉多变量间复杂的交互关系。
+
+三、损失函数与优化算法
+
+由于样本中“未受伤”比例远高于“受伤”比例，模型采用带权重的二元交叉熵损失函数（Binary Cross-Entropy with Logits Loss），并自动计算正负样本权重 pos_weight = (N_neg / N_pos) 以平衡类别不均。
+优化器采用 Adam 算法（学习率设为 1×10⁻⁴），在每轮迭代中更新网络参数以最小化损失函数。
+
+四、训练与验证
+
+模型共训练300轮（epochs）。每轮计算训练集与验证集的损失（Loss）与准确率（Accuracy），并记录收敛趋势。
+训练过程中使用 Dropout 提高模型泛化性能。
+每50轮打印一次主要指标，最终绘制训练/验证损失曲线与验证准确率曲线，以观察模型是否稳定收敛。
+
+五、模型评估
+
+ROC 曲线与 AUC 指标
+使用验证集结果绘制ROC曲线并计算AUC（Area Under the Curve）值，衡量模型整体分类能力。
+同时利用 Youden’s J 指标（TPR − FPR）确定最优分类阈值。
+
+混淆矩阵（Confusion Matrix）
+分别在默认阈值0.5及最优阈值下绘制混淆矩阵，直观展示模型的分类正确率、误判率与漏判率。
+
+Precision / Recall / F1 曲线分析
+在阈值区间 [0.1, 0.9] 以步长0.05 计算不同阈值下的精确率（Precision）、召回率（Recall）与 F1 值。
+绘制三者随阈值变化的曲线，以综合平衡模型在不同判断标准下的表现，并选取 F1 值最高时对应的最优阈值。
+
+六、输出与关键指标
+
+模型输出包括：
+
+训练与验证集的损失曲线；
+
+验证集准确率曲线；
+
+ROC 曲线与 AUC 指标；
+
+不同阈值下的混淆矩阵；
+
+Precision、Recall、F1 与阈值变化关系图；
+
+自动识别的最优阈值（基于 F1 与 Youden’s J）。
 
 == 10.2 Model
 
-== 10.3 Summary
+#figure(
+  image("figures/log_scaled_correlation_heatmap.jpg", width: 80%),
+  caption: [Correlation heatmap after log scaling],
+)
+#v(2em)
+
+== 10.3 Summary&Discussion
+
+一、验证准确率随训练轮数变化（Validation Accuracy Over Epochs）
+
+如图所示，验证集准确率（Validation Accuracy）在训练初期波动较大，但整体呈现出稳步上升的趋势，从约 0.28 提升至接近 0.45。
+这表明模型在训练过程中逐渐学习到特征间的有效关系，验证集的表现也不断改善。
+虽然最终准确率仍有一定上升空间，但曲线未出现明显的过拟合迹象，说明当前网络结构与正则化（Dropout=0.1）设置较为合理，模型具备较好的泛化能力。
+
+二、混淆矩阵（Confusion Matrix, Threshold=0.50）
+
+在默认阈值 0.5 下，模型对“受伤”（正类）的识别表现为 召回率较高但精确率略低。
+混淆矩阵显示：
+
+TP（真阳性）=31：正确识别为“有受伤”；
+
+FP（假阳性）=10：误将“无受伤”预测为“有受伤”；
+
+TN（真阴性）=7；
+
+FN（假阴性）=43。
+
+这种结果表明，模型更倾向于“报错宁多勿漏”，在事故分析场景下是可接受的取向，因为漏检（FN）代表未预测到的受伤事件，代价通常更高。
+
+三、混淆矩阵（Confusion Matrix, Threshold=0.49, Optimal by Youden’s J）
+
+当采用 Youden’s J 方法确定的最优阈值 0.49 时，模型整体识别能力明显改善：
+
+TP 上升至 46，FN 降低至 28；
+
+TN 仍保持在 7，FP 稍有增加（10）。
+
+这意味着模型通过微调阈值实现了更好的平衡，在维持较高召回率的同时提高了整体分类准确性。
+相较默认阈值，误判减少、漏判显著减少，说明阈值优化在不平衡数据任务中是一个关键步骤。
+
+四、Precision / Recall / F1 随阈值变化曲线
+
+Precision（精确率）
+Precision 表示模型预测为“受伤”的样本中，真正受伤的比例。
+公式：Precision = TP / (TP + FP)
+其中：
+TP（True Positive）= 模型正确预测为“受伤”的样本数
+FP（False Positive）= 模型误将“未受伤”预测为“受伤”的样本数
+高 Precision 意味着模型预测“受伤”时的可信度高，即误报少。
+
+Recall（召回率）
+Recall 表示实际“受伤”的样本中，模型成功识别出的比例。
+公式：Recall = TP / (TP + FN)
+其中：
+FN（False Negative）= 模型漏判为“未受伤”的受伤样本数
+高 Recall 意味着模型能尽量不漏掉真正的受伤样本，在安全风险分析任务中尤为重要。
+
+F1 Score（调和平均数）
+F1 是 Precision 与 Recall 的调和平均，用于平衡两者的权重：
+公式：F1 = 2 × (Precision × Recall) / (Precision + Recall)
+当 Precision 和 Recall 同时较高时，F1 才会达到较高水平。
+F1 特别适用于样本分布不均衡（如“受伤”样本远少于“未受伤”样本）的场景，能更客观地反映模型整体表现。
+
+（嫌麻烦可以直接这么写：【直观理解】
+
+Precision —— 不误报（预测为“受伤”的可信度）
+Recall —— 不漏报（真正“受伤”的覆盖率）
+F1 —— 综合平衡（整体分类性能））
+
+图中展示了不同阈值下的 Precision、Recall 与 F1 的变化关系。可以看到，在阈值 0.1–0.49 区间内，三者均保持较高水平，其中 Recall 基本维持在 1.0，Precision 稳定在约 0.8，F1 值接近 0.9。
+当阈值超过 0.5 后，三项指标均迅速下降，说明过高的阈值导致模型过度保守，从而漏掉大量正样本。
+因此，选取 0.49 作为最优阈值 能在召回率与精确率之间取得理想平衡，F1 值达到最大，进一步验证了模型在分类任务上的有效性与稳定性。
+
+== 10.4 Reference
+
+Bishop, C. M. (2006). Pattern recognition and machine learning. Springer.
+
+Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep learning. MIT Press.
+
+Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., ... & Duchesnay, É. (2011). Scikit-learn: Machine learning in Python. Journal of Machine Learning Research, 12, 2825–2830.
+
+Kingma, D. P., & Ba, J. (2015). Adam: A method for stochastic optimization. In International Conference on Learning Representations (ICLR).
+
+Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, 27(8), 861–874.
+
+= 11. Regression & Neural Network Models & Results
+
+== 11.1 Hypothesis
+
+== 11.2 Model
+
+== 11.3 Summary&Discussion
+
+== 11.4 reference
+
+
+
+
 
 = 11. References
 [1] New York City Department of Buildings. (n.d.). *Incident Database* [Data set]. \
@@ -332,6 +490,7 @@ o	Output: Injury Probability
 [5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
 
  
+
 
 
 
