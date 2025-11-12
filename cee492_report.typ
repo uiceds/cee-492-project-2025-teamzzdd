@@ -384,8 +384,26 @@ Precision、Recall、F1 与阈值变化关系图；
 == 10.2 Model
 
 #figure(
-  image("figures/log_scaled_correlation_heatmap.jpg", width: 80%),
-  caption: [Correlation heatmap after log scaling],
+  image("figures/accuracy.png", width: 80%),
+  caption: [],
+)
+#v(2em)
+
+#figure(
+  image("figures/confusion matrix_0.5.png", width: 80%),
+  caption: [],
+)
+#v(2em)
+
+#figure(
+  image("figures/confusion matrix_0.49.png", width: 80%),
+  caption: [],
+)
+#v(2em)
+
+#figure(
+  image("figures/precision.png", width: 80%),
+  caption: [],
 )
 #v(2em)
 
@@ -490,6 +508,7 @@ Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters
 [5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
 
  
+
 
 
 
