@@ -409,6 +409,12 @@ Precision、Recall、F1 与阈值变化关系图；
 #v(2em)
 
 #figure(
+  image("figures/ROC.png", width: 80%),
+  caption: [],
+)
+#v(2em)
+
+#figure(
   image("figures/precision.png", width: 80%),
   caption: [],
 )
@@ -623,6 +629,7 @@ MAE（平均绝对误差）：衡量预测结果的平均偏离程度。
 [5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
 
  
+
 
 
 
