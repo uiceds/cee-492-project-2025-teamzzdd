@@ -591,7 +591,29 @@ MAE（平均绝对误差）：衡量预测结果的平均偏离程度。
 
 
 == 11.2 Model
+#figure(
+  image("figures/regression1.png", width: 80%),
+  caption: [],
+)
+#v(2em)
 
+#figure(
+  image("figures/regression2.png", width: 80%),
+  caption: [],
+)
+#v(2em)
+
+#figure(
+  image("figures/regression3.png", width: 80%),
+  caption: [],
+)
+#v(2em)
+
+#figure(
+  image("figures/regression4.png", width: 80%),
+  caption: [],
+)
+#v(2em)
 
 == 11.3 Summary&Discussion
 
@@ -629,6 +651,7 @@ MAE（平均绝对误差）：衡量预测结果的平均偏离程度。
 [5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
 
  
+
 
 
 
