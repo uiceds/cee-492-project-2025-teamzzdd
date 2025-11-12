@@ -602,12 +602,6 @@ Adam 能自动调整学习率，兼顾收敛速度与稳定性。
 )
 #v(2em)
 
-#figure(
-  image("figures/regression4.png", width: 80%),
-  caption: [],
-)
-#v(2em)
-
 == 11.3 Summary and Discussion
 
 本研究共测试了三种模型：神经网络回归模型、Hybrid Lag and Group Bias 线性模型、以及 Two-Stage Hybrid Model（无滞后与严格去噪）。  
@@ -639,6 +633,7 @@ Adam 能自动调整学习率，兼顾收敛速度与稳定性。
 [5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
 
  
+
 
 
 
