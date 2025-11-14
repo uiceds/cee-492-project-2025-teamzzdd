@@ -330,74 +330,45 @@ o	Output: Injury Probability
 = 10. Classification & Neural Network Models & Results
 
 == 10.1 Methodolgy 
-加入了新的两个参数：
-NoncompliantCount-表示不合规行为
-City of New York. (2025). Official website of the City of New York. Retrieved November 11, 2025, from https://www.nyc.gov/main
+To enhance model performance, two additional parameters were integrated: 
 
-issue number(代表某地区某个月施工项目假设是一直且允许有时间滞后）
-City of New York. (n.d.). DOB Job Application Filings [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
+*NoncompliantCount*, representing the frequency of non-compliant behaviors , 
 
-一、数据准备
-从原始数据集 df_final 中提取五个输入特征：平均温度（AvgTemp）、平均降水量（AvgPrecip）、热脆弱指数（HVI_w,已经包含borough影响的加权）、不合规次数（NoncompliantCount）以及施工许可证编号（IssueNumber）。
-目标变量为受伤事件（Injury），其数值大于零的样本被视为“发生受伤”（标记为1），否则标记为0。
-为了消除量纲差异，使用 StandardScaler 对输入特征进行标准化处理。
-数据随后以 80% 训练集和 20% 验证集的比例随机划分。
+*IssueNumber*, representing the volume of active construction projects in a specific area and month, allowing for temporal lags
 
-二、模型结构
+=== 10.1.1 Data Preparation
+Five input features were selected from the final dataset *(df_final)*: Average Temperature *(AvgTemp)*, Average Precipitation *(AvgPrecip)*, Weighted Heat Vulnerability Index *(HVI_w)*, NoncompliantCount, and IssueNumber. The target variable, Injury, was binarized: samples with an injury count greater than zero were labeled as "Injury Occurred" (1), while others were labeled as 0. To address dimensional discrepancies, a *StandardScaler* was applied to standardize all input features. The dataset was randomly partitioned into a training set (80%) and a validation set (20%).
 
-采用三层前馈神经网络（Feedforward Neural Network, FNN）作为预测模型，其结构如下：
+=== 10.1.2 Model Architecture
+A three-layer Feedforward Neural Network (FNN) was adopted as the predictive model. The architecture is defined as follows:
 
-输入层（对应五个输入特征）；
+*Input Layer*: Corresponds to the five input features.
 
-第一隐藏层：16个神经元，ReLU激活函数；
+*First Hidden Layer*: 16 neurons utilizing the ReLU activation function.
 
-Dropout层（比例0.1），用于缓解过拟合；
+*Dropout Layer*: Applied with a rate of 0.1 to mitigate overfitting.
 
-第二隐藏层：8个神经元，ReLU激活函数；
+*Second Hidden Layer*: 8 neurons utilizing the ReLU activation function.
 
-输出层：1个神经元，输出为未归一化的logit值，通过Sigmoid函数转化为受伤概率。
+*Output Layer*: A single neuron outputting unnormalized logit values, which are transformed into injury probabilities via a Sigmoid function.
 
-该模型结构具有非线性表达能力，适合捕捉多变量间复杂的交互关系。
+This structure provides the necessary nonlinear expressive capacity to capture complex interactions among the multivariate inputs.
 
-三、损失函数与优化算法
+=== 10.1.3 Loss Function and Optimization
 
-由于样本中“未受伤”比例远高于“受伤”比例，模型采用带权重的二元交叉熵损失函数（Binary Cross-Entropy with Logits Loss），并自动计算正负样本权重 pos_weight = (N_neg / N_pos) 以平衡类别不均。
-优化器采用 Adam 算法（学习率设为 1×10⁻⁴），在每轮迭代中更新网络参数以最小化损失函数。
+Given the significant class imbalance (where "No Injury" cases far exceed "Injury" cases), the model utilizes a Weighted Binary Cross-Entropy with Logits Loss function. A positive weight, calculated as $"pos"_"weight" = N_"neg" / N_"pos"$, is automatically applied to balance the classes. The Adam optimizer, with a learning rate of $1 *10^"-4"$, is employed to update network parameters and minimize the loss function during each iteration.
 
-四、训练与验证
+=== 10.1.4 Training and Validation
 
-模型共训练300轮（epochs）。每轮计算训练集与验证集的损失（Loss）与准确率（Accuracy），并记录收敛趋势。
-训练过程中使用 Dropout 提高模型泛化性能。
-每50轮打印一次主要指标，最终绘制训练/验证损失曲线与验证准确率曲线，以观察模型是否稳定收敛。
+The model was trained for 300 epochs. Loss and Accuracy for both training and validation sets were calculated in each epoch to monitor convergence trends. Dropout was active during training to enhance generalization. Key metrics were logged every 50 epochs. Finally, training/validation loss curves and validation accuracy curves were plotted to assess the stability of model convergence.
 
-五、模型评估
+=== 10.1.5 Model Evaluation
+* ROC Curve & AUC*: The Receiver Operating Characteristic (ROC) curve was plotted using validation results, and the Area Under the Curve (AUC) was calculated to quantify overall classification performance. Youden's J statistic ($"TPR" - "FPR"$) was utilized to determine the optimal classification threshold.
 
-ROC 曲线与 AUC 指标
-使用验证集结果绘制ROC曲线并计算AUC（Area Under the Curve）值，衡量模型整体分类能力。
-同时利用 Youden’s J 指标（TPR − FPR）确定最优分类阈值。
+* Confusion Matrix*: Matrices were generated for both the default threshold (0.5) and the optimal threshold to visualize classification accuracy, false positive rates, and false negative rates.
 
-混淆矩阵（Confusion Matrix）
-分别在默认阈值0.5及最优阈值下绘制混淆矩阵，直观展示模型的分类正确率、误判率与漏判率。
+* Precision-Recall-F1 Analysis*: Precision, Recall, and F1 scores were calculated across a threshold range of [0.1, 0.9] with a step size of 0.05. Curves were plotted to evaluate trade-offs under different judgment criteria, identifying the threshold that maximizes the F1 score. 
 
-Precision / Recall / F1 曲线分析
-在阈值区间 [0.1, 0.9] 以步长0.05 计算不同阈值下的精确率（Precision）、召回率（Recall）与 F1 值。
-绘制三者随阈值变化的曲线，以综合平衡模型在不同判断标准下的表现，并选取 F1 值最高时对应的最优阈值。
-
-六、输出与关键指标
-
-模型输出包括：
-
-训练与验证集的损失曲线；
-
-验证集准确率曲线；
-
-ROC 曲线与 AUC 指标；
-
-不同阈值下的混淆矩阵；
-
-Precision、Recall、F1 与阈值变化关系图；
-
-自动识别的最优阈值（基于 F1 与 Youden’s J）。
 
 == 10.2 Model
 
@@ -431,167 +402,130 @@ Precision、Recall、F1 与阈值变化关系图；
 )
 #v(2em)
 
-== 10.3 Summary&Discussion
+== 10.3 Summary & Discussion
 
-一、验证准确率随训练轮数变化（Validation Accuracy Over Epochs）
+=== 10.3.1 Validation Accuracy Over Epochs
 
-如图所示，验证集准确率（Validation Accuracy）在训练初期波动较大，但整体呈现出稳步上升的趋势，从约 0.28 提升至接近 0.45。
-这表明模型在训练过程中逐渐学习到特征间的有效关系，验证集的表现也不断改善。
-虽然最终准确率仍有一定上升空间，但曲线未出现明显的过拟合迹象，说明当前网络结构与正则化（Dropout=0.1）设置较为合理，模型具备较好的泛化能力。
+As illustrated in the results, the validation accuracy exhibited significant fluctuation during the initial training phase but demonstrated a steady upward trend overall, rising from approximately 0.28 to nearly 0.45. This indicates that the model progressively learned effective relationships between features, leading to improved validation performance. While there is room for further accuracy improvement, the absence of significant overfitting suggests that the network architecture and regularization settings (Dropout=0.1) are reasonable and provide good generalization capability.
 
-二、混淆矩阵（Confusion Matrix, Threshold=0.50）
+=== 10.3.2 Confusion Matrix (Threshold = 0.50)
 
-在默认阈值 0.5 下，模型对“受伤”（正类）的识别表现为 召回率较高但精确率略低。
-混淆矩阵显示：
+At the default threshold of 0.50, the model's identification of "Injury" (positive class) showed high recall but slightly lower precision. The confusion matrix results are as follows:
 
-TP（真阳性）=31：正确识别为“有受伤”；
 
-FP（假阳性）=10：误将“无受伤”预测为“有受伤”；
+* True Positives (TP)* = 31 (Correctly identified injuries)
 
-TN（真阴性）=7；
 
-FN（假阴性）=43。
+* False Positives (FP)* = 10 (Non-injuries incorrectly predicted as injuries)
 
-这种结果表明，模型更倾向于“报错宁多勿漏”，在事故分析场景下是可接受的取向，因为漏检（FN）代表未预测到的受伤事件，代价通常更高。
 
-三、混淆矩阵（Confusion Matrix, Threshold=0.49, Optimal by Youden’s J）
+* True Negatives (TN)* = 7
 
-当采用 Youden’s J 方法确定的最优阈值 0.49 时，模型整体识别能力明显改善：
 
-TP 上升至 46，FN 降低至 28；
+* False Negatives (FN)* = 43
 
-TN 仍保持在 7，FP 稍有增加（10）。
 
-这意味着模型通过微调阈值实现了更好的平衡，在维持较高召回率的同时提高了整体分类准确性。
-相较默认阈值，误判减少、漏判显著减少，说明阈值优化在不平衡数据任务中是一个关键步骤。
+These results suggest a conservative prediction strategy (preferring false alarms over missed detections). In the context of accident analysis, this bias is acceptable, as false negatives (missed injury predictions) typically carry a higher safety cost than false positives.
 
-四、Precision / Recall / F1 随阈值变化曲线
+=== 10.3.3 Confusion Matrix (Threshold = 0.49, Optimal by Youden's J)
 
-Precision（精确率）
-Precision 表示模型预测为“受伤”的样本中，真正受伤的比例。
-公式：Precision = TP / (TP + FP)
-其中：
-TP（True Positive）= 模型正确预测为“受伤”的样本数
-FP（False Positive）= 模型误将“未受伤”预测为“受伤”的样本数
-高 Precision 意味着模型预测“受伤”时的可信度高，即误报少。
+Applying the optimal threshold of 0.49, determined by Youden's J statistic, significantly improved the model's recognition capability:
 
-Recall（召回率）
-Recall 表示实际“受伤”的样本中，模型成功识别出的比例。
-公式：Recall = TP / (TP + FN)
-其中：
-FN（False Negative）= 模型漏判为“未受伤”的受伤样本数
-高 Recall 意味着模型能尽量不漏掉真正的受伤样本，在安全风险分析任务中尤为重要。
+* TP* increased to 46, and *FN* decreased to 28.
 
-F1 Score（调和平均数）
-F1 是 Precision 与 Recall 的调和平均，用于平衡两者的权重：
-公式：F1 = 2 × (Precision × Recall) / (Precision + Recall)
-当 Precision 和 Recall 同时较高时，F1 才会达到较高水平。
-F1 特别适用于样本分布不均衡（如“受伤”样本远少于“未受伤”样本）的场景，能更客观地反映模型整体表现。
+* TN* remained at 7, with a slight increase in *FP* to 10.
 
-（嫌麻烦可以直接这么写：【直观理解】
+This adjustment achieved a better balance, enhancing overall classification accuracy while maintaining high recall. The significant reduction in missed detections (FN) compared to the default threshold highlights that threshold optimization is a critical step in tasks involving imbalanced datasets.
 
-Precision —— 不误报（预测为“受伤”的可信度）
-Recall —— 不漏报（真正“受伤”的覆盖率）
-F1 —— 综合平衡（整体分类性能））
+=== 10.3.4 Precision/Recall/F1 vs. Threshold
 
-图中展示了不同阈值下的 Precision、Recall 与 F1 的变化关系。可以看到，在阈值 0.1–0.49 区间内，三者均保持较高水平，其中 Recall 基本维持在 1.0，Precision 稳定在约 0.8，F1 值接近 0.9。
-当阈值超过 0.5 后，三项指标均迅速下降，说明过高的阈值导致模型过度保守，从而漏掉大量正样本。
-因此，选取 0.49 作为最优阈值 能在召回率与精确率之间取得理想平衡，F1 值达到最大，进一步验证了模型在分类任务上的有效性与稳定性。
+Analysis of the metrics is defined as follows:
 
-== 10.4 Reference
 
-Bishop, C. M. (2006). Pattern recognition and machine learning. Springer.
+* Precision*: The proportion of true injuries among predicted injuries. High precision implies high confidence in positive predictions (few false alarms). 
 
-Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep learning. MIT Press.
 
-Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., ... & Duchesnay, É. (2011). Scikit-learn: Machine learning in Python. Journal of Machine Learning Research, 12, 2825–2830.
+* Recall*: The proportion of actual injuries correctly identified. High recall implies comprehensive coverage of safety risks (few missed incidents). 
 
-Kingma, D. P., & Ba, J. (2015). Adam: A method for stochastic optimization. In International Conference on Learning Representations (ICLR).
 
-Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, 27(8), 861–874.
+* F1 Score*: The harmonic mean of Precision and Recall, providing a balanced metric for imbalanced datasets. 
+
+
+
+The plotted curves show the relationship between these metrics and the threshold. In the 0.1–0.49 range, all three metrics remain high: Recall stays near 1.0, Precision stabilizes around 0.8, and the F1 score approaches 0.9. However, beyond the 0.5 threshold, all metrics decline rapidly, indicating that an excessively high threshold makes the model overly conservative, resulting in missed positive samples. Consequently, 0.49 was selected as the optimal threshold, achieving an ideal balance between Recall and Precision and maximizing the F1 score.
 
 
 = 11. Regression and Neural Network Models and Results
 
 == 11.1 Hypothesis
 
-本研究采用改进型神经网络回归模型，用于预测施工过程中人员受伤数量。  
-在模型结构中引入了数据去噪、标准化与非线性特征提取机制，以提高预测的稳定性和鲁棒性。
+This study employs an improved Neural Network Regression model to predict the count of construction-related injuries. To enhance prediction stability and robustness, the model incorporates mechanisms for data denoising, standardization, and nonlinear feature extraction.
 
-一、数据准备与清洗  
-缺失值处理：将 Injury 中的缺失值填充为零并转换为浮点型。  
+=== 11.1.1 Data Preparation and Cleaning
+* Missing Values*: Missing values in the Injury column were filled with zero and converted to floating-point format. 
 
-特征构建：从 YearMonth 提取月份变量（Month），并对 Borough（行政区）进行独热编码。  
+* Feature Engineering*: The Month variable was extracted from YearMonth, and Borough was processed using one-hot encoding. 
 
-去噪处理：  
-- 去除温度、降水、热脆弱指数、违规次数、许可证数量和 Injury 中的极端值（处于样本最低一分位与最高九十九分位之外）；  
-- 剔除同时存在极端高温与极端降雨的样本；  
-- 去除施工样本数极少的记录（IssueNumber 过低的情况）；  
-- 限制热脆弱指数（HVI）在合理上限范围。  
+* Denoising*: Extreme values (outside the 1st and 99th percentiles) were removed for Temperature, Precipitation, HVI, Noncompliant Count, Issue Number, and Injury counts. Samples exhibiting concurrent extreme heat and precipitation were excluded, as were records with negligible construction activity (low IssueNumber). HVI values were capped within a reasonable upper limit. 
 
-由于数据本身较为稀疏，因此未使用额外正则化项，以避免进一步欠拟合或梯度不收敛。  
+* Log Smoothing*: Logarithmic smoothing was applied to high-variance features (Noncompliant Count, Issue Number, Precipitation) to prevent dominance by single variables. 
 
-对数平滑：对高方差特征（违规次数、许可证数量、降水量）取对数，以防止单一变量过度主导输入。  
-数据清洗后仅保留有效样本，并输出剩余样本数以验证数据质量。
+Due to the inherent sparsity of the data, additional regularization terms were omitted to avoid further underfitting or gradient convergence issues.
 
-二、特征标准化  
-输入特征包括平均气温、平均降水量、热脆弱指数、违规次数、许可证数量、月份以及各行政区编码列。  
-所有输入变量使用标准化方法进行处理，目标变量（Injury）采用均值和标准差归一化，以保证数值稳定并促进梯度收敛。  
-数据集按照八成训练集与两成验证集进行划分。
+=== 11.1.2 Feature Standardization
+Input features comprised Average Temperature, Average Precipitation, Heat Vulnerability Index, Noncompliant Count, Issue Number, Month, and borough encoding columns. All input variables were standardized. To ensure numerical stability and facilitate gradient convergence, the target variable *(Injury)* was normalized using its mean and standard deviation. The dataset was subsequently partitioned into an 80% training set and a 20% validation set.
 
-三、模型结构  
-定义名为 InjuryRegressor 的神经网络模型，采用多层非线性结构：  
-- 输入层：对应全部输入特征；  
-- 第一隐藏层：三十二个神经元，使用 LeakyReLU 激活函数；  
-- Dropout 层（比例为 0.1），用于防止过拟合；  
-- 第二隐藏层：十六个神经元，使用 LeakyReLU 激活函数；  
-- 第三隐藏层：八个神经元，使用 LeakyReLU 激活函数；  
-- 输出层：一个神经元，用于输出受伤人数预测值。  
+=== 11.1.3 Model Architecture
+A Neural Network model named InjuryRegressor was defined with a multi-layer nonlinear structure:
 
-LeakyReLU 能在负区间保持非零梯度，避免梯度消失问题，适合稀疏数据的回归任务。
+* Input Layer*: Corresponds to all processed input features.
 
-四、损失函数与优化器  
-模型使用均方误差作为损失函数，优化器采用 Adam，学习率为三乘十的负四次方。  
-Adam 能自动调整学习率，兼顾收敛速度与稳定性。  
-训练过程中记录训练损失和验证损失，用于监测模型收敛趋势与泛化性能。  
+* First Hidden Layer*: 32 neurons using the LeakyReLU activation function.
 
-注：其他非线性分布模型（如泊松模型和负二项模型）在训练中出现收敛问题，因此未采用。
+* Dropout Layer*: Rate of 0.1, used to prevent overfitting.
 
-五、模型评估  
-利用验证集预测结果计算以下指标：  
-- R 方值（决定系数）：衡量模型对目标方差的解释能力。如果 R 方小于零，说明模型未能有效学习；  
-- 均方根误差：反映预测偏差的平均幅度；  
-- 平均绝对误差：衡量预测结果与实际值之间的平均偏离程度。  
+* Second Hidden Layer*: 16 neurons using the LeakyReLU activation function.
 
-此外，通过绘制预测值与实际值的散点图来评估拟合程度。若点云接近对角线，说明预测效果较好。  
-最终输出验证集前十五组样本的预测与实际对比结果以供核查。
+* Third Hidden Layer*: 8 neurons using the LeakyReLU activation function.
 
-六、模型改进  
-第一种改进：Hybrid Lag and Group Bias 线性模型  
+* Output Layer*: Single neuron outputting the predicted injury count.
 
-思路：在传统线性回归中加入时间滞后特征与行政区分组偏置，以同时捕捉时间惯性与地区差异。  
+LeakyReLU was selected because it maintains non-zero gradients in the negative interval, avoiding the vanishing gradient problem, which is particularly suitable for regression tasks involving sparse data.
 
-特征处理：  
-- 仅保留有施工记录的样本；  
-- 对违规次数、许可证数量、降水量进行对数平滑；  
-- 按行政区和月份生成一期滞后特征。  
+=== 11.1.4 Loss Function and Optimizer
+The model uses Mean Squared Error (MSE) as the loss function. The Adam optimizer was selected with a learning rate of $3*10^"-4"$, balancing convergence speed and stability through automatic learning rate adjustment. Training and validation losses were recorded to monitor convergence trends and generalization performance. Note: Traditional nonlinear count models (e.g., Poisson and Negative Binomial) were tested but excluded due to convergence failures during training.
 
-模型结构：  
-模型包含全局线性权重与分区偏置项，用于反映不同行政区的基线风险。  
+=== 11.1.5 Training and Validation 
+The following metrics were calculated using validation predictions:
 
-结果：  
-该模型在解释地区性差异方面具有一定能力，但整体 R 方、均方根误差与平均绝对误差仍较低，说明拟合程度有限。
+* $R^2$ (Coefficient of Determination)*: Measures the proportion of variance explained by the model. An $R^2 < 0$ indicates the model failed to learn effectively.
 
-第二种改进：Two-Stage Hybrid Model（无滞后与严格去噪）  
+* RMSE (Root Mean Square Error)*: Reflects the average magnitude of prediction error. 
 
-思路：采用“先分类、后回归”的两阶段结构，以提升在稀疏样本条件下的预测稳定性。  
+* MAE (Mean Absolute Error)*: Measures the average deviation between predicted and actual values. 
 
-第一阶段（分类）：利用神经网络判断是否发生受伤事件（即 Injury 是否大于零），并输出概率供第二阶段使用。  
-第二阶段（回归）：在确认有伤害的样本中，基于线性模型与行政区偏置估计实际伤害人数。  
+Additionally, scatter plots of predicted vs. actual values were generated to assess fit; a point cloud clustering near the diagonal indicates good predictive performance.
 
-结果：  
-分类阶段的准确率约为 0.8 到 0.9，能较好地区分高风险月份。  
-回归阶段的 R 方值相比单阶段模型略有提升，但受限于数据量不足，整体预测能力仍不理想。
+=== 11.1.6 Model Improvements
+*Approach 1: Hybrid Lag and Group Bias Linear Model*
+
+*Concept*: Incorporates time-lag features and borough-specific biases into linear regression to capture temporal inertia and regional disparities.
+
+* Feature Processing*: Retained only samples with construction records; applied log smoothing to non-compliant counts, permits, and precipitation; generated one-period lag features by borough and month. 
+
+*Structure*: Includes global linear weights and regional bias terms to reflect baseline risks across boroughs.
+
+* Results*: While the model demonstrated some capacity to explain regional differences, overall $R^2$, RMSE, and MAE metrics remained poor, indicating limited fit.
+
+*Approach 2: Two-Stage Hybrid Model (No Lag, Strict Denoising)*
+
+* Concept*: Adopts a "Classify-then-Regress" structure to improve stability under sparse data conditions. 
+
+* Stage 1 (Classification)*: Uses a neural network to determine the probability of an injury occurring (Injury > 0).
+
+* Stage 2 (Regression)*: For confirmed injury samples, estimates the actual count using a linear model with borough biases. 
+
+* Results*: The classification stage achieved high accuracy (0.8–0.9), effectively identifying high-risk months. However, while the regression stage showed a slight improvement in $R^2$ over single-stage models, overall predictive capability remained unsatisfactory due to the limited volume of data.
 
 == 11.2 Model
 
@@ -615,21 +549,15 @@ Adam 能自动调整学习率，兼顾收敛速度与稳定性。
 
 == 11.3 Summary and Discussion
 
-本研究共测试了三种模型：神经网络回归模型、Hybrid Lag and Group Bias 线性模型、以及 Two-Stage Hybrid Model（无滞后与严格去噪）。  
-整体来看，这三种模型的预测效果均不理想，主要体现在 R 方值为负或接近零，说明模型的预测能力仍弱于以样本平均值为基准的简单模型。
+This study evaluated three regression approaches: the Neural Network Regressor, the Hybrid Lag and Group Bias Model, and the Two-Stage Hybrid Model. Overall, all three yielded suboptimal results, characterized by negative or near-zero $R^2$ values, indicating predictive performance weaker than simple baseline averages. 
 
-首先，神经网络回归模型难以学习到稳定的规律。施工伤害数据高度稀疏，大部分月份的伤害数量为零或一，只有极少数月份超过两起。数据分布极度不平衡，信号较弱而噪声占主导，使得网络在训练时倾向于预测接近平均值的结果，从而导致 R 方为负。
+First, the Neural Network Regressor struggled to learn stable patterns. The construction injury data is highly sparse (most months have 0 or 1 injury). Consequently, the network tended to predict near-mean values to minimize error, resulting in negative $R^2$. 
 
-其次，Hybrid Lag and Group Bias 线性模型虽然引入了滞后特征和行政区分组偏置，试图捕捉时间延迟效应与地区差异，但施工伤害事件在时间上缺乏显著的自相关性。滞后变量反而带来额外噪声，使模型出现轻度过拟合，预测效果并未改善。
+Second, the Hybrid Lag and Group Bias Model failed to improve performance despite introducing lag features. This suggests a lack of significant temporal autocorrelation in construction injury events; lag variables likely introduced additional noise rather than signal. 
 
-最后，Two-Stage Hybrid Model（无滞后与严格去噪）在分类阶段表现较好，能够识别出高风险月份。然而在回归阶段，由于仅保留存在伤害的样本，并在去噪后进一步减少数据量，最终有效样本数量极为有限。样本过少使模型难以学习到稳定的统计关系，R 方依然为负，说明随机性与噪声仍然主导结果。
+Finally, while the Two-Stage Hybrid Model performed well in classification, the regression stage suffered from severe data scarcity. After filtering for only positive-injury samples and applying strict denoising, the effective sample size was insufficient for the model to generalize, leaving $R^2$ negative.
 
-综合来看，三种模型表现不佳的主要原因包括：  
-一是数据稀疏且离散化严重；  
-二是噪声比例高，特征与伤害事件之间的相关性较弱；  
-三是去噪和筛选后样本数量进一步减少，导致模型难以泛化。  
-
-未来的研究可以考虑扩充样本范围，例如增加年份或地区数据，引入更平滑的时间特征或风险指标，从而提升模型稳定性与预测性能。
+In conclusion, the poor performance is attributed to: (1) high data sparsity and discreteness; (2) a low signal-to-noise ratio; and (3) excessive reduction in sample size due to aggressive cleaning. Future research should focus on expanding the dataset (more years/regions) and incorporating smoother temporal features or risk indices.
 
 
 
@@ -637,13 +565,18 @@ Adam 能自动调整学习率，兼顾收敛速度与稳定性。
 
 
 = 12. References
-[1] New York City Department of Buildings. (n.d.). *Incident Database* [Data set]. \
-[2] Nayak, S. G., Shrestha, S., Kinney, P. L., Ross, Z., Sheridan, S. C., Pantea, C. I., Hsu, W. H., Muscatiello, N., & Hwang, S. A. (2018). *Development of a heat vulnerability index for New York State.* Public Health, 161, 127–137. \
-[3] Hilbe, J. M. (2011). *Negative binomial regression* (2nd ed.). Cambridge University Press. \
-[4] Cameron, A. C., & Trivedi, P. K. (2013). *Regression analysis of count data* (2nd ed.). Cambridge University Press. \
-[5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
-
- 
+[1] New York City Department of Buildings. (n.d.). _Incident Database_ [Data set]. \
+[2] Nayak, S. G., Shrestha, S., Kinney, P. L., Ross, Z., Sheridan, S. C., Pantea, C. I., Hsu, W. H., Muscatiello, N., & Hwang, S. A. (2018). _Development of a heat vulnerability index for New York State._ Public Health, 161, 127–137. \
+[3] Hilbe, J. M. (2011). _Negative binomial regression_ (2nd ed.). Cambridge University Press. \
+[4] Cameron, A. C., & Trivedi, P. K. (2013). _Regression analysis of count data_ (2nd ed.). Cambridge University Press. \
+[5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). _Applied logistic regression_ (3rd ed.). Wiley.\
+[6] Bishop, C. M. (2006). _Pattern recognition and machine learning_. Springer. \ 
+[7] Goodfellow, I., Bengio, Y., & Courville, A. (2016). _Deep learning_. MIT Press. \ 
+[8] Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., ... & Duchesnay, É. (2011). Scikit-learn: Machine learning in Python. _Journal of Machine Learning Research, 12_, 2825–2830. \ 
+[10] Kingma, D. P., & Ba, J. (2015). Adam: A method for stochastic optimization. In _International Conference on Learning Representations (ICLR)_. \ 
+[11] Fawcett, T. (2006). An introduction to ROC analysis. _Pattern Recognition Letters, 27_(8), 861–874. \ 
+[12] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
+[13] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
 
 
 
