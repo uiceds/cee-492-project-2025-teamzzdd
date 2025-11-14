@@ -300,11 +300,12 @@ o	Output: Location of Cities (using graph)
 == 8.2 Models
 
 #figure(image("figures/injury_scattermap_zs.jpg", width: 80%), caption: [Spatial Distribution of Injuries from Each Borough])
+
 #figure(image("figures/injury_scattermap_kmeans_zs.jpg", width: 80%), caption: [K-Means Model w/ Centroids])
 
 == 8.3 Summary
 
-= 9. Decision Tree Models & Results
+= 9. Classification Tree Models & Results
 
 == 9.1 Hypothesis
 
@@ -313,6 +314,16 @@ o	Input: Borough, Check Description
 o	Output: Injury Probability
 
 == 9.2 Model
+
+#figure(image("figures/manhattan_tree_zs.jpg", width: 80%), caption: [Manhattan Injury Classification Tree])
+
+#figure(image("figures/brooklyn_tree_zs.jpg", width: 80%), caption: [Brooklyn Injury Classification Tree])
+
+#figure(image("figures/queens_tree_zs.jpg", width: 80%), caption: [Queens Injury Classification Tree])
+
+#figure(image("figures/bronx_tree_zs.jpg", width: 80%), caption: [Bronx Injury Classification Tree])
+
+#figure(image("figures/nyc_tree_zs.jpg", width: 80%), caption: [Four Boroughs Total Injury Classification Tree])
 
 == 9.3 Summary
 
@@ -633,6 +644,7 @@ Adam 能自动调整学习率，兼顾收敛速度与稳定性。
 [5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). *Applied logistic regression* (3rd ed.). Wiley.
 
  
+
 
 
 
