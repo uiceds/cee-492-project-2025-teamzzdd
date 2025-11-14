@@ -263,7 +263,7 @@ which are standard approaches for count and binary outcomes in risk and safety s
 
 These visual representations are only preliminary and can be used as inspiration for the plots in the actual predictive modelling phase.
 
-= 7. Plan for Deliverable 3
+= 7. Preliminary Predictive Modeling
 
 This section will describe how we plan on creating more complex models pertaining to our data, such as predictive modelling. This aspect is necessary in terms of understanding important patterns and information that cannot be simply derived by just correlating two variables.
 
@@ -577,6 +577,7 @@ In conclusion, the poor performance is attributed to: (1) high data sparsity and
 [11] Fawcett, T. (2006). An introduction to ROC analysis. _Pattern Recognition Letters, 27_(8), 861–874. \ 
 [12] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
 [13] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
+
 
 
 
