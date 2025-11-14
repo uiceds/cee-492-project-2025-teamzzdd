@@ -313,7 +313,7 @@ Output: Cities/Counties with Highest Concentration
 
 Through the 4 major boroughs of New York City, we can determine common factors pertaining to construction incidents/accidents that lead to injuries in New York City. From this data, we can determine which factors should primarily be examined in terms of implementing new state OSHA regulations.
 
-Input: Borough, Check Description
+Input: Borough, Incident Type
 
 Output: Injuries
 
@@ -581,6 +581,7 @@ In conclusion, the poor performance is attributed to: (1) high data sparsity and
 [11] Fawcett, T. (2006). An introduction to ROC analysis. _Pattern Recognition Letters, 27_(8), 861–874. \ 
 [12] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
 [13] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
+
 
 
 
