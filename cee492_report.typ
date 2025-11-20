@@ -65,8 +65,18 @@ keywords:"Construction Safety", "Risk Prediction", "Accident Reports", "Regressi
 
 = 1. Introduction
 #v(1em)
+
 == 1.1 Background & Motivation
-The purpose of the model is to help avoid incidents and accidents at New York City by identifying the dominant attributes influencing outcomes, thereby guiding proactive protection measures in construction management.
+#v(1em)
+Although construction safety has been studied for more than two decades, research that integrates real incident reports with feature extraction and machine–learning–based prediction is still relatively new. This line of work remains in an early stage.[1]In New York City, construction makes up an unusually high share of workplace deaths—over 20% of all fatalities. Many of these cases are tied to safety violations and gaps in oversight or enforcement [2].
+#v(1em)
+In our preliminary regression model, we selected temperature, humidity, and HVI (heat vulnerability index) as our new parameters. However, in the neural network model, we include direct indicators of safety noncompliance and supervision gaps, while the statistical models use meteorological variables to capture environmental effects on incidents.
+#v(1em)
+Construction safety has long been a central concern in civil engineering, with most prior work focusing either on structural health monitoring or on post-incident analyses based on official reports. However, studies that combine text-based incident reports, systematic feature extraction, and machine-learning-based predictive modeling remain relatively scarce.Although New York City provides a large amount of construction-related data, incidents are distributed very unevenly across boroughs. Manhattan reports far more cases because of its dense concentration of projects and workers, while several other boroughs have relatively few. This imbalance adds another layer of difficulty for both modeling and interpretation [3].
+#v(1em)
+This imbalance also leads to many zero observations. When zeros dominate the data, standard Poisson models often break down because their core assumption—mean equals variance—no longer holds. Heavy zero inflation also makes coefficient estimates in standard regression models unstable and less trustworthy [4].In addition, the small data size, limited feature availability, and weak model interpretability can significantly affect machine learning models. These constraints narrow the kinds of conclusions models can draw and make it harder to develop reliable predictive tools [5].
+#v(1em)
+Therefore, it’s vital to use machine learning methods to test our model on New York City data with varying parameter settings.The purpose of the model is to help avoid incidents and accidents at New York City by identifying the dominant attributes influencing outcomes, thereby guiding proactive protection measures in construction management.
 #v(1em)
 == 1.2 Objectives
 Our main objective is to analyze different types of construction incidents at New York City that happened within 1 or 2 years from now. For this project, we would mainly be examining the nature of construction related incidents and accidents as well as performing correlations with the data by examining the prevalence of each incident and accident at each of the five boroughs of New York City. We would want to see where each type of incident has the highest probability of occurring, and where specifically measures should be implemented to prevent these types of incidents. Finally, keeping track of when these incidents occurred will also be critical as the data could also be used to calculate the frequency of accidents over time.
@@ -74,12 +84,11 @@ Our main objective is to analyze different types of construction incidents at Ne
 == 1.3 Overview of Analytical Plan
 In Section 2, we begin by preprocessing the data and, through a correlation-mapping analysis, identify and introduce additional relevant parameters. Section 3 conducts preliminary regression modeling to diagnose the limitations of classical regression approaches and to determine that subsequent modeling efforts should primarily adopt a classification framework. Sections 4 and 5 present the clustering and tree-based baselines, specifically k-means clustering and decision tree models. Sections 6 and 7 develop the neural-network–based classification and regression models; although our main focus remains on classification, we still explore regression models for the purpose of methodological completeness and comparative analysis. 
 #v(2em)
-= 2. Exploratory data analysis
+= 2. Exploratory Data Analysis
 This section will mainly focus on introductory data analysis with some preliminary tables and plots describing critical aspects of the data. Visible patterns will be discussed with the data that has been formulated and the coming sections below will describe how we plan on applying and modelling this data.
 #v(1em)
-== 2.1. Basic information
-The dataset consists of construction-related incidents and accidents at New York City in each of the five boroughs. It provides a large-scale CSV file suitable for predictive analysis.
-We pull data from New York City Department of Buildings. (n.d.). Incident Database [Data set].
+== 2.1. Basic Information
+The dataset consists of construction-related incidents and accidents at New York City in each of the five boroughs. It provides a large-scale CSV file suitable for predictive analysis.[6]
 The dataset includes approximately 958 rows, each representing an accident or incident record, and 20 columns containing attribute fields of these records.
 #v(2em)
 == 2.2 Attributes
@@ -116,7 +125,7 @@ The dataset includes approximately 958 rows, each representing an accident or in
 
 Proposal for attribute usage will be made, focusing on those with predictive relevance.
 #v(1em)
-== 2.3 Adding new parameters
+== 2.3 New parameters
 In this data integration step, we enriched the dataset by incorporating external environmental and vulnerability factors. The Heat Vulnerability Index (HVI) was integrated by joining it with the dataset using 'postcode' as the linking key. We then performed a data cleaning step to ensure data quality by removing records with missing values. Following this, climate variables, specifically 'AvgTemp' (Average Temperature) and 'AvgPrecip' (Average Precipitation), were merged into the dataset. This process of joining HVI, merging climate data, and handling missing values resulted in a final, refined dataset containing 415 valid observations, which was then used for the subsequent correlation and regression analyses
 #align(center, [Table 3. Integrated Dataset with Climate and HVI Variables
 #table(
@@ -165,7 +174,7 @@ These visual representations are only preliminary and can be used as inspiration
 == 2.4 Preprocessing
 #v(1em)
 === 2.4.1 Data Integration and Cohort
-For the data integration and cohort definition, we first filtered the dataset. We then applied groupby operations to extract and aggregate key information. This aggregation was performed by 'borough (Area)', month, and 'postcode'. The 'postcode' attribute serves as a critical key, as it is directly used to link and integrate the Heat Vulnerability Index data (Nayak et al., 2018).
+For the data integration and cohort definition, we first filtered the dataset. We then applied groupby operations to extract and aggregate key information. This aggregation was performed by 'borough (Area)', month, and 'postcode'. The 'postcode' attribute serves as a critical key, as it is directly used to link and integrate the Heat Vulnerability Index data [7].
 #v(1em)
 === 2.4.2 Borough × Month Aggregation
 To explore trends over time, the data were aggregated by borough and month. The aggregation reveals that incidents tend to cluster during the spring and summer months, aligning with increased construction activity. 
@@ -182,7 +191,7 @@ To explore trends over time, the data were aggregated by borough and month. The 
   [Bronx], [10451], [Jun-24], [3], [1], [2],
 )])
 Excerpt shown above; full panel saved as `monthly_borough.csv`.
-== 2.5 results for Preprocessing
+== 2.5 Results for Preprocessing
 Four of the preliminary plots below count incidents such as fatalities and injuries that happened at each borough and district. The last four show the total injuries and fatalities that happened in New York City during each month, and then the accumulation of injuries and fatalities over time from January 2024 to October 2025. With this data, we can go even further with borough or district specific statistics regarding these construction incidents.
 
 #figure(image("figures/borough_fatality_bar_zs.jpg", width: 80%), caption: [Average Fatalities at Each Borough])
@@ -213,7 +222,7 @@ Four of the preliminary plots below count incidents such as fatalities and injur
 )])
 On average, 83.8% of incidents resulted in at least one reported injury, whereas fatalities were rare (around 1.5% of all cases). The Bronx recorded the highest injury rate, followed closely by Brooklyn.
 #v(1em)
-== 2.6 Summary
+== 2.6 Discussion
 This section synthesizes the primary findings from our exploratory data analysis. We aggregated the data to compute and examine key descriptive statistics. Specifically, we calculated the average number of fatalities, average number of injuries, and average incident counts for each of the five boroughs. From this, we also derived the fatality and injury rates (as percentages) per borough to better understand the proportional risk. Furthermore, our summary includes an analysis of temporal patterns. We investigated monthly trends by charting the frequency and cumulative totals of both fatalities and injuries over the study period. These initial summaries provide a foundational understanding of which areas are most affected and how incident severity fluctuates over time.
 
 #v(2em)
@@ -248,7 +257,7 @@ At the begining we try to use several traditional prediction model in order to f
 )])
 #figure(image("figures/neg_bin_fatality_coefficients.jpg", width: 80%), caption: [Negative binomial fatality model coefficients])
 #v(1em)
-== 3.1.1.3 Logistic Model
+== 3.1.1.3 Logistic Model[10]
 #align(center, [Table 8. Logistic Regression Results for Binary Fatality Events
 #table(
   columns: 7,
@@ -267,23 +276,23 @@ At the begining we try to use several traditional prediction model in order to f
 In this study, we selected Poisson, Negative Binomial, and Logit models based on the following considerations.
 First, the dataset contains a substantial number of zeros, resulting in pronounced sparsity.
 Second, although the injury variable takes non-zero values, the fatality variable appears only as 0 or 1 throughout the dataset.
-Given these characteristics, we employ a Poisson regression to describe the relationship between injury counts and the relevant covariates. To address the rarity of fatality events—which may induce over-dispersion—we further introduce a Negative Binomial model, thereby relaxing the restrictive assumption that the variance must equal the mean. In addition, because fatality is inherently a binary outcome, it naturally aligns with a logit regression, allowing us to model the occurrence of a fatal event directly as a 0/1 response.
+Given these characteristics, we employ a Poisson regression to describe the relationship between injury counts and the relevant covariates. To address the rarity of fatality events—which may induce over-dispersion—we further introduce a Negative Binomial model[8], thereby relaxing the restrictive assumption that the variance must equal the mean. [9]In addition, because fatality is inherently a binary outcome, it naturally aligns with a logit regression, allowing us to model the occurrence of a fatal event directly as a 0/1 response.
 The purpose of this set of preliminary regressions is to diagnose the sparsity and information content of the data, which in turn guides the selection of our downstream modeling tasks. Based on these diagnostic results, our subsequent experiments place greater emphasis on classification, as it is better suited to the underlying data structure.
 #v(1em)
-Fig.10 Poisson Model
+Poisson Model
 #v(1em)
-In the Poisson model, we observed that the significance levels of several parameters—such as the borough dummy variables, meteorological indicators, and the HVI—are generally weak. Some coefficients even exhibit numerical irregularities, for example, in Staten Island, accompanied by notably wide confidence intervals. Although correlation mapping suggests strong pairwise correlations, these signals must be interpreted with caution due to several limitations.
+In Fig.10, we observed that the significance levels of several parameters—such as the borough dummy variables, meteorological indicators, and the HVI—are generally weak. Some coefficients even exhibit numerical irregularities, for example, in Staten Island, accompanied by notably wide confidence intervals. Although correlation mapping suggests strong pairwise correlations, these signals must be interpreted with caution due to several limitations.
 First, the correlation map is inherently dominated by linear relationships.
 Second, it does not capture the interdependence among variables. For instance, while the HVI exhibits a high correlation with the outcome, its relationship with the borough variable is exceptionally tight, suggesting that the observed correlation is primarily driven by borough-specific characteristics rather than the HVI itself.
 As a result, when adopting Poisson or other count-distribution models, it is not surprising that many predictors are not statistically significant. In addition, the sparsity of observations from Staten Island directly contributes to overdispersion, further affecting coefficient stability.
 #v(1em)
-Fig.11 Negative Binomial Model
+Negative Binomial Model
 #v(1em)
-Although the Negative Binomial model is, in principle, more suitable for handling sparsity, the results still appear unreasonable. The intercept is much larger than expected, and both the z-values and p-values show little statistical significance. Staten Island, as noted earlier, remains the main source of sparsity-related distortion. Even with the relaxed variance assumption, the model does not gain meaningful explanatory power or demonstrate real learning capability. In short, the combination of extremely rare events and an imbalanced, irregular data structure prevents the Negative Binomial model from fitting the outcome in any convincing way.
+In Fig.11, although the Negative Binomial model is, in principle, more suitable for handling sparsity, the results still appear unreasonable. The intercept is much larger than expected, and both the z-values and p-values show little statistical significance. Staten Island, as noted earlier, remains the main source of sparsity-related distortion. Even with the relaxed variance assumption, the model does not gain meaningful explanatory power or demonstrate real learning capability. In short, the combination of extremely rare events and an imbalanced, irregular data structure prevents the Negative Binomial model from fitting the outcome in any convincing way.
 #v(1em)
-Fig.12 Three Model Comparison
+Three Model Comparison
 #v(1em)
-For both the Poisson and Negative Binomial models, most coefficients cluster tightly around zero with very limited variation. In contrast, the Logit model produces several abnormal coefficients, especially for borough indicators with sparse observations and for certain months. The magnitudes are far beyond those in the other two models (particularly when compared to the Negative Binomial), implying that fatality behaves even less predictably under the logit specification.
+In Fig.12, for both the Poisson and Negative Binomial models, most coefficients cluster tightly around zero with very limited variation. In contrast, the Logit model produces several abnormal coefficients, especially for borough indicators with sparse observations and for certain months. The magnitudes are far beyond those in the other two models (particularly when compared to the Negative Binomial), implying that fatality behaves even less predictably under the logit specification.
 
 This kind of “coefficient blow-up” in the Logit model usually signals quasi-complete separation: within specific borough–month combinations, fatal events either almost never occur or never occur at all. In our case, it is mostly the “almost never” situation. When that happens, logistic regression tends to push the associated coefficients toward ±∞ in an attempt to fit those extreme patterns. This indicates that fatality as a 0/1 outcome suffers from even stronger sparsity and imbalance than when treated as a count, reinforcing the idea that fatal events resemble a rare-event classification problem rather than a conventional regression target.
 #v(1em)
@@ -294,7 +303,7 @@ Taken together, the sparsity and irregular structure of our data make standard r
 == 3.2 K-Means Models Classification Methodolgy
 #v(1em)
 
-Given the specific location of each incident along with the number of construction projects happening at that location, we can figure out the severity of construction incidents at a given location within the boroughs of New York City. We can then use that information to determine which areas need better protocol with their construction projects. Therefore, we can use K-Means to determine which area within each borough has the highest concentration of incidents.
+Given the specific location of each incident along with the number of construction projects happening at that location, we can figure out the severity of construction incidents at a given location within the boroughs of New York City. We can then use that information to determine which areas need better protocol with their construction projects. Therefore, we can use K-Means[11] to determine which area within each borough has the highest concentration of incidents.
 
 Input: Longitude, Latitude, Injuries, Boroughs
 
@@ -317,9 +326,9 @@ Output: Injuries
 === 3.4.1 Methodolgy 
 To enhance model performance, two additional parameters were integrated: 
 
-*NoncompliantCount*, representing the frequency of non-compliant behaviors , 
+*NoncompliantCount*, representing the frequency of non-compliant behaviors , [16]
 
-*IssueNumber*, representing the volume of active construction projects in a specific area and month, allowing for temporal lags
+*IssueNumber*, representing the volume of active construction projects in a specific area and month, allowing for temporal lags[17]
 #v(1em)
 ==== 3.4.1.1 Data Preparation
 Five input features were selected from the final dataset *(df_final)*: Average Temperature *(AvgTemp)*, Average Precipitation *(AvgPrecip)*, Weighted Heat Vulnerability Index *(HVI_w)*, NoncompliantCount, and IssueNumber. The target variable, Injury, was binarized: samples with an injury count greater than zero were labeled as "Injury Occurred" (1), while others were labeled as 0. To address dimensional discrepancies, a *StandardScaler* was applied to standardize all input features. The dataset was randomly partitioned into a training set (80%) and a validation set (20%).
@@ -337,20 +346,20 @@ A three-layer Feedforward Neural Network (FNN) was adopted as the predictive mod
 
 *Output Layer*: A single neuron outputting unnormalized logit values, which are transformed into injury probabilities via a Sigmoid function.
 
-This structure provides the necessary nonlinear expressive capacity to capture complex interactions among the multivariate inputs.
+This structure provides the necessary nonlinear expressive capacity[12] to capture complex interactions among the multivariate inputs.
 
 
 #v(1em)
 ==== 3.4.1.3 Loss Function and Optimization
 
-Given the significant class imbalance (where "No Injury" cases far exceed "Injury" cases), the model utilizes a Weighted Binary Cross-Entropy with Logits Loss function. A positive weight, calculated as $"pos"_"weight" = N_"neg" / N_"pos"$, is automatically applied to balance the classes. The Adam optimizer, with a learning rate of $1 *10^"-4"$, is employed to update network parameters and minimize the loss function during each iteration.
+Given the significant class imbalance (where "No Injury" cases far exceed "Injury" cases), the model utilizes a Weighted Binary Cross-Entropy with Logits Loss function. A positive weight, calculated as $"pos"_"weight" = N_"neg" / N_"pos"$, is automatically applied to balance the classes. The Adam optimizer[14], with a learning rate of $1 *10^"-4"$, is employed to update network parameters and minimize the loss function during each iteration.
 #v(1em)
 === 3.4.1.4 Training and Validation
 
 The model was trained for 300 epochs. Loss and Accuracy for both training and validation sets were calculated in each epoch to monitor convergence trends. Dropout was active during training to enhance generalization. Key metrics were logged every 50 epochs. Finally, training/validation loss curves and validation accuracy curves were plotted to assess the stability of model convergence.
 #v(1em)
 === 3.4.1.5 Model Evaluation
-* ROC Curve & AUC*: The Receiver Operating Characteristic (ROC) curve was plotted using validation results, and the Area Under the Curve (AUC) was calculated to quantify overall classification performance. Youden's J statistic ($"TPR" - "FPR"$) was utilized to determine the optimal classification threshold.
+* ROC Curve & AUC*: The Receiver Operating Characteristic (ROC) curve was plotted[15] using validation results, and the Area Under the Curve (AUC) was calculated to quantify overall classification performance. Youden's J statistic ($"TPR" - "FPR"$) was utilized to determine the optimal classification threshold.
 
 * Confusion Matrix*: Matrices were generated for both the default threshold (0.5) and the optimal threshold to visualize classification accuracy, false positive rates, and false negative rates.
 
@@ -571,18 +580,23 @@ In conclusion, the poor performance is attributed to: (1) high data sparsity and
 
 #pagebreak()
 = 5. References
-[1] New York City Department of Buildings. (n.d.). _Incident Database_ [Data set]. \
-[2] Nayak, S. G., Shrestha, S., Kinney, P. L., Ross, Z., Sheridan, S. C., Pantea, C. I., Hsu, W. H., Muscatiello, N., & Hwang, S. A. (2018). _Development of a heat vulnerability index for New York State._ Public Health, 161, 127–137. \
-[3] Hilbe, J. M. (2011). _Negative binomial regression_ (2nd ed.). Cambridge University Press. \
-[4] Cameron, A. C., & Trivedi, P. K. (2013). _Regression analysis of count data_ (2nd ed.). Cambridge University Press. \
-[5] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). _Applied logistic regression_ (3rd ed.). Wiley.\
-[6] Bishop, C. M. (2006). _Pattern recognition and machine learning_. Springer. \ 
-[7] Goodfellow, I., Bengio, Y., & Courville, A. (2016). _Deep learning_. MIT Press. \ 
-[8] Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., ... & Duchesnay, É. (2011). Scikit-learn: Machine learning in Python. _Journal of Machine Learning Research, 12_, 2825–2830. \ 
-[10] Kingma, D. P., & Ba, J. (2015). Adam: A method for stochastic optimization. In _International Conference on Learning Representations (ICLR)_. \ 
-[11] Fawcett, T. (2006). An introduction to ROC analysis. _Pattern Recognition Letters, 27_(8), 861–874. \ 
-[12] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
-[13] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
+[1]Tixier, A. J.-P., Hallowell, M. R., Rajagopalan, B., & Bowman, D. (2016). Application of machine learning to construction injury prediction. Automation in Construction, 69, 102-114. https://doi.org/10.1016/j.autcon.2016.05.016\
+[2]NYCOSH. (2022, February 10). Deadly Skyline: An annual report on construction fatalities in New York State (2022 ed.). https://nycosh.org/wp-content/uploads/2022/02/NYCOSH_Deadly-Skyline-Report_2022.pdf\
+[3]Office of the New York State Comptroller. (2025, July). The construction sector in New York City: Post-pandemic trends (Report No. 8-2026). https://www.osc.ny.gov/files/reports/pdf/report-8-2026.pdf\
+[4]Carrivick, P. J. W., Lee, A. H., & Yau, K. K. W. (2003). Zero-inflated Poisson modeling to evaluate occupational safety interventions. Safety Science, 41(1), 53–63. https://doi.org/10.1016/S0925-7535(01)00057-1\
+[5]Junjia, Y., Alias, A. H., Haron, N. A., & Abu Bakar, N. (2024). Machine learning algorithms for safer construction sites: Critical review. Building Engineering, 2(1), 544. https://doi.org/10.59400/be.v2i1.544\
+[6] New York City Department of Buildings. (n.d.). _Incident Database_ [Data set]. \
+[7] Nayak, S. G., Shrestha, S., Kinney, P. L., Ross, Z., Sheridan, S. C., Pantea, C. I., Hsu, W. H., Muscatiello, N., & Hwang, S. A. (2018). _Development of a heat vulnerability index for New York State._ Public Health, 161, 127–137. \
+[8] Hilbe, J. M. (2011). _Negative binomial regression_ (2nd ed.). Cambridge University Press. \
+[9] Cameron, A. C., & Trivedi, P. K. (2013). _Regression analysis of count data_ (2nd ed.). Cambridge University Press. \
+[10] Hosmer, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). _Applied logistic regression_ (3rd ed.). Wiley.\
+[11] Bishop, C. M. (2006). _Pattern recognition and machine learning_. Springer. \ 
+[12] Goodfellow, I., Bengio, Y., & Courville, A. (2016). _Deep learning_. MIT Press. \ 
+[13] Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., ... & Duchesnay, É. (2011). Scikit-learn: Machine learning in Python. _Journal of Machine Learning Research, 12_, 2825–2830. \ 
+[14] Kingma, D. P., & Ba, J. (2015). Adam: A method for stochastic optimization. In _International Conference on Learning Representations (ICLR)_. \ 
+[15] Fawcett, T. (2006). An introduction to ROC analysis. _Pattern Recognition Letters, 27_(8), 861–874. \ 
+[16] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
+[17] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
 
 
 
