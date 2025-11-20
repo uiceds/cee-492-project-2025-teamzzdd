@@ -283,7 +283,8 @@ Poisson Model
 #v(1em)
 In Fig.10, we observed that the significance levels of several parameters—such as the borough dummy variables, meteorological indicators, and the HVI—are generally weak. Some coefficients even exhibit numerical irregularities, for example, in Staten Island, accompanied by notably wide confidence intervals. Although correlation mapping suggests strong pairwise correlations, these signals must be interpreted with caution due to several limitations.
 First, the correlation map is inherently dominated by linear relationships.
-Second, it does not capture the interdependence among variables. For instance, while the HVI exhibits a high correlation with the outcome, its relationship with the borough variable is exceptionally tight, suggesting that the observed correlation is primarily driven by borough-specific characteristics rather than the HVI itself.
+Second, the model does not capture how the variables depend on one another. For example, the HVI has a strong correlation with the outcome, but it is also very tightly linked to the borough variable. This suggests that the apparent effect of the HVI is mostly reflecting borough-specific patterns rather than the index itself.
+Because of this, it is not surprising that many predictors fail to reach statistical significance in the Poisson or other count-based models. The limited number of observations from Staten Island also adds to the overdispersion problem, which in turn makes the coefficient estimates less stable.
 As a result, when adopting Poisson or other count-distribution models, it is not surprising that many predictors are not statistically significant. In addition, the sparsity of observations from Staten Island directly contributes to overdispersion, further affecting coefficient stability.
 #v(1em)
 Negative Binomial Model
@@ -597,6 +598,7 @@ In conclusion, the poor performance is attributed to: (1) high data sparsity and
 [15] Fawcett, T. (2006). An introduction to ROC analysis. _Pattern Recognition Letters, 27_(8), 861–874. \ 
 [16] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
 [17] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
+
 
 
 
