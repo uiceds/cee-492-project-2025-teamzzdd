@@ -64,16 +64,15 @@ keywords:"Construction Safety", "Risk Prediction", "Accident Reports", "Regressi
 
 
 = 1. Introduction
-The introduction clearly describes the planned analysis, including a rationale for why the analysis is expected to be useful and any relevant background information. It includes a description of the dataset you are using, including its source, format, and content. A description of each attribute (e.g. spreadsheet column) in the dataset should be included.
 #v(1em)
 == 1.1 Background & Motivation
 The purpose of the model is to help avoid incidents and accidents at New York City by identifying the dominant attributes influencing outcomes, thereby guiding proactive protection measures in construction management.
 #v(1em)
-== 1.2 Research Questions & Objectives
+== 1.2 Objectives
 Our main objective is to analyze different types of construction incidents at New York City that happened within 1 or 2 years from now. For this project, we would mainly be examining the nature of construction related incidents and accidents as well as performing correlations with the data by examining the prevalence of each incident and accident at each of the five boroughs of New York City. We would want to see where each type of incident has the highest probability of occurring, and where specifically measures should be implemented to prevent these types of incidents. Finally, keeping track of when these incidents occurred will also be critical as the data could also be used to calculate the frequency of accidents over time.
 #v(1em)
 == 1.3 Overview of Analytical Plan
-
+In Section 2, we begin by preprocessing the data and, through a correlation-mapping analysis, identify and introduce additional relevant parameters. Section 3 conducts preliminary regression modeling to diagnose the limitations of classical regression approaches and to determine that subsequent modeling efforts should primarily adopt a classification framework. Sections 4 and 5 present the clustering and tree-based baselines, specifically k-means clustering and decision tree models. Sections 6 and 7 develop the neural-network–based classification and regression models; although our main focus remains on classification, we still explore regression models for the purpose of methodological completeness and comparative analysis. 
 #v(2em)
 = 2. Exploratory data analysis
 This section will mainly focus on introductory data analysis with some preliminary tables and plots describing critical aspects of the data. Visible patterns will be discussed with the data that has been formulated and the coming sections below will describe how we plan on applying and modelling this data.
@@ -132,7 +131,7 @@ Preliminary inspection indicates that higher-HVI areas (typically in the Bronx a
 
 Some other parameter will be added such as Noncomplaint Count and IssueNumber (in section 6) in order to solve the regression model problems. 
 #v(1em)
-== 2.3.1 correlation mapping
+== 2.3.1 Correlation Mapping
 == 2.3.1.1 Weighted HVI
 Weighted averaging is used when different observations contribute unequally to an aggregate measure.In another word it will directly contain the information about the borough.
 #v(1em)
@@ -262,43 +261,39 @@ At the begining we try to use several traditional prediction model in order to f
 == 3.1.4 visualization 
 
 #figure(image("figures/coef_comparison.jpg", width: 80%), caption: [Coefficient comparison])
-#figure(image("figures/pred_fatal_heatmap.jpg", width: 80%), caption: [Predicted fatality heatmap])
-#figure(image("figures/pred_fatal_spatial.jpg", width: 80%), caption: [Spatial fatality prediction map])
-#v(1em)
+
 == 3.2 Disccusion the limitation of data
-本研究在建模时没有采用传统的线性回归，而是根据响应变量的离散计数特征与大量 0 的现象，分别构建了 Poisson、负二项与 Logit 模型。伤人数属于计数型结果且样本中取值范围相对更丰富，因此首先使用 Poisson 回归刻画伤人数与气候、地区等协变量之间的关系；死亡人数极为稀少且存在明显过度离散的可能，于是进一步采用负二项回归以放宽方差 = 均值的假设；在此基础上，又将死亡事件重编码为二元变量（是否发生死亡），使用逻辑回归直接拟合 0/1 结果。通过比较三类模型的系数与预测表现，我们的目标并不是得到一个“完美模型”，而是诊断数据的稀疏性和信息含量，以判断后续神经网络应更偏向计数回归任务还是极度不平衡的分类任务。
-图 10（伤人数 Poisson 模型系数）
-Poisson 模型中，各 Borough 虚拟变量、气象变量（平均气温、降水）以及 HVI 指标的系数大多接近 0，显著性也很弱；只有 Staten Island 的系数呈现出数值异常的极端负值，同时置信区间非常宽。这一方面说明在当前样本规模下，不同区之间的伤人差异并未被稳健地识别出来；另一方面，Staten Island 伤人事件极少，导致其系数在 Poisson 框架下数值不稳定、对少量观测点高度敏感。这提示伤人数据已经存在一定的稀疏性和潜在过度离散问题。
+In this study, we selected Poisson, Negative Binomial, and Logit models based on the following considerations.
+First, the dataset contains a substantial number of zeros, resulting in pronounced sparsity.
+Second, although the injury variable takes non-zero values, the fatality variable appears only as 0 or 1 throughout the dataset.
+Given these characteristics, we employ a Poisson regression to describe the relationship between injury counts and the relevant covariates. To address the rarity of fatality events—which may induce over-dispersion—we further introduce a Negative Binomial model, thereby relaxing the restrictive assumption that the variance must equal the mean. In addition, because fatality is inherently a binary outcome, it naturally aligns with a logit regression, allowing us to model the occurrence of a fatal event directly as a 0/1 response.
+The purpose of this set of preliminary regressions is to diagnose the sparsity and information content of the data, which in turn guides the selection of our downstream modeling tasks. Based on these diagnostic results, our subsequent experiments place greater emphasis on classification, as it is better suited to the underlying data structure.
+#v(1em)
+Fig.10 Poisson Model
+#v(1em)
+In the Poisson model, we observed that the significance levels of several parameters—such as the borough dummy variables, meteorological indicators, and the HVI—are generally weak. Some coefficients even exhibit numerical irregularities, for example, in Staten Island, accompanied by notably wide confidence intervals. Although correlation mapping suggests strong pairwise correlations, these signals must be interpreted with caution due to several limitations.
+First, the correlation map is inherently dominated by linear relationships.
+Second, it does not capture the interdependence among variables. For instance, while the HVI exhibits a high correlation with the outcome, its relationship with the borough variable is exceptionally tight, suggesting that the observed correlation is primarily driven by borough-specific characteristics rather than the HVI itself.
+As a result, when adopting Poisson or other count-distribution models, it is not surprising that many predictors are not statistically significant. In addition, the sparsity of observations from Staten Island directly contributes to overdispersion, further affecting coefficient stability.
+#v(1em)
+Fig.11 Negative Binomial Model
+#v(1em)
+Although the Negative Binomial model is, in principle, more suitable for handling sparsity, the results still appear unreasonable. The intercept is much larger than expected, and both the z-values and p-values show little statistical significance. Staten Island, as noted earlier, remains the main source of sparsity-related distortion. Even with the relaxed variance assumption, the model does not gain meaningful explanatory power or demonstrate real learning capability. In short, the combination of extremely rare events and an imbalanced, irregular data structure prevents the Negative Binomial model from fitting the outcome in any convincing way.
+#v(1em)
+Fig.12 Three Model Comparison
+#v(1em)
+For both the Poisson and Negative Binomial models, most coefficients cluster tightly around zero with very limited variation. In contrast, the Logit model produces several abnormal coefficients, especially for borough indicators with sparse observations and for certain months. The magnitudes are far beyond those in the other two models (particularly when compared to the Negative Binomial), implying that fatality behaves even less predictably under the logit specification.
 
-图 11（死亡人数负二项模型系数）
-负二项模型在理论上可以更好地处理过度离散和大量 0，但结果依然显示：截距估计值很大、标准误同样很大，多数协变量的 z 值和 P 值并不显著。部分 Borough（如 Manhattan、Queens）系数方向与伤人模型相符，但 Staten Island 仍然出现了大幅度的负向系数，说明该地区死亡事件在样本期内几乎从未发生。整体来看，负二项模型并未显著提升解释力，而是进一步暴露出死亡数据“极少事件 + 极不平衡”的结构特征。
-
-图 12（Poisson、NegBin、Logit 系数对比）
-系数对比图将三种模型放在同一坐标系中，可以看到：
-
-Poisson 与负二项模型的绝大部分系数集中在 0 附近，变化幅度有限；
-
-Logistic 模型的若干 Borough 和月份虚拟变量却出现了数量级远大于前两者的正负系数，有的系数甚至被拉得非常极端。
-
-这种“Logit 系数爆炸”的现象，通常反映了数据中存在准完全分离（quasi-complete separation）：在某些 Borough–月份组合中，要么几乎从不发生死亡，要么全部都发生死亡（在这里主要是“几乎从不发生”），导致逻辑回归为了拟合这些极端样本而把对应系数推向 ±∞。这说明 fatality 作为 0/1 结果时，数据的稀疏性和不平衡问题比计数建模时更加严重，也进一步印证了“死亡预测更接近罕见事件分类”的判断。
-
-图 13（Borough×月份死亡预测热力图，负二项模型）
-热力图展示了不同 Borough 与月份组合下的预测死亡人数，整体数值都非常低，大部分格子接近 0，仅在极少数 Borough–月份（例如 Bronx、Manhattan 的个别月份）出现略高的预测值（约 0.03–0.04）。图中既看不出明显的季节性，也难以识别稳定的空间–时间模式，这说明在当前观察期内，死亡事件不仅总体数量极少，而且在时间和空间上都高度分散，模型只能给出“接近零”的预测。换句话说，数据本身缺乏足够的信息来支撑精细的时空风险分布分析。
-
-图 14（死亡预测的空间分布气泡图）
-空间气泡图将各 Borough 的预测死亡人数投影到地理坐标上，气泡大小与颜色差异有限，仅反映出 Manhattan、Bronx 等个别区域略高，而 Staten Island 基本为零。由于每个点背后只有非常少的死亡样本，这张图更多地是对数据稀疏性的可视化：我们可以大致看出“高风险区”集中在核心城区，但无论是绝对水平还是统计显著性，都不足以支持进一步的空间推断或政策定量评估。
-
-综合来看，这一系列“并不理想”的回归结果本身，恰恰揭示了数据层面的关键局限：
-
-事件极度稀少与类别严重不平衡——尤其是死亡样本，导致 Logit 模型出现分离现象、系数数值不稳定。
-
-Poisson 假设不足与过度离散——伤人和死亡计数均呈现出比 Poisson 更强的波动，需要负二项或零膨胀类模型；但在当前样本规模下，即便放宽分布假设，很多协变量依然无法被显著识别。
-
-时空信息不足——Borough×月份的组合中，大多数格子没有事件，导致时空模式难以从噪声中分离出来，空间图和热力图更多反映的是“哪里几乎一直是 0”。
+This kind of “coefficient blow-up” in the Logit model usually signals quasi-complete separation: within specific borough–month combinations, fatal events either almost never occur or never occur at all. In our case, it is mostly the “almost never” situation. When that happens, logistic regression tends to push the associated coefficients toward ±∞ in an attempt to fit those extreme patterns. This indicates that fatality as a 0/1 outcome suffers from even stronger sparsity and imbalance than when treated as a count, reinforcing the idea that fatal events resemble a rare-event classification problem rather than a conventional regression target.
+#v(1em)
+Summary
+#v(1em)
+Taken together, the sparsity and irregular structure of our data make standard regression models unsuitable unless additional, more informative predictors are introduced—such as the new parameters incorporated in Section 7.
 #v(2em)
 = 4. K-Means Models 
 #v(1em)
-== 4.1 Hypothesis
+== 4.1 Methodolgy 
+
 
 Given the specific location of each incident along with the number of construction projects happening at that location, we can figure out the severity of construction incidents at a given location within the boroughs of New York City. We can then use that information to determine which areas need better protocol with their construction projects. Therefore, we can use K-Means to determine which area within each borough has the highest concentration of incidents.
 
@@ -318,7 +313,8 @@ The K-Means model shows that construction-related injuries in New York City form
 #v(2em)
 = 5. Classification Tree Models 
 #v(1em)
-== 5.1 Hypothesis
+== 5.1 Methodolgy 
+
 
 Through the 4 major boroughs of New York City, we can determine common factors pertaining to construction incidents/accidents that lead to injuries in New York City. From this data, we can determine which factors should primarily be examined in terms of implementing new state OSHA regulations.
 
@@ -369,7 +365,6 @@ A three-layer Feedforward Neural Network (FNN) was adopted as the predictive mod
 
 This structure provides the necessary nonlinear expressive capacity to capture complex interactions among the multivariate inputs.
 
-在过程中我们没有选择用特征函数正则化等结构，其本质是因为甚至连过拟合也做不到完全学习的状态。
 
 #v(1em)
 === 6.1.3 Loss Function and Optimization
@@ -475,7 +470,7 @@ The plotted curves show the relationship between these metrics and the threshold
 #v(2em)
 = 7. Neural Network Models Regression
 #v(1em)
-== 7.1 Hypothesis
+== 7.1 Methodolgy
 
 This study employs an improved Neural Network Regression model to predict the count of construction-related injuries. To enhance prediction stability and robustness, the model incorporates mechanisms for data denoising, standardization, and nonlinear feature extraction.
 #v(1em)
@@ -509,6 +504,8 @@ A Neural Network model named InjuryRegressor was defined with a multi-layer nonl
 * Output Layer*: Single neuron outputting the predicted injury count.
 
 LeakyReLU was selected because it maintains non-zero gradients in the negative interval, avoiding the vanishing gradient problem, which is particularly suitable for regression tasks involving sparse data.
+#v(1em)
+In this process, we did not adopt feature-function regularization or similar structures, essentially because the model was not even capable of overfitting — it could not fully learn the patterns in the first place.
 #v(1em)
 === 7.1.4 Loss Function and Optimizer
 The model uses Mean Squared Error (MSE) as the loss function. The Adam optimizer was selected with a learning rate of $3*10^"-4"$, balancing convergence speed and stability through automatic learning rate adjustment. Training and validation losses were recorded to monitor convergence trends and generalization performance. Note: Traditional nonlinear count models (e.g., Poisson and Negative Binomial) were tested but excluded due to convergence failures during training.
