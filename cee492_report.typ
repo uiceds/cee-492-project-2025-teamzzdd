@@ -217,12 +217,13 @@ On average, 83.8% of incidents resulted in at least one reported injury, whereas
 This section synthesizes the primary findings from our exploratory data analysis. We aggregated the data to compute and examine key descriptive statistics. Specifically, we calculated the average number of fatalities, average number of injuries, and average incident counts for each of the five boroughs. From this, we also derived the fatality and injury rates (as percentages) per borough to better understand the proportional risk. Furthermore, our summary includes an analysis of temporal patterns. We investigated monthly trends by charting the frequency and cumulative totals of both fatalities and injuries over the study period. These initial summaries provide a foundational understanding of which areas are most affected and how incident severity fluctuates over time.
 
 #v(2em)
-= 3. Preliminary Predictive Modeling & Model Limitation 
+= 3.Methodology
+== 3.1 Preliminary Predictive Modeling & Model Limitation 
 #v(1em)
-== 3.1 Result figures and explaination
+=== 3.1.1 Result figures and Explaination
 At the begining we try to use several traditional prediction model in order to figure out limitation about the data of the model.
 #v(1em)
-== 3.1.1 Poisson Model (Injury)
+==== 3.1.1.1 Poisson Model (Injury)
 #align(center, [Table 6. Poisson Regression Model Results for Injury Counts
 #table(
   columns: 7,
@@ -234,7 +235,7 @@ At the begining we try to use several traditional prediction model in order to f
 )])
 #figure(image("figures/poisson_injury_coefficients.jpg", width: 80%), caption: [Poisson injury model coefficients])
 #v(1em)
-== 3.1.2 Negative Binomial Model (Fatality) 
+==== 3.1.1.2 Negative Binomial Model (Fatality) 
 
 #align(center, [Table 7. Negative Binomial Regression Model Results for Fatalities
 #table(
@@ -247,7 +248,7 @@ At the begining we try to use several traditional prediction model in order to f
 )])
 #figure(image("figures/neg_bin_fatality_coefficients.jpg", width: 80%), caption: [Negative binomial fatality model coefficients])
 #v(1em)
-== 3.1.3 Logistic Model
+== 3.1.1.3 Logistic Model
 #align(center, [Table 8. Logistic Regression Results for Binary Fatality Events
 #table(
   columns: 7,
@@ -258,11 +259,11 @@ At the begining we try to use several traditional prediction model in order to f
   [Intercept], [-8.1713], [8.01e+06], [-1e-06], [1.000], [-1.57e+07], [1.57e+07],
 )])
 #v(1em)
-== 3.1.4 visualization 
+== 3.1.1.4 Visualization 
 
 #figure(image("figures/coef_comparison.jpg", width: 80%), caption: [Coefficient comparison])
 
-== 3.2 Disccusion the limitation of data
+== 3.1.2 Disccusion the Limitation of Data for Preliminary Regression Model
 In this study, we selected Poisson, Negative Binomial, and Logit models based on the following considerations.
 First, the dataset contains a substantial number of zeros, resulting in pronounced sparsity.
 Second, although the injury variable takes non-zero values, the fatality variable appears only as 0 or 1 throughout the dataset.
@@ -290,10 +291,8 @@ Summary
 #v(1em)
 Taken together, the sparsity and irregular structure of our data make standard regression models unsuitable unless additional, more informative predictors are introduced—such as the new parameters incorporated in Section 7.
 #v(2em)
-= 4. K-Means Models 
+== 3.2 K-Means Models Classification Methodolgy
 #v(1em)
-== 4.1 Methodolgy 
-
 
 Given the specific location of each incident along with the number of construction projects happening at that location, we can figure out the severity of construction incidents at a given location within the boroughs of New York City. We can then use that information to determine which areas need better protocol with their construction projects. Therefore, we can use K-Means to determine which area within each borough has the highest concentration of incidents.
 
@@ -301,20 +300,10 @@ Input: Longitude, Latitude, Injuries, Boroughs
 
 Output: Cities/Counties with Highest Concentration
 #v(1em)
-== 4.2 Models
 
-#figure(image("figures/injury_scattermap_zs.jpg", width: 80%), caption: [Spatial Distribution of Injuries from Each Borough])
-
-#figure(image("figures/injury_scattermap_kmeans_zs.jpg", width: 80%), caption: [K-Means Model w/ Centroids])
-#v(1em)
-== 4.3 Summary
-
-The K-Means model shows that construction-related injuries in New York City form clear spatial clusters, with higher concentrations appearing within parts of the Bronx and Brooklyn, where repeated incident points are densely grouped. By using longitude, latitude, injury counts, and borough information, the clustering results highlight these boroughs as priority areas for strengthened safety protocols and resource allocation.
 #v(2em)
-= 5. Classification Tree Models 
+= 3.3 Decision Tree Models Classification Methodolgy
 #v(1em)
-== 5.1 Methodolgy 
-
 
 Through the 4 major boroughs of New York City, we can determine common factors pertaining to construction incidents/accidents that lead to injuries in New York City. From this data, we can determine which factors should primarily be examined in terms of implementing new state OSHA regulations.
 
@@ -322,35 +311,20 @@ Input: Borough, Incident Type
 
 Output: Injuries
 #v(1em)
-== 5.2 Model
 
-#figure(image("figures/manhattan_tree_zs.jpg", width: 80%), caption: [Manhattan Injury Classification Tree])
-
-#figure(image("figures/brooklyn_tree_zs.jpg", width: 80%), caption: [Brooklyn Injury Classification Tree])
-
-#figure(image("figures/queens_tree_zs.jpg", width: 80%), caption: [Queens Injury Classification Tree])
-
-#figure(image("figures/bronx_tree_zs.jpg", width: 80%), caption: [Bronx Injury Classification Tree])
-
-#figure(image("figures/nyc_tree_zs.jpg", width: 80%), caption: [Four Boroughs Total Injury Classification Tree])
+== 3.4 Neural Network Classification 
 #v(1em)
-== 5.3 Summary
-
-The Classification Tree model identifies which incident types and borough characteristics are most strongly associated with injury outcomes. The results show that Manhattan, Brooklyn, Queens, and the Bronx each display different dominant contributing factors, indicating that incident type plays a key role in predicting injury likelihood. These insights support targeted regulatory and safety strategies tailored to the needs of each borough.
-#v(2em)
-= 6. Neural Network Classification 
-#v(1em)
-== 6.1 Methodolgy 
+=== 3.4.1 Methodolgy 
 To enhance model performance, two additional parameters were integrated: 
 
 *NoncompliantCount*, representing the frequency of non-compliant behaviors , 
 
 *IssueNumber*, representing the volume of active construction projects in a specific area and month, allowing for temporal lags
 #v(1em)
-=== 6.1.1 Data Preparation
+==== 3.4.1.1 Data Preparation
 Five input features were selected from the final dataset *(df_final)*: Average Temperature *(AvgTemp)*, Average Precipitation *(AvgPrecip)*, Weighted Heat Vulnerability Index *(HVI_w)*, NoncompliantCount, and IssueNumber. The target variable, Injury, was binarized: samples with an injury count greater than zero were labeled as "Injury Occurred" (1), while others were labeled as 0. To address dimensional discrepancies, a *StandardScaler* was applied to standardize all input features. The dataset was randomly partitioned into a training set (80%) and a validation set (20%).
 #v(1em)
-=== 6.1.2 Model Architecture
+==== 3.4.1.2 Model Architecture
 A three-layer Feedforward Neural Network (FNN) was adopted as the predictive model. The architecture is defined as follows:
 
 *Input Layer*: Corresponds to the five input features.
@@ -367,15 +341,15 @@ This structure provides the necessary nonlinear expressive capacity to capture c
 
 
 #v(1em)
-=== 6.1.3 Loss Function and Optimization
+==== 3.4.1.3 Loss Function and Optimization
 
 Given the significant class imbalance (where "No Injury" cases far exceed "Injury" cases), the model utilizes a Weighted Binary Cross-Entropy with Logits Loss function. A positive weight, calculated as $"pos"_"weight" = N_"neg" / N_"pos"$, is automatically applied to balance the classes. The Adam optimizer, with a learning rate of $1 *10^"-4"$, is employed to update network parameters and minimize the loss function during each iteration.
 #v(1em)
-=== 6.1.4 Training and Validation
+=== 3.4.1.4 Training and Validation
 
 The model was trained for 300 epochs. Loss and Accuracy for both training and validation sets were calculated in each epoch to monitor convergence trends. Dropout was active during training to enhance generalization. Key metrics were logged every 50 epochs. Finally, training/validation loss curves and validation accuracy curves were plotted to assess the stability of model convergence.
 #v(1em)
-=== 6.1.5 Model Evaluation
+=== 3.4.1.5 Model Evaluation
 * ROC Curve & AUC*: The Receiver Operating Characteristic (ROC) curve was plotted using validation results, and the Area Under the Curve (AUC) was calculated to quantify overall classification performance. Youden's J statistic ($"TPR" - "FPR"$) was utilized to determine the optimal classification threshold.
 
 * Confusion Matrix*: Matrices were generated for both the default threshold (0.5) and the optimal threshold to visualize classification accuracy, false positive rates, and false negative rates.
@@ -383,8 +357,106 @@ The model was trained for 300 epochs. Loss and Accuracy for both training and va
 * Precision-Recall-F1 Analysis*: Precision, Recall, and F1 scores were calculated across a threshold range of [0.1, 0.9] with a step size of 0.05. Curves were plotted to evaluate trade-offs under different judgment criteria, identifying the threshold that maximizes the F1 score. 
 
 #v(1em)
-== 6.2 Model
 
+
+#v(2em)
+== 3.5 Neural Network Models Regression 
+#v(1em)
+=== 3.5.1 Methodolgy
+
+This study employs an improved Neural Network Regression model to predict the count of construction-related injuries. To enhance prediction stability and robustness, the model incorporates mechanisms for data denoising, standardization, and nonlinear feature extraction.
+#v(1em)
+=== 3.5.1.1 Data Preparation and Cleaning
+* Missing Values*: Missing values in the Injury column were filled with zero and converted to floating-point format. 
+
+* Feature Engineering*: The Month variable was extracted from YearMonth, and Borough was processed using one-hot encoding. 
+
+* Denoising*: Extreme values (outside the 1st and 99th percentiles) were removed for Temperature, Precipitation, HVI, Noncompliant Count, Issue Number, and Injury counts. Samples exhibiting concurrent extreme heat and precipitation were excluded, as were records with negligible construction activity (low IssueNumber). HVI values were capped within a reasonable upper limit. 
+
+* Log Smoothing*: Logarithmic smoothing was applied to high-variance features (Noncompliant Count, Issue Number, Precipitation) to prevent dominance by single variables. 
+
+Due to the inherent sparsity of the data, additional regularization terms were omitted to avoid further underfitting or gradient convergence issues.
+#v(1em)
+=== 3.5.1.2 Feature Standardization
+Input features comprised Average Temperature, Average Precipitation, Heat Vulnerability Index, Noncompliant Count, Issue Number, Month, and borough encoding columns. All input variables were standardized. To ensure numerical stability and facilitate gradient convergence, the target variable *(Injury)* was normalized using its mean and standard deviation. The dataset was subsequently partitioned into an 80% training set and a 20% validation set.
+#v(1em)
+=== 3.5.1.3 Model Architecture
+A Neural Network model named InjuryRegressor was defined with a multi-layer nonlinear structure:
+
+* Input Layer*: Corresponds to all processed input features.
+
+* First Hidden Layer*: 32 neurons using the LeakyReLU activation function.
+
+* Dropout Layer*: Rate of 0.1, used to prevent overfitting.
+
+* Second Hidden Layer*: 16 neurons using the LeakyReLU activation function.
+
+* Third Hidden Layer*: 8 neurons using the LeakyReLU activation function.
+
+* Output Layer*: Single neuron outputting the predicted injury count.
+
+LeakyReLU was selected because it maintains non-zero gradients in the negative interval, avoiding the vanishing gradient problem, which is particularly suitable for regression tasks involving sparse data.
+#v(1em)
+In this process, we did not adopt feature-function regularization or similar structures, essentially because the model was not even capable of overfitting — it could not fully learn the patterns in the first place.
+#v(1em)
+=== 3.5.1.4 Loss Function and Optimizer
+The model uses Mean Squared Error (MSE) as the loss function. The Adam optimizer was selected with a learning rate of $3*10^"-4"$, balancing convergence speed and stability through automatic learning rate adjustment. Training and validation losses were recorded to monitor convergence trends and generalization performance. Note: Traditional nonlinear count models (e.g., Poisson and Negative Binomial) were tested but excluded due to convergence failures during training.
+#v(1em)
+=== 3.5.1.5 Training and Validation 
+The following metrics were calculated using validation predictions:
+
+* $R^2$ (Coefficient of Determination)*: Measures the proportion of variance explained by the model. An $R^2 < 0$ indicates the model failed to learn effectively.
+
+* RMSE (Root Mean Square Error)*: Reflects the average magnitude of prediction error. 
+
+* MAE (Mean Absolute Error)*: Measures the average deviation between predicted and actual values. 
+
+Additionally, scatter plots of predicted vs. actual values were generated to assess fit; a point cloud clustering near the diagonal indicates good predictive performance.
+#v(1em)
+=== 3.5.1.6 Model Improvements
+*Approach 1: Hybrid Lag and Group Bias Linear Model*
+
+*Concept*: Incorporates time-lag features and borough-specific biases into linear regression to capture temporal inertia and regional disparities.
+
+* Feature Processing*: Retained only samples with construction records; applied log smoothing to non-compliant counts, permits, and precipitation; generated one-period lag features by borough and month. 
+
+*Structure*: Includes global linear weights and regional bias terms to reflect baseline risks across boroughs.
+
+* Results*: While the model demonstrated some capacity to explain regional differences, overall $R^2$, RMSE, and MAE metrics remained poor, indicating limited fit.
+
+*Approach 2: Two-Stage Hybrid Model (No Lag, Strict Denoising)*
+
+* Concept*: Adopts a "Classify-then-Regress" structure to improve stability under sparse data conditions. 
+
+* Stage 1 (Classification)*: Uses a neural network to determine the probability of an injury occurring (Injury > 0).
+
+* Stage 2 (Regression)*: For confirmed injury samples, estimates the actual count using a linear model with borough biases. 
+
+* Results*: The classification stage achieved high accuracy (0.8–0.9), effectively identifying high-risk months. However, while the regression stage showed a slight improvement in $R^2$ over single-stage models, overall predictive capability remained unsatisfactory due to the limited volume of data.
+#v(1em)
+
+= 4 Results and Discussion
+== 4.1 K-mean 
+  #figure(image("figures/injury_scattermap_zs.jpg", width: 80%), caption: [Spatial Distribution of Injuries from Each Borough])
+
+#figure(image("figures/injury_scattermap_kmeans_zs.jpg", width: 80%), caption: [K-Means Model w/ Centroids])
+#v(1em)
+
+The K-Means model shows that construction-related injuries in New York City form clear spatial clusters, with higher concentrations appearing within parts of the Bronx and Brooklyn, where repeated incident points are densely grouped. By using longitude, latitude, injury counts, and borough information, the clustering results highlight these boroughs as priority areas for strengthened safety protocols and resource allocation.
+== 4.2 Decision Tree
+#figure(image("figures/manhattan_tree_zs.jpg", width: 80%), caption: [Manhattan Injury Classification Tree])
+
+#figure(image("figures/brooklyn_tree_zs.jpg", width: 80%), caption: [Brooklyn Injury Classification Tree])
+
+#figure(image("figures/queens_tree_zs.jpg", width: 80%), caption: [Queens Injury Classification Tree])
+
+#figure(image("figures/bronx_tree_zs.jpg", width: 80%), caption: [Bronx Injury Classification Tree])
+
+#figure(image("figures/nyc_tree_zs.jpg", width: 80%), caption: [Four Boroughs Total Injury Classification Tree])
+#v(1em)
+The Classification Tree model identifies which incident types and borough characteristics are most strongly associated with injury outcomes. The results show that Manhattan, Brooklyn, Queens, and the Bronx each display different dominant contributing factors, indicating that incident type plays a key role in predicting injury likelihood. These insights support targeted regulatory and safety strategies tailored to the needs of each borough.
+#v(2em)
+== 4.3 Netrual Network for Classification
 #figure(
   image("figures/accuracy.png", width: 80%),
   caption: [Validation Accuracy Over Training Epochs],
@@ -415,13 +487,12 @@ The model was trained for 300 epochs. Loss and Accuracy for both training and va
 )
 #v(2em)
 #v(1em)
-== 6.3 Summary & Discussion
-#v(1em)
-=== 6.3.1 Validation Accuracy Over Epochs
+
+=== 4.3.1 Validation Accuracy Over Epochs
 
 As illustrated in the results, the validation accuracy exhibited significant fluctuation during the initial training phase but demonstrated a steady upward trend overall, rising from approximately 0.28 to nearly 0.45. This indicates that the model progressively learned effective relationships between features, leading to improved validation performance. While there is room for further accuracy improvement, the absence of significant overfitting suggests that the network architecture and regularization settings (Dropout=0.1) are reasonable and provide good generalization capability.
 #v(1em)
-=== 6.3.2 Confusion Matrix (Threshold = 0.50)
+=== 4.3.2 Confusion Matrix (Threshold = 0.50)
 
 At the default threshold of 0.50, the model's identification of "Injury" (positive class) showed high recall but slightly lower precision. The confusion matrix results are as follows:
 
@@ -440,7 +511,7 @@ At the default threshold of 0.50, the model's identification of "Injury" (positi
 
 These results suggest a conservative prediction strategy (preferring false alarms over missed detections). In the context of accident analysis, this bias is acceptable, as false negatives (missed injury predictions) typically carry a higher safety cost than false positives.
 #v(1em)
-=== 6.3.3 Confusion Matrix (Threshold = 0.49, Optimal by Youden's J)
+=== 4.3.3 Confusion Matrix (Threshold = 0.49, Optimal by Youden's J)
 
 Applying the optimal threshold of 0.49, determined by Youden's J statistic, significantly improved the model's recognition capability:
 
@@ -450,7 +521,7 @@ Applying the optimal threshold of 0.49, determined by Youden's J statistic, sign
 
 This adjustment achieved a better balance, enhancing overall classification accuracy while maintaining high recall. The significant reduction in missed detections (FN) compared to the default threshold highlights that threshold optimization is a critical step in tasks involving imbalanced datasets.
 #v(1em)
-=== 6.3.4 Precision/Recall/F1 vs. Threshold
+=== 4.3.4 Precision/Recall/F1 vs. Threshold
 
 Analysis of the metrics is defined as follows:
 
@@ -467,82 +538,7 @@ Analysis of the metrics is defined as follows:
 
 The plotted curves show the relationship between these metrics and the threshold. In the 0.1–0.49 range, all three metrics remain high: Recall stays near 1.0, Precision stabilizes around 0.8, and the F1 score approaches 0.9. However, beyond the 0.5 threshold, all metrics decline rapidly, indicating that an excessively high threshold makes the model overly conservative, resulting in missed positive samples. Consequently, 0.49 was selected as the optimal threshold, achieving an ideal balance between Recall and Precision and maximizing the F1 score.
 
-#v(2em)
-= 7. Neural Network Models Regression
-#v(1em)
-== 7.1 Methodolgy
-
-This study employs an improved Neural Network Regression model to predict the count of construction-related injuries. To enhance prediction stability and robustness, the model incorporates mechanisms for data denoising, standardization, and nonlinear feature extraction.
-#v(1em)
-=== 7.1.1 Data Preparation and Cleaning
-* Missing Values*: Missing values in the Injury column were filled with zero and converted to floating-point format. 
-
-* Feature Engineering*: The Month variable was extracted from YearMonth, and Borough was processed using one-hot encoding. 
-
-* Denoising*: Extreme values (outside the 1st and 99th percentiles) were removed for Temperature, Precipitation, HVI, Noncompliant Count, Issue Number, and Injury counts. Samples exhibiting concurrent extreme heat and precipitation were excluded, as were records with negligible construction activity (low IssueNumber). HVI values were capped within a reasonable upper limit. 
-
-* Log Smoothing*: Logarithmic smoothing was applied to high-variance features (Noncompliant Count, Issue Number, Precipitation) to prevent dominance by single variables. 
-
-Due to the inherent sparsity of the data, additional regularization terms were omitted to avoid further underfitting or gradient convergence issues.
-#v(1em)
-=== 7.1.2 Feature Standardization
-Input features comprised Average Temperature, Average Precipitation, Heat Vulnerability Index, Noncompliant Count, Issue Number, Month, and borough encoding columns. All input variables were standardized. To ensure numerical stability and facilitate gradient convergence, the target variable *(Injury)* was normalized using its mean and standard deviation. The dataset was subsequently partitioned into an 80% training set and a 20% validation set.
-#v(1em)
-=== 7.1.3 Model Architecture
-A Neural Network model named InjuryRegressor was defined with a multi-layer nonlinear structure:
-
-* Input Layer*: Corresponds to all processed input features.
-
-* First Hidden Layer*: 32 neurons using the LeakyReLU activation function.
-
-* Dropout Layer*: Rate of 0.1, used to prevent overfitting.
-
-* Second Hidden Layer*: 16 neurons using the LeakyReLU activation function.
-
-* Third Hidden Layer*: 8 neurons using the LeakyReLU activation function.
-
-* Output Layer*: Single neuron outputting the predicted injury count.
-
-LeakyReLU was selected because it maintains non-zero gradients in the negative interval, avoiding the vanishing gradient problem, which is particularly suitable for regression tasks involving sparse data.
-#v(1em)
-In this process, we did not adopt feature-function regularization or similar structures, essentially because the model was not even capable of overfitting — it could not fully learn the patterns in the first place.
-#v(1em)
-=== 7.1.4 Loss Function and Optimizer
-The model uses Mean Squared Error (MSE) as the loss function. The Adam optimizer was selected with a learning rate of $3*10^"-4"$, balancing convergence speed and stability through automatic learning rate adjustment. Training and validation losses were recorded to monitor convergence trends and generalization performance. Note: Traditional nonlinear count models (e.g., Poisson and Negative Binomial) were tested but excluded due to convergence failures during training.
-#v(1em)
-=== 7.1.5 Training and Validation 
-The following metrics were calculated using validation predictions:
-
-* $R^2$ (Coefficient of Determination)*: Measures the proportion of variance explained by the model. An $R^2 < 0$ indicates the model failed to learn effectively.
-
-* RMSE (Root Mean Square Error)*: Reflects the average magnitude of prediction error. 
-
-* MAE (Mean Absolute Error)*: Measures the average deviation between predicted and actual values. 
-
-Additionally, scatter plots of predicted vs. actual values were generated to assess fit; a point cloud clustering near the diagonal indicates good predictive performance.
-#v(1em)
-=== 7.1.6 Model Improvements
-*Approach 1: Hybrid Lag and Group Bias Linear Model*
-
-*Concept*: Incorporates time-lag features and borough-specific biases into linear regression to capture temporal inertia and regional disparities.
-
-* Feature Processing*: Retained only samples with construction records; applied log smoothing to non-compliant counts, permits, and precipitation; generated one-period lag features by borough and month. 
-
-*Structure*: Includes global linear weights and regional bias terms to reflect baseline risks across boroughs.
-
-* Results*: While the model demonstrated some capacity to explain regional differences, overall $R^2$, RMSE, and MAE metrics remained poor, indicating limited fit.
-
-*Approach 2: Two-Stage Hybrid Model (No Lag, Strict Denoising)*
-
-* Concept*: Adopts a "Classify-then-Regress" structure to improve stability under sparse data conditions. 
-
-* Stage 1 (Classification)*: Uses a neural network to determine the probability of an injury occurring (Injury > 0).
-
-* Stage 2 (Regression)*: For confirmed injury samples, estimates the actual count using a linear model with borough biases. 
-
-* Results*: The classification stage achieved high accuracy (0.8–0.9), effectively identifying high-risk months. However, while the regression stage showed a slight improvement in $R^2$ over single-stage models, overall predictive capability remained unsatisfactory due to the limited volume of data.
-#v(1em)
-== 7.2 Model
+== 4.4 Netrual Network for Regression
 
 #figure(
   image("figures/regression1.png", width: 80%),
@@ -562,7 +558,6 @@ Additionally, scatter plots of predicted vs. actual values were generated to ass
 )
 #v(2em)
 #v(1em)
-== 7.3 Summary and Discussion
 
 This study evaluated three regression approaches: the Neural Network Regressor, the Hybrid Lag and Group Bias Model, and the Two-Stage Hybrid Model. Overall, all three yielded suboptimal results, characterized by negative or near-zero $R^2$ values, indicating predictive performance weaker than simple baseline averages. 
 
@@ -573,8 +568,9 @@ Second, the Hybrid Lag and Group Bias Model failed to improve performance despit
 Finally, while the Two-Stage Hybrid Model performed well in classification, the regression stage suffered from severe data scarcity. After filtering for only positive-injury samples and applying strict denoising, the effective sample size was insufficient for the model to generalize, leaving $R^2$ negative.
 
 In conclusion, the poor performance is attributed to: (1) high data sparsity and discreteness; (2) a low signal-to-noise ratio; and (3) excessive reduction in sample size due to aggressive cleaning. Future research should focus on expanding the dataset (more years/regions) and incorporating smoother temporal features or risk indices.
+
 #pagebreak()
-= 8. References
+= 5. References
 [1] New York City Department of Buildings. (n.d.). _Incident Database_ [Data set]. \
 [2] Nayak, S. G., Shrestha, S., Kinney, P. L., Ross, Z., Sheridan, S. C., Pantea, C. I., Hsu, W. H., Muscatiello, N., & Hwang, S. A. (2018). _Development of a heat vulnerability index for New York State._ Public Health, 161, 127–137. \
 [3] Hilbe, J. M. (2011). _Negative binomial regression_ (2nd ed.). Cambridge University Press. \
