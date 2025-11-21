@@ -12,28 +12,28 @@
     gutter: 1.5em,
     row-gutter: 1em,
     [
-      **Zhixing Wang**  
+      *Zhixing Wang*  
       Department of Civil and Environmental Engineering  
       University of Illinois Urbana–Champaign  
       Urbana, IL, USA  
       *zw88\@illinois.edu*
     ],
     [
-      **Zain Sitabkhan**  
+      *Zain Sitabkhan*
       Department of Civil and Environmental Engineering  
       University of Illinois Urbana–Champaign  
       Urbana, IL, USA 
       *zsita\@illinois.edu*
     ],
     [
-      **Deago Sirenden**  
+      *Deago Sirenden*
       Department of Civil and Environmental Engineering  
       University of Illinois Urbana–Champaign  
       Urbana, IL, USA  
       *deagofs2\@illinois.edu*
     ],
     [
-      **Zach Da**  
+      *Zhihui Da*
       Department of Civil and Environmental Engineering  
       University of Illinois Urbana–Champaign  
       Urbana, IL, USA  
@@ -623,16 +623,18 @@ The plotted curves show the relationship between these metrics and the threshold
 )
 #v(1em)
 === 4.5.2 Discussion
-This study evaluated three regression approaches: the Neural Network Regressor, the Hybrid Lag and Group Bias Model, and the Two-Stage Hybrid Model. Overall, all three yielded suboptimal results, characterized by negative or near-zero $R^2$ values, indicating predictive performance weaker than simple baseline averages. 
+As illustrated in the regression results, the predictive performance of the count-based models stood in stark contrast to the classification models. While the classification approach successfully identified high-risk scenarios, the regression models struggled to quantify the exact number of injuries, yielding suboptimal $R^2$ values across all three experimental setups.
 
-First, the Neural Network Regressor struggled to learn stable patterns. The construction injury data is highly sparse (most months have 0 or 1 injury). Consequently, the network tended to predict near-mean values to minimize error, resulting in negative $R^2$. 
+*Baseline and Hybrid Models Performance:*
+The Baseline Neural Network Regressor (Figure 25) achieved an $R^2$ of only 0.0211. A visual inspection of the scatter plot reveals a distinct "regression to the mean" phenomenon: while the true injury counts range from 0 to 4, the model’s predictions cluster tightly in the narrow range of 0.5 to 1.5. This indicates that the model, unable to find strong signal patterns in the sparse data, defaulted to predicting the average injury rate to minimize the global loss function.
 
-Second, the Hybrid Lag and Group Bias Model failed to improve performance despite introducing lag features. This suggests a lack of significant temporal autocorrelation in construction injury events; lag variables likely introduced additional noise rather than signal. 
+The introduction of temporal features in the Hybrid Lag and Group Bias Linear Model (Figure 26) resulted in a marginal improvement, raising the $R^2$ to 0.0452. Although the scatter points show a slightly wider distribution compared to the baseline, the improvement is negligible. This suggests that construction injury events in this dataset lack significant temporal autocorrelation; the occurrence of an injury in the previous month does not strongly predict the magnitude of injuries in the subsequent month.
 
-Finally, while the Two-Stage Hybrid Model performed well in classification, the regression stage suffered from severe data scarcity. After filtering for only positive-injury samples and applying strict denoising, the effective sample size was insufficient for the model to generalize, leaving $R^2$ negative.
+*Two-Stage Model Limitations:*
+Most notably, the Two-Stage Hybrid Model (Figure 27), which was designed to mitigate sparsity by first classifying injury occurrence and then regressing the count, resulted in a negative $R^2$ of -0.3013. While the classification stage (Stage 1) showed promise in filtering out zero-event months4, the subsequent regression stage (Stage 2) suffered critically from data scarcity. After filtering for only positive-injury samples and applying strict denoising5, the effective sample size became too small for the regressor to generalize. The negative $R^2$ implies that the model's predictions were worse than simply using the horizontal mean of the test data, highlighting the dangers of aggressive data segmentation on small datasets.
 
-In conclusion, the poor performance is attributed to: (1) high data sparsity and discreteness; (2) a low signal-to-noise ratio; and (3) excessive reduction in sample size due to aggressive cleaning. Future research should focus on expanding the dataset (more years/regions) and incorporating smoother temporal features or risk indices.
-
+*Summary of Regression Challenges:*
+The poor performance across these models reinforces the findings from the preliminary methodology section: predicting the exact magnitude of construction accidents is significantly harder than predicting their probability. The high sparsity (zero-inflation) and the stochastic nature of accidents mean that the signal-to-noise ratio is too low for standard regression loss functions (like MSE) to converge effectively. Future improvements would likely require a significantly larger dataset to support complex architectures or the use of specialized loss functions like Zero-Inflated Poisson (ZIP) loss, provided that convergence issues can be overcome.
 #pagebreak()
 = 5. References
 [1]Tixier, A. J.-P., Hallowell, M. R., Rajagopalan, B., & Bowman, D. (2016). Application of machine learning to construction injury prediction. Automation in Construction, 69, 102-114. https://doi.org/10.1016/j.autcon.2016.05.016\
