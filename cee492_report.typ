@@ -311,8 +311,9 @@ The dataset would then be implemented into Julia and then these variables would 
 
 The architecture for this model is simple with the features being the four independent variables along with the specific city locations, which is an output of this dataset. Note that the names of the cities were not a part of the dataset but can mainly be derived from approximating or interpolating the locations from the longitude and latitude.
 
-Input Selections: Longitude, latitude, injuries, and boroughs
-Output Selection: Cities/counties with the highest concentration
+*Input Selections*: Longitude, latitude, injuries, and boroughs
+
+*Output Selection*: Cities/counties with the highest concentration
 
 #v(1em)
 === 3.2.3 Weighted K-Means Function
@@ -336,14 +337,17 @@ For this model, three features from the data set where implemented (borough, che
 
 The model will contain two independent variables and one dependent variable.
 
-Input Selections: Boroughs and check descriptions
-Output Selection: Injuries (number and percentage)
+*Input Selections*: Boroughs and check descriptions
+
+*Output Selection*: Injuries (number and percentage)
 
 There will be five decision trees in total, with four of them displaying the results from each borough and the last one displaying the overall results across the four boroughs from the dataset. The three components of a typical decision tree are the root nodes, branches, internal nodes, and leaf nodes. 
 
-Root Node: Borough
-Internal Nodes: Check Description
-Leaf Nodes: Injuries
+*Root Node*: Borough
+
+*Internal Nodes*: Check Description
+
+*Leaf Nodes*: Injuries
 
 There will be three leaf nodes per each internal node, characterizing where injuries would be more than one, equal to one, or less than one (zero) for each incident. The injuries’ numbers and percentages would then be displayed for each of these leaf nodes.
 
@@ -479,6 +483,9 @@ Additionally, scatter plots of predicted vs. actual values were generated to ass
 = 4 Results and Discussion
 #v(1em)
 == 4.1 Introduction 
+
+In the previous section, the methodology of the four kinds of models was explained. This section will display and discuss the models pertaining to each respective section. The effectiveness of these models as well as their performance will be described, along with a critical analysis of their features.
+
 #v(1em)
 == 4.2 K-Means Classification Models
 #v(1em)
@@ -638,6 +645,7 @@ In conclusion, the poor performance is attributed to: (1) high data sparsity and
 [15] Fawcett, T. (2006). An introduction to ROC analysis. _Pattern Recognition Letters, 27_(8), 861–874. \ 
 [16] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
 [17] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
+
 
 
 
