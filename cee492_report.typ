@@ -298,37 +298,64 @@ Taken together, the sparsity and irregular structure of our data make standard r
 #v(2em)
 == 3.2 K-Means Classification Models Methodology
 #v(1em)
-=== 3.2.1 Data Preparation
+=== 3.2.1 Data Preparation and Cleaning
+
+To create this model, four features from the dataset were implemented (longitude, latitude, number of injuries, and boroughs). This dataset will analyze four out of the five boroughs which are Manhattan, Brooklyn, Queens, & Bronx. The fifth borough, Staten Island, will be excluded from the data set due to its lack of available data.
+
+For easier visualization and to prevent data overlap, longitude and latitude were rounded to three significant figures. Since the injury values often return as 0 or 1 within the dataset, they were grouped by the rounded longitude and latitude location and then summed for further data cleaning before plotting. The data was then grouped into boroughs and then plotted all together in one plot.
+
+The dataset would then be implemented into Julia and then these variables would be separated out to create the plots.
 
 #v(1em)
 === 3.2.2 Model Architecture
 
+The architecture for this model is simple with the features being the four independent variables along with the specific city locations, which is an output of this dataset. Note that the names of the cities were not a part of the dataset but can mainly be derived from approximating or interpolating the locations from the longitude and latitude.
+
+Input Selections: Longitude, latitude, injuries, and boroughs
+Output Selection: Cities/counties with the highest concentration
+
 #v(1em)
 === 3.2.3 Weighted K-Means Function
 
+To characterize the data better, a weighted k-means function was implemented to create weighted centroids for each borough. First, four additional functions had to be created before doing the k-means function (init_centroids, calc_distances, calc_groups, and update_centroids!). After these four functions resulted in a working weighted k_means function, rows with missing data values had to be dropped to further clean the data. After variables were created for the point locations and the weights (in terms of injury count), the centroids were plotted and implemented into the plot.
+
 #v(1em)
 === 3.2.4 Model Evaluation
+
+The plots are in the form of a scatter map showing the four cluster groups representing four of the boroughs in New York City. These cluster groups also closely represent how the actual boroughs are oriented within New York City, which allows for accurate data visualization. The second plot shows the additional weighted centroids in the form of stars that came from the weighted k-means function.
 
 #v(2em)
 == 3.3 Decision Tree Classification Models Methodology
 #v(1em)
 === 3.3.1 Data Preparation
 
+For this model, three features from the data set where implemented (borough, check description, injuries). Similarly to the k-means methodology, Staten Island will also be excluded from this dataset. The check descriptions list the different reasons of these construction incidents that occurred. This model’s check descriptions will contain “Worker Fell”, “Mechanical Construction Equipment”, “Material Failure”, “Scaffold/Shoring Installations”, “Excavation/Soil Work”. There was an additional check description in the dataset called, “Other Construction”, but that would be excluded because of the ambiguous nature of this description.
+
 #v(1em)
 === 3.3.2 Model Architecture
 
-Through the 4 major boroughs of New York City, we can determine common factors pertaining to construction incidents/accidents that lead to injuries in New York City. From this data, we can determine which factors should primarily be examined in terms of implementing new state OSHA regulations.
+The model will contain two independent variables and one dependent variable.
 
-Input: Borough, Incident Type
+Input Selections: Boroughs and check descriptions
+Output Selection: Injuries (number and percentage)
 
-Output: Injuries
-#v(1em)
+There will be five decision trees in total, with four of them displaying the results from each borough and the last one displaying the overall results across the four boroughs from the dataset. The three components of a typical decision tree are the root nodes, branches, internal nodes, and leaf nodes. 
+
+Root Node: Borough
+Internal Nodes: Check Description
+Leaf Nodes: Injuries
+
+There will be three leaf nodes per each internal node, characterizing where injuries would be more than one, equal to one, or less than one (zero) for each incident. The injuries’ numbers and percentages would then be displayed for each of these leaf nodes.
 
 #v(1em)
 === 3.3.3 Classification & Grouping of Data
 
+The data would be grouped by borough and analyzed using Microsoft Excel. Excel’s functions would be used to calculate the sums and percentages for the injuries. The actual models would then be created using Microsoft PowerPoint.
+
 #v(1em)
 === 3.3.4 Model Evaluation
+
+The model will show the structure of the model as described in the Model Architecture section, with the nodes appearing as rectangles and the branches appearing as arrows.
 
 == 3.4 Neural Network Classification Models Methodology
 #v(1em)
@@ -611,6 +638,7 @@ In conclusion, the poor performance is attributed to: (1) high data sparsity and
 [15] Fawcett, T. (2006). An introduction to ROC analysis. _Pattern Recognition Letters, 27_(8), 861–874. \ 
 [16] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
 [17] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
+
 
 
 
