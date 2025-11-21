@@ -303,6 +303,12 @@ Taken together, the sparsity and irregular structure of our data make standard r
 #v(1em)
 === 3.2.2 Model Architecture
 
+#v(1em)
+=== 3.2.3 Weighted K-Means Function
+
+#v(1em)
+=== 3.2.4 Model Evaluation
+
 #v(2em)
 == 3.3 Decision Tree Classification Models Methodology
 #v(1em)
@@ -317,6 +323,12 @@ Input: Borough, Incident Type
 
 Output: Injuries
 #v(1em)
+
+#v(1em)
+=== 3.3.3 Classification & Grouping of Data
+
+#v(1em)
+=== 3.3.4 Model Evaluation
 
 == 3.4 Neural Network Classification Models Methodology
 #v(1em)
@@ -594,6 +606,7 @@ In conclusion, the poor performance is attributed to: (1) high data sparsity and
 [15] Fawcett, T. (2006). An introduction to ROC analysis. _Pattern Recognition Letters, 27_(8), 861–874. \ 
 [16] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
 [17] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
+
 
 
 
