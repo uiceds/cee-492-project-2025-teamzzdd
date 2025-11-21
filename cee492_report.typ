@@ -497,8 +497,15 @@ In the previous section, the methodology of the four kinds of models was explain
 
 #v(1em)
 === 4.2.2 Discussion
+These spatial distributions show a different concentration of injuries scattered across the four boroughs of New York City. There is a lot of information that can be derived from these two graphs. 
 
-The K-Means model shows that construction-related injuries in New York City form clear spatial clusters, with higher concentrations appearing within parts of the Bronx and Brooklyn, where repeated incident points are densely grouped. By using longitude, latitude, injury counts, and borough information, the clustering results highlight these boroughs as priority areas for strengthened safety protocols and resource allocation.
+The large concentration of injuries grouped together in Manhattan shows where Time Square is. In this densely populated area, it makes sense that there are a lot of construction projects that take place due to the high property value of this area. The high concentration of injuries located in Brooklyn and Queens are also close to Times Square as well, which also demonstrates that these incidents must have taken place within the most populated areas of the city.
+
+From this data, it can be derived that there should be stricter Occupational Safety and Health Administration (OSHA) regulations when it comes to potentially hazardous construction projects within these areas of New York City. Specifically, these areas might also be subdivided into specific districts and these districts can also come up with their own regulations to counteract the possibility of construction fatalities. 
+
+Finally, the main role of these stars, which show the weighted k-means centroids of the data is to better characterize and understand the data, especially with the incidents still piling on each other even with the preliminary amount of data cleaning. For example, the star that corresponds to Manhattan shows that the concentration of injuries mainly happens around Times Square. The plots above show a relatively linear relationship of injuries overtime, which shows that this accurately predicts that more construction projects in this area will likely lead to more injuries. The same applies to Brooklyn, where the star is located in the area where it is more densely populated (closer to Times Square). 
+
+However, the centroids in Queens and Bronx do not give a lot of information as the injuries were more spatially distributed throughout the boroughs rather than being concentrated in one location. Some boroughs are bigger than others, so this demonstrates the primary shortcomings of this model. What can also be derived is the bias in terms of the size of each borough. The main reason Manhattan has the most incidents is most likely because it is the most populated area of New York City. This would also demonstrate that there would be more construction projects in an area like that, and that additional data regarding the number of construction projects at each borough over time would also be needed to make accurate predictions of this data.
 #v(1em)
 == 4.3 Decision Tree Classification Models
 #v(1em)
@@ -645,6 +652,7 @@ In conclusion, the poor performance is attributed to: (1) high data sparsity and
 [15] Fawcett, T. (2006). An introduction to ROC analysis. _Pattern Recognition Letters, 27_(8), 861–874. \ 
 [16] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
 [17] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
+[1NYC Maps. Maps of World. https://www.mapsofworld.com/usa/new-york-city-map.html#google_vignette
 
 
 
