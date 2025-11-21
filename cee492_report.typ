@@ -125,7 +125,7 @@ The dataset includes approximately 958 rows, each representing an accident or in
 
 Proposal for attribute usage will be made, focusing on those with predictive relevance.
 #v(1em)
-== 2.3 New parameters
+== 2.3 Correlation Mapping
 In this data integration step, we enriched the dataset by incorporating external environmental and vulnerability factors. The Heat Vulnerability Index (HVI) was integrated by joining it with the dataset using 'postcode' as the linking key. We then performed a data cleaning step to ensure data quality by removing records with missing values. Following this, climate variables, specifically 'AvgTemp' (Average Temperature) and 'AvgPrecip' (Average Precipitation), were merged into the dataset. This process of joining HVI, merging climate data, and handling missing values resulted in a final, refined dataset containing 415 valid observations, which was then used for the subsequent correlation and regression analyses
 #align(center, [Table 3. Integrated Dataset with Climate and HVI Variables
 #table(
@@ -140,11 +140,10 @@ Preliminary inspection indicates that higher-HVI areas (typically in the Bronx a
 
 Some other parameter will be added such as Noncomplaint Count and IssueNumber (in section 6) in order to solve the regression model problems. 
 #v(1em)
-== 2.3.1 Correlation Mapping
-== 2.3.1.1 Weighted HVI
+=== 2.3.1 Weighted HVI
 Weighted averaging is used when different observations contribute unequally to an aggregate measure.In another word it will directly contain the information about the borough.
 #v(1em)
-== 2.3.1.2 Global Correlation
+=== 2.3.2 Global Correlation
 A global correlation analysis was conducted among key variables: TotalIncidents, Fatality, Injury, AvgTemp, AvgPrecip, and HVI.
 #align(center, [Table 5. Correlation Matrix of Incident, Climate, and Vulnerability Variables
 #table(
@@ -158,7 +157,7 @@ A global correlation analysis was conducted among key variables: TotalIncidents,
 )])
 We conducted a global correlation analysis to understand the initial linear relationships between the primary variables. The results, partially shown in the table1, reveal several key patterns.Most notably, there is a very strong positive correlation between TotalIncidents and Injury (Pearson $r = 0.958$), which is expected as most incidents involve injuries.In contrast, Fatality demonstrates a weak correlation with the other variables in the table. The correlation with TotalIncidents is low ($r = 0.120$), and it is even weaker with Injury ($r = 0.075$). The environmental variables, AvgTemp ($r = -0.007$) and AvgPrecip ($r = -0.153$), also show negligible linear relationships with fatalities.Furthermore, analysis of the Heat Vulnerability Index (HVI) indicated a moderate negative correlation with both incidents and injuries, with correlation coefficients (r) observed in the range of approximately -0.57 to -0.606. This suggests that areas with higher vulnerability scores may, counterintuitively, be associated with fewer reported incidents in this dataset, prompting the need for further, more nuanced analysis.
 #v(1em)
-== 2.3.1.3 Log-scaled Correlation
+=== 2.3.3 Log-scaled Correlation
 #figure(
   image("figures/log_scaled_correlation_heatmap.jpg", width: 80%),
   caption: [Correlation heatmap after log scaling],
@@ -166,10 +165,6 @@ We conducted a global correlation analysis to understand the initial linear rela
 #v(1em)
 Results show a strong positive correlation between TotalIncidents and Injury (r ≈ 0.96) and a negative correlation between HVI and Fatality (r ≈ –0.57). Although counterintuitive at first glance, this may reflect underreporting or mitigation interventions in high-vulnerability areas.
 These relationships were visualized using a log-scaled correlation heatmap, emphasizing nonlinear dependencies that justify the use of both Poisson and Negative Binomial regression models in the next section.
-#v(1em)
-== 2.3.2 Summary
-
-These visual representations are only preliminary and can be used as inspiration for the plots in the actual predictive modelling phase.
 #v(1em)
 == 2.4 Preprocessing
 #v(1em)
@@ -210,7 +205,7 @@ Four of the preliminary plots below count incidents such as fatalities and injur
 
 #figure(image("figures/cumul_injury_zs.jpg", width: 80%), caption: [Fatalities Each Month])
 #v(1em)
-== 2.5.1 Averaging the Data
+=== 2.5.1 Averaging the Data
 #align(center, [Table 4. Average Incident and Injury Rates by Borough
 #table(
   columns: 6,
@@ -232,7 +227,7 @@ This section synthesizes the primary findings from our exploratory data analysis
 === 3.1.1 Result figures and Explaination
 At the begining we try to use several traditional prediction model in order to figure out limitation about the data of the model.
 #v(1em)
-==== 3.1.1.1 Poisson Model (Injury)
+=== 3.1.2 Poisson Model (Injury)
 #align(center, [Table 6. Poisson Regression Model Results for Injury Counts
 #table(
   columns: 7,
@@ -244,7 +239,7 @@ At the begining we try to use several traditional prediction model in order to f
 )])
 #figure(image("figures/poisson_injury_coefficients.jpg", width: 80%), caption: [Poisson injury model coefficients])
 #v(1em)
-==== 3.1.1.2 Negative Binomial Model (Fatality) 
+=== 3.1.3 Negative Binomial Model (Fatality) 
 
 #align(center, [Table 7. Negative Binomial Regression Model Results for Fatalities
 #table(
@@ -257,7 +252,7 @@ At the begining we try to use several traditional prediction model in order to f
 )])
 #figure(image("figures/neg_bin_fatality_coefficients.jpg", width: 80%), caption: [Negative binomial fatality model coefficients])
 #v(1em)
-== 3.1.1.3 Logistic Model[10]
+=== 3.1.4 Logistic Model[10]
 #align(center, [Table 8. Logistic Regression Results for Binary Fatality Events
 #table(
   columns: 7,
@@ -268,11 +263,11 @@ At the begining we try to use several traditional prediction model in order to f
   [Intercept], [-8.1713], [8.01e+06], [-1e-06], [1.000], [-1.57e+07], [1.57e+07],
 )])
 #v(1em)
-== 3.1.1.4 Visualization 
+=== 3.1.5 Visualization 
 
 #figure(image("figures/coef_comparison.jpg", width: 80%), caption: [Coefficient comparison])
 
-== 3.1.2 Disccusion the Limitation of Data for Preliminary Regression Model
+=== 3.1.6 Disccusion the Limitation of Data for Preliminary Regression Model
 In this study, we selected Poisson, Negative Binomial, and Logit models based on the following considerations.
 First, the dataset contains a substantial number of zeros, resulting in pronounced sparsity.
 Second, although the injury variable takes non-zero values, the fatality variable appears only as 0 or 1 throughout the dataset.
@@ -303,17 +298,30 @@ Taken together, the sparsity and irregular structure of our data make standard r
 #v(2em)
 == 3.2 K-Means Models Classification Methodolgy
 #v(1em)
+=== 3.2.1 Methodolgy
 
 Given the specific location of each incident along with the number of construction projects happening at that location, we can figure out the severity of construction incidents at a given location within the boroughs of New York City. We can then use that information to determine which areas need better protocol with their construction projects. Therefore, we can use K-Means[11] to determine which area within each borough has the highest concentration of incidents.
 
 Input: Longitude, Latitude, Injuries, Boroughs
 
 Output: Cities/Counties with Highest Concentration
+
 #v(1em)
+==== 3.2.1.1 Data Preparation
+
+#v(1em)
+==== 3.2.1.2 Model Architecture
 
 #v(2em)
-= 3.3 Decision Tree Models Classification Methodolgy
+== 3.3 Decision Tree Models Classification Methodolgy
 #v(1em)
+=== 3.3.1 Methodolgy
+
+#v(1em)
+==== 3.3.1.1 Data Preparation
+
+#v(1em)
+==== 3.3.1.2 Model Architecture
 
 Through the 4 major boroughs of New York City, we can determine common factors pertaining to construction incidents/accidents that lead to injuries in New York City. From this data, we can determine which factors should primarily be examined in terms of implementing new state OSHA regulations.
 
@@ -355,11 +363,11 @@ This structure provides the necessary nonlinear expressive capacity[12] to captu
 
 Given the significant class imbalance (where "No Injury" cases far exceed "Injury" cases), the model utilizes a Weighted Binary Cross-Entropy with Logits Loss function. A positive weight, calculated as $"pos"_"weight" = N_"neg" / N_"pos"$, is automatically applied to balance the classes. The Adam optimizer[14], with a learning rate of $1 *10^"-4"$, is employed to update network parameters and minimize the loss function during each iteration.
 #v(1em)
-=== 3.4.1.4 Training and Validation
+==== 3.4.1.4 Training and Validation
 
 The model was trained for 300 epochs. Loss and Accuracy for both training and validation sets were calculated in each epoch to monitor convergence trends. Dropout was active during training to enhance generalization. Key metrics were logged every 50 epochs. Finally, training/validation loss curves and validation accuracy curves were plotted to assess the stability of model convergence.
 #v(1em)
-=== 3.4.1.5 Model Evaluation
+==== 3.4.1.5 Model Evaluation
 * ROC Curve & AUC*: The Receiver Operating Characteristic (ROC) curve was plotted[15] using validation results, and the Area Under the Curve (AUC) was calculated to quantify overall classification performance. Youden's J statistic ($"TPR" - "FPR"$) was utilized to determine the optimal classification threshold.
 
 * Confusion Matrix*: Matrices were generated for both the default threshold (0.5) and the optimal threshold to visualize classification accuracy, false positive rates, and false negative rates.
@@ -376,7 +384,7 @@ The model was trained for 300 epochs. Loss and Accuracy for both training and va
 
 This study employs an improved Neural Network Regression model to predict the count of construction-related injuries. To enhance prediction stability and robustness, the model incorporates mechanisms for data denoising, standardization, and nonlinear feature extraction.
 #v(1em)
-=== 3.5.1.1 Data Preparation and Cleaning
+==== 3.5.1.1 Data Preparation and Cleaning
 * Missing Values*: Missing values in the Injury column were filled with zero and converted to floating-point format. 
 
 * Feature Engineering*: The Month variable was extracted from YearMonth, and Borough was processed using one-hot encoding. 
@@ -387,10 +395,10 @@ This study employs an improved Neural Network Regression model to predict the co
 
 Due to the inherent sparsity of the data, additional regularization terms were omitted to avoid further underfitting or gradient convergence issues.
 #v(1em)
-=== 3.5.1.2 Feature Standardization
+==== 3.5.1.2 Feature Standardization
 Input features comprised Average Temperature, Average Precipitation, Heat Vulnerability Index, Noncompliant Count, Issue Number, Month, and borough encoding columns. All input variables were standardized. To ensure numerical stability and facilitate gradient convergence, the target variable *(Injury)* was normalized using its mean and standard deviation. The dataset was subsequently partitioned into an 80% training set and a 20% validation set.
 #v(1em)
-=== 3.5.1.3 Model Architecture
+==== 3.5.1.3 Model Architecture
 A Neural Network model named InjuryRegressor was defined with a multi-layer nonlinear structure:
 
 * Input Layer*: Corresponds to all processed input features.
@@ -409,10 +417,10 @@ LeakyReLU was selected because it maintains non-zero gradients in the negative i
 #v(1em)
 In this process, we did not adopt feature-function regularization or similar structures, essentially because the model was not even capable of overfitting — it could not fully learn the patterns in the first place.
 #v(1em)
-=== 3.5.1.4 Loss Function and Optimizer
+==== 3.5.1.4 Loss Function and Optimizer
 The model uses Mean Squared Error (MSE) as the loss function. The Adam optimizer was selected with a learning rate of $3*10^"-4"$, balancing convergence speed and stability through automatic learning rate adjustment. Training and validation losses were recorded to monitor convergence trends and generalization performance. Note: Traditional nonlinear count models (e.g., Poisson and Negative Binomial) were tested but excluded due to convergence failures during training.
 #v(1em)
-=== 3.5.1.5 Training and Validation 
+==== 3.5.1.5 Training and Validation 
 The following metrics were calculated using validation predictions:
 
 * $R^2$ (Coefficient of Determination)*: Measures the proportion of variance explained by the model. An $R^2 < 0$ indicates the model failed to learn effectively.
@@ -423,7 +431,7 @@ The following metrics were calculated using validation predictions:
 
 Additionally, scatter plots of predicted vs. actual values were generated to assess fit; a point cloud clustering near the diagonal indicates good predictive performance.
 #v(1em)
-=== 3.5.1.6 Model Improvements
+==== 3.5.1.6 Model Improvements
 *Approach 1: Hybrid Lag and Group Bias Linear Model*
 
 *Concept*: Incorporates time-lag features and borough-specific biases into linear regression to capture temporal inertia and regional disparities.
@@ -466,7 +474,7 @@ The K-Means model shows that construction-related injuries in New York City form
 #v(1em)
 The Classification Tree model identifies which incident types and borough characteristics are most strongly associated with injury outcomes. The results show that Manhattan, Brooklyn, Queens, and the Bronx each display different dominant contributing factors, indicating that incident type plays a key role in predicting injury likelihood. These insights support targeted regulatory and safety strategies tailored to the needs of each borough.
 #v(2em)
-== 4.3 Netrual Network for Classification
+== 4.3 Neural Network for Classification
 #figure(
   image("figures/accuracy.png", width: 80%),
   caption: [Validation Accuracy Over Training Epochs],
@@ -548,7 +556,7 @@ Analysis of the metrics is defined as follows:
 
 The plotted curves show the relationship between these metrics and the threshold. In the 0.1–0.49 range, all three metrics remain high: Recall stays near 1.0, Precision stabilizes around 0.8, and the F1 score approaches 0.9. However, beyond the 0.5 threshold, all metrics decline rapidly, indicating that an excessively high threshold makes the model overly conservative, resulting in missed positive samples. Consequently, 0.49 was selected as the optimal threshold, achieving an ideal balance between Recall and Precision and maximizing the F1 score.
 
-== 4.4 Netrual Network for Regression
+== 4.4 Neural Network for Regression
 
 #figure(
   image("figures/regression1.png", width: 80%),
@@ -598,6 +606,7 @@ In conclusion, the poor performance is attributed to: (1) high data sparsity and
 [15] Fawcett, T. (2006). An introduction to ROC analysis. _Pattern Recognition Letters, 27_(8), 861–874. \ 
 [16] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
 [17] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
+
 
 
 
