@@ -454,14 +454,21 @@ Additionally, scatter plots of predicted vs. actual values were generated to ass
 == 4.1 Introduction 
 #v(1em)
 == 4.2 K-Means Classification Models
-  #figure(image("figures/injury_scattermap_zs.jpg", width: 80%), caption: [Spatial Distribution of Injuries from Each Borough])
+#v(1em)
+=== 4.2.1 Models 
+#figure(image("figures/injury_scattermap_zs.jpg", width: 80%), caption: [Spatial Distribution of Injuries from Each Borough])
 
 #figure(image("figures/injury_scattermap_kmeans_zs.jpg", width: 80%), caption: [K-Means Model w/ Centroids])
 #v(1em)
 
+#v(1em)
+=== 4.2.2 Discussion
+
 The K-Means model shows that construction-related injuries in New York City form clear spatial clusters, with higher concentrations appearing within parts of the Bronx and Brooklyn, where repeated incident points are densely grouped. By using longitude, latitude, injury counts, and borough information, the clustering results highlight these boroughs as priority areas for strengthened safety protocols and resource allocation.
 #v(1em)
 == 4.3 Decision Tree Classification Models
+#v(1em)
+=== 4.3.1 Models 
 #figure(image("figures/manhattan_tree_zs.jpg", width: 80%), caption: [Manhattan Injury Classification Tree])
 
 #figure(image("figures/brooklyn_tree_zs.jpg", width: 80%), caption: [Brooklyn Injury Classification Tree])
@@ -472,9 +479,13 @@ The K-Means model shows that construction-related injuries in New York City form
 
 #figure(image("figures/nyc_tree_zs.jpg", width: 80%), caption: [Four Boroughs Total Injury Classification Tree])
 #v(1em)
+=== 4.3.2 Discussion
+
 The Classification Tree model identifies which incident types and borough characteristics are most strongly associated with injury outcomes. The results show that Manhattan, Brooklyn, Queens, and the Bronx each display different dominant contributing factors, indicating that incident type plays a key role in predicting injury likelihood. These insights support targeted regulatory and safety strategies tailored to the needs of each borough.
 #v(1em)
 == 4.4 Neural Network Classification Models
+#v(1em)
+=== 4.4.1 Models
 #figure(
   image("figures/accuracy.png", width: 80%),
   caption: [Validation Accuracy Over Training Epochs],
@@ -506,11 +517,10 @@ The Classification Tree model identifies which incident types and borough charac
 #v(2em)
 #v(1em)
 
-=== 4.4.1 Validation Accuracy Over Epochs
+#v(1em)
+=== 4.4.2 Discussion
 
 As illustrated in the results, the validation accuracy exhibited significant fluctuation during the initial training phase but demonstrated a steady upward trend overall, rising from approximately 0.28 to nearly 0.45. This indicates that the model progressively learned effective relationships between features, leading to improved validation performance. While there is room for further accuracy improvement, the absence of significant overfitting suggests that the network architecture and regularization settings (Dropout=0.1) are reasonable and provide good generalization capability.
-#v(1em)
-=== 4.4.2 Confusion Matrix (Threshold = 0.50)
 
 At the default threshold of 0.50, the model's identification of "Injury" (positive class) showed high recall but slightly lower precision. The confusion matrix results are as follows:
 
@@ -528,8 +538,6 @@ At the default threshold of 0.50, the model's identification of "Injury" (positi
 
 
 These results suggest a conservative prediction strategy (preferring false alarms over missed detections). In the context of accident analysis, this bias is acceptable, as false negatives (missed injury predictions) typically carry a higher safety cost than false positives.
-#v(1em)
-=== 4.4.3 Confusion Matrix (Threshold = 0.49, Optimal by Youden's J)
 
 Applying the optimal threshold of 0.49, determined by Youden's J statistic, significantly improved the model's recognition capability:
 
@@ -538,9 +546,6 @@ Applying the optimal threshold of 0.49, determined by Youden's J statistic, sign
 * TN* remained at 7, with a slight increase in *FP* to 10.
 
 This adjustment achieved a better balance, enhancing overall classification accuracy while maintaining high recall. The significant reduction in missed detections (FN) compared to the default threshold highlights that threshold optimization is a critical step in tasks involving imbalanced datasets.
-#v(1em)
-=== 4.4.4 Precision/Recall/F1 vs. Threshold
-
 Analysis of the metrics is defined as follows:
 
 
@@ -557,7 +562,8 @@ Analysis of the metrics is defined as follows:
 The plotted curves show the relationship between these metrics and the threshold. In the 0.1–0.49 range, all three metrics remain high: Recall stays near 1.0, Precision stabilizes around 0.8, and the F1 score approaches 0.9. However, beyond the 0.5 threshold, all metrics decline rapidly, indicating that an excessively high threshold makes the model overly conservative, resulting in missed positive samples. Consequently, 0.49 was selected as the optimal threshold, achieving an ideal balance between Recall and Precision and maximizing the F1 score.
 #v(1em)
 == 4.5 Neural Network Regression Models
-
+#v(1em)
+=== 4.5.1 Models
 #figure(
   image("figures/regression1.png", width: 80%),
   caption: [Baseline model performance—predicted vs. true injury counts],
@@ -574,9 +580,8 @@ The plotted curves show the relationship between these metrics and the threshold
   image("figures/regression3.png", width: 80%),
   caption: [Two-Stage Hybrid Model—predicted vs. true injury counts],
 )
-#v(2em)
 #v(1em)
-
+=== 4.5.2 Discussion
 This study evaluated three regression approaches: the Neural Network Regressor, the Hybrid Lag and Group Bias Model, and the Two-Stage Hybrid Model. Overall, all three yielded suboptimal results, characterized by negative or near-zero $R^2$ values, indicating predictive performance weaker than simple baseline averages. 
 
 First, the Neural Network Regressor struggled to learn stable patterns. The construction injury data is highly sparse (most months have 0 or 1 injury). Consequently, the network tended to predict near-mean values to minimize error, resulting in negative $R^2$. 
@@ -606,6 +611,7 @@ In conclusion, the poor performance is attributed to: (1) high data sparsity and
 [15] Fawcett, T. (2006). An introduction to ROC analysis. _Pattern Recognition Letters, 27_(8), 861–874. \ 
 [16] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
 [17] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
+
 
 
 
