@@ -297,7 +297,7 @@ Three Model Comparison
 #v(1em)
 Figure 12 compares coefficients across the three models. In both the Poisson and Negative Binomial models, coefficients cluster near zero. In contrast, the logistic model exhibits extreme coefficient magnitudes, particularly for borough variables with very limited fatality observations. This outcome is characteristic of quasi-complete separation, a condition in which particular borough–month combinations contain almost exclusively nonfatal outcomes. Under such conditions, logistic regression drives coefficients toward infinity in an attempt to discriminate between nearly homogeneous groups. This behavior indicates that fatality prediction functions more appropriately as a rare-event classification task rather than a count-based regression problem.
 
-This kind of “coefficient blow-up” in the Logit model usually signals quasi-complete separation: within specific borough–month combinations, fatal events either almost never occur or never occur at all. In our case, it is mostly the “almost never” situation. When that happens, logistic regression tends to push the associated coefficients toward ±∞ in an attempt to fit those extreme patterns. This indicates that fatality as a 0/1 outcome suffers from even stronger sparsity and imbalance than when treated as a count, reinforcing the idea that fatal events resemble a rare-event classification problem rather than a conventional regression target.
+This kind of “coefficient blow-up” in the Logit model usually signals quasi-complete separation: within specific borough–month combinations, fatal events either almost never occur or never occur at all. In this casee, it is mostly the “almost never” situation. When that happens, logistic regression tends to push the associated coefficients toward ±∞ in an attempt to fit those extreme patterns. This indicates that fatality as a 0/1 outcome suffers from even stronger sparsity and imbalance than when treated as a count, reinforcing the idea that fatal events resemble a rare-event classification problem rather than a conventional regression target.
 #v(1em)
 Summary
 #v(1em)
@@ -661,6 +661,7 @@ The poor performance across these models reinforces the findings from the prelim
 [16] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
 [17] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
 [1NYC Maps. Maps of World. https://www.mapsofworld.com/usa/new-york-city-map.html#google_vignette
+
 
 
 
