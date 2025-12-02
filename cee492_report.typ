@@ -313,6 +313,7 @@ Summary
 Taken together, the sparsity and irregular structure of the data make standard regression models unsuitable unless additional, more informative predictors are introduced—such as the new parameters incorporated in Section 7.
 #v(2em)
 = 4.Methodology
+According to Preliminary Regression Attemps, we decided to use classification as our main task. However, in order to claim the limatation of regression model, we also developed NN regression model in section 5.5.
 
 == 4.1 K-Means Classification Models Methodology
 #v(1em)
@@ -572,42 +573,13 @@ While the Neural Network provided higher predictive accuracy through non-linear 
 #v(1em)
 === 5.4.2 Discussion
 
-As illustrated in the results, the validation accuracy exhibited significant fluctuation during the initial training phase but demonstrated a steady upward trend overall, rising from approximately 0.28 to nearly 0.45. At the default threshold of 0.50, the model's identification of "Injury" (positive class) showed high recall but slightly lower precision. The confusion matrix results are as follows:
+As shown in Figures 20 to 23, the validation accuracy fluctuates noticeably during the early training stages but still shows a slight upward trend. Although the model's predictive ability is limited, it captures some basic patterns in the data.
 
+The confusion matrix at the default threshold of 0.50 shows a large number of false negatives (FN=43), meaning many injury cases were missed. This leads to low recall and directly affects overall accuracy. After moving the threshold to 0.49, the model catches more injury cases and misses fewer. So the change does matter, especially since the data itself is uneven.
+Looking at the precision, recall, and F1 curves, the model reacts differently depending on the threshold. It shows a bit of a pattern, but the features we use are too simple, so the results are still not steady.
 
-* True Positives (TP)* = 31 (Correctly identified injuries)
+Overall, the classification model has clear limitations due to limited features and dataset imbalance. Even so, the threshold comparison indicates that the model’s predictions can be slightly improved, and better performance may be possible if more informative features are added.
 
-
-* False Positives (FP)* = 10 (Non-injuries incorrectly predicted as injuries)
-
-
-* True Negatives (TN)* = 7
-
-
-* False Negatives (FN)* = 43
-
-
-These results suggest a conservative prediction strategy (preferring false alarms over missed detections). In the context of accident analysis, this bias is acceptable, as false negatives (missed injury predictions) typically carry a higher safety cost than false positives.
-
-* TP* increased to 46, and *FN* decreased to 28.
-
-* TN* remained at 7, with a slight increase in *FP* to 10.
-
-This adjustment achieved a better balance, enhancing overall classification accuracy while maintaining high recall. The significant reduction in missed detections (FN) compared to the default threshold highlights that threshold optimization is a critical step in tasks involving imbalanced datasets.
-Analysis of the metrics is defined as follows:
-
-
-* Precision*: The proportion of true injuries among predicted injuries. High precision implies high confidence in positive predictions (few false alarms). 
-
-
-* Recall*: The proportion of actual injuries correctly identified. High recall implies comprehensive coverage of safety risks (few missed incidents). 
-
-
-* F1 Score*: The harmonic mean of Precision and Recall, providing a balanced metric for imbalanced datasets. 
-
-
-
-The plotted curves show the relationship between these metrics and the threshold. In the 0.1–0.49 range, all three metrics remain high: Recall stays near 1.0, Precision stabilizes around 0.8, and the F1 score approaches 0.9. However, beyond the 0.5 threshold, all metrics decline rapidly, indicating that an excessively high threshold makes the model overly conservative, resulting in missed positive samples. Consequently, 0.49 was selected as the optimal threshold, achieving an ideal balance between Recall and Precision and maximizing the F1 score.
 #v(1em)
 == 5.5 Neural Network Regression Models
 #v(1em)
