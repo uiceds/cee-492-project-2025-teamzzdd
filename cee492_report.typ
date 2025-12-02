@@ -193,7 +193,10 @@ Table 2 presents an excerpt of the monthly aggregation output for selected borou
 )])
 Excerpt shown above; full panel saved as `monthly_borough.csv`.
 == 2.5 Results for Preprocessing
-The preliminary visualizations summarize the distribution of injuries and fatalities across boroughs and districts, as well as monthly and cumulative trends from January 2024 through October 2025. These results establish a foundational understanding of spatial and temporal variation in incident patterns and support further analysis through borough-specific and district-specific modeling approaches.
+The early plots mainly show where the injuries and fatalities happened in the boroughs and districts, and they also give a rough view of how the numbers changed by month and in total from Jan 2024 to Oct 2025.
+These results establish a foundational understanding of spatial and temporal variation in incident 
+patterns and support further analysis through borough-specific and district-specific modeling 
+approaches.
 
 #figure(image("figures/borough_fatality_bar_zs.jpg", width: 80%), caption: [Average Fatalities at Each Borough])
 
@@ -221,7 +224,13 @@ The preliminary visualizations summarize the distribution of injuries and fatali
   [Borough], [AvgFatality], [AvgInjury], [AvgIncident], [FatalityRate%], [InjuryRate%],
   [Bronx], [0.019], [1.10], [1.31], [1.47], [83.82],
 )])
-Table 4 summarizes borough-level averages for fatalities, injuries, and total incident counts. On average, approximately 83.8 percent of recorded incidents resulted in at least one reported injury, while fatal events represented only about 1.5 percent of total cases. The Bronx reported the highest average injury rate, followed closely by Brooklyn, indicating a spatial concentration of elevated incident severity. These results suggest that incident frequency alone may not fully capture risk and that borough-level proportional measures provide a more informative perspective on relative safety outcomes.
+Table 4 shows the average numbers for fatalities, injuries, and total incidents in each borough. In general, around 83.8% of the cases ended up having at least one injury reported，
+while fatal events represented only about 1.5 percent of total cases. The Bronx reported the highest 
+12
+average injury rate, followed closely by Brooklyn, indicating a spatial concentration of elevated 
+incident severity. These results suggest that incident frequency alone may not fully capture risk and 
+that borough-level proportional measures provide a more informative perspective on relative safety 
+outcomes.
 #v(1em)
 == 2.6 Discussion
 The exploratory analysis highlights several important characteristics of the dataset that inform subsequent modeling. Borough-level aggregation revealed substantial disparities in injury prevalence, with the Bronx and Brooklyn experiencing the highest proportional injury rates relative to total incident counts. Temporal analysis demonstrated clustering during warmer months, suggesting that seasonal workforce expansion and construction volume may influence incident trends.
