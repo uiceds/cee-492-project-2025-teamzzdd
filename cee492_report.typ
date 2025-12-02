@@ -239,10 +239,10 @@ Descriptive statistics further emphasized that injuries constitute the dominant 
 #v(1em)
 The results also indicate that proportional measures and aggregated perspectives reveal patterns not visible through raw incident counts alone. These insights establish foundational context for the methodological approaches introduced in Section 3 and guide feature selection priorities for classification-based modeling frameworks.
 #v(2em)
-= 3.Methodology
+= 3. Preliminary Regression Attemps 
 == 3.1 Preliminary Predictive Modeling & Model Limitation 
 #v(1em)
-=== 3.1.1 Result figures and Explaination
+=== 3.1.1 Explaination
 Initial model development applied several traditional statistical prediction approaches to assess the suitability of the dataset and to diagnose structural limitations for downstream modeling. These preliminary models provide insight into sparsity, imbalance, and the distributional characteristics of the injury and fatality outcomes.
 #v(1em)
 === 3.1.2 Poisson Model (Injury)
@@ -312,9 +312,11 @@ Summary
 #v(1em)
 Taken together, the sparsity and irregular structure of the data make standard regression models unsuitable unless additional, more informative predictors are introduced—such as the new parameters incorporated in Section 7.
 #v(2em)
-== 3.2 K-Means Classification Models Methodology
+= 4.Methodology
+
+== 4.1 K-Means Classification Models Methodology
 #v(1em)
-=== 3.2.1 Data Preparation and Cleaning
+=== 4.1.1 Data Preparation and Cleaning
 
 The K-means clustering analysis utilized four primary features from the dataset: longitude, latitude, number of injuries, and borough classification. The clustering procedure focused on four boroughs: Manhattan, Brooklyn, Queens, and the Bronx. Staten Island was excluded from the analysis because the available incident records were extremely limited, resulting in high sparsity that prevented reliable pattern identification.
 #v(1em)
@@ -322,7 +324,7 @@ To support spatial visualization and reduce coordinate noise, longitude and lati
 #v(1em)
 After preprocessing, the data were imported into Julia, and the selected variables were separated and formatted for clustering and spatial visualization. This preparation enabled borough-level comparison and supported the identification of geographically concentrated injury patterns.
 #v(1em)
-=== 3.2.2 Model Architecture
+=== 4.1.2 Model Architecture
 
 The K-means model architecture utilized four independent variables: longitude, latitude, number of injuries, and borough identification. These features represent spatial and contextual attributes necessary to form geographically meaningful clusters. City and neighborhood locations were not included directly within the dataset but were inferred based on interpolated coordinate values from longitude and latitude. This process enabled estimation of the highest concentration of incidents at the sub-borough level.
 
@@ -331,25 +333,25 @@ The K-means model architecture utilized four independent variables: longitude, l
 *Output Selection*: Cities/counties with the highest concentration
 
 #v(1em)
-=== 3.2.3 Weighted K-Means Function
+=== 4.1.3 Weighted K-Means Function
 To enhance representation of incident density within the clustering results, a weighted K-means approach was implemented. Weighted centroids were constructed to emphasize cluster influence in areas with greater injury frequency. Prior to applying the weighted K-means algorithm, four supporting functions were developed to initialize the model and ensure iterative consistency: init_centroids, calc_distances, calc_groups, and update_centroids!. These functions collectively enabled the construction of a functional weighted clustering routine.
 #v(1em)
 Rows containing missing values were removed to improve data reliability. Point locations and associated weights, defined by recorded injury counts, were then used to generate centroid positions. The resulting centroids were visualized within the clustering plot to illustrate spatial concentration patterns.
 #v(1em)
-=== 3.2.4 Model Evaluation
+=== 4.1.4 Model Evaluation
 
 Model performance was evaluated through scatter map visualizations that display four cluster groups corresponding to the four boroughs included in the dataset. The spatial distribution of the clusters closely aligns with the geographic layout of New York City, demonstrating that the clustering structure is consistent with real-world urban boundaries. A supplementary visualization presents the weighted centroids as star markers, highlighting areas with the highest proportional burden of injury-related incidents.
 #v(1em)
 These visual outcomes indicate that the weighted K-means method produces clusters that reflect spatial variation in incident concentration and support interpretation of localized construction safety patterns.
 #v(2em)
-== 3.3 Decision Tree Classification Models Methodology
+== 4.2 Decision Tree Classification Models Methodology
 #v(1em)
-=== 3.3.1 Data Preparation
+=== 4.2.1 Data Preparation
 
 The decision tree model was developed using three features from the dataset: Borough, Check Description, and Injuries. Consistent with the K-means clustering methodology, Staten Island was excluded due to insufficient sample size, which would otherwise limit interpretive reliability. The Check Description field identifies the reported cause of each construction incident. For this model, the categories included "Worker Fell," "Mechanical Construction Equipment," "Material Failure," "Scaffold/Shoring Installations," and "Excavation/Soil Work." The category "Other Construction" was removed due to its ambiguous classification and limited analytical value.
 
 #v(1em)
-=== 3.3.2 Model Architecture
+=== 4.2.2 Model Architecture
 
 The model utilized two independent variables, Borough and Check Description, and one dependent variable, Injury Count. Five decision trees were produced: four representing each individual borough and one displaying the aggregated results across the four boroughs. The structure of the decision tree consists of a hierarchical arrangement that includes root nodes, internal nodes, branches, and leaf nodes.
 For each leaf node, both the number and percentage of injuries were calculated to show incident severity distribution. 
@@ -360,24 +362,24 @@ For each leaf node, both the number and percentage of injuries were calculated t
 
 *Leaf Nodes*: Injuries
 #v(1em)
-=== 3.3.3 Classification & Grouping of Data
+=== 4.2.3 Classification & Grouping of Data
 
 The dataset was grouped by borough, and summary statistics for injury counts were calculated using Microsoft Excel. The structure and graphical representation of the decision tree models were constructed in Microsoft PowerPoint to support visual interpretability and comparative analysis across boroughs.
 
 #v(1em)
-=== 3.3.4 Model Evaluation
+=== 4.2.4 Model Evaluation
 
 The decision tree model outputs illustrate the branching structure described in the model architecture. Nodes appear as rectangular blocks, while directional arrows indicate hierarchical decision paths. This visual format facilitates identification of incident categories associated with higher injury risk across different boroughs.
-== 3.4 Neural Network Classification Models Methodology
+== 4.3 Neural Network Classification Models Methodology
 #v(1em)
-=== 3.4.1 Data Preparation
+=== 4.3.1 Data Preparation
 Two additional parameters were integrated to enhance model performance:
 *NoncompliantCount*, representing the frequency of non-compliant behaviors , [16]
 *IssueNumber*, representing the volume of active construction projects in a specific area and month, allowing for temporal lags[17]
 
 Five input variables were selected from the final dataset: Average Temperature (AvgTemp), Average Precipitation (AvgPrecip), Weighted Heat Vulnerability Index (HVI_w), NoncompliantCount, and IssueNumber. The target variable, Injury, was binarized by assigning a label of 1 to observations with at least one injury and 0 otherwise. A StandardScaler was applied to standardize input features, and the dataset was divided into training (80 percent) and validation (20 percent) partitions.
 #v(1em)
-=== 3.4.2 Model Architecture
+=== 4.3.2 Model Architecture
 A three-layer Feedforward Neural Network (FNN) was utilized as the predictive framework. The model architecture included:
 
 *Input Layer*: Corresponds to the five input features.
@@ -394,15 +396,15 @@ This configuration provides nonlinear capacity required for representing complex
 
 
 #v(1em)
-=== 3.4.3 Loss Function and Optimization
+=== 4.3.3 Loss Function and Optimization
 
 Given the significant class imbalance (where "No Injury" cases far exceed "Injury" cases), the model utilizes a Weighted Binary Cross-Entropy with Logits Loss function. A positive weight, calculated as $"pos"_"weight" = N_"neg" / N_"pos"$, is automatically applied to balance the classes. The Adam optimizer[14], with a learning rate of $1 *10^"-4"$, is employed to update network parameters and minimize the loss function during each iteration.
 #v(1em)
-=== 3.4.4 Training and Validation
+=== 4.3.4 Training and Validation
 
 The model was trained for 300 epochs. Loss and accuracy metrics for both training and validation sets were computed at each epoch. Dropout was applied during training to improve generalization. Convergence trends were monitored by logging performance metrics every 50 epochs, followed by visual inspection of loss and accuracy curves.
 #v(1em)
-=== 3.4.5 Model Evaluation
+=== 4.3.5 Model Evaluation
 * ROC Curve & AUC*: The Receiver Operating Characteristic (ROC) curve was plotted[15] using validation results, and the Area Under the Curve (AUC) was calculated to quantify overall classification performance. Youden's J statistic ($"TPR" - "FPR"$) was utilized to determine the optimal classification threshold.
 
 * Confusion Matrix*: Matrices were generated for both the default threshold (0.5) and the optimal threshold to visualize classification accuracy, false positive rates, and false negative rates.
@@ -413,9 +415,9 @@ The model was trained for 300 epochs. Loss and accuracy metrics for both trainin
 
 
 #v(2em)
-== 3.5 Neural Network Regression Models Methodology
+== 4.4 Neural Network Regression Models Methodology
 #v(1em)
-=== 3.5.1 Data Preparation and Cleaning
+=== 4.4.1 Data Preparation and Cleaning
 The Neural Network Regression model was constructed to predict the count of construction-related injuries. To improve stability and robustness, several preprocessing procedures were applied, including denoising, feature engineering, and nonlinear feature refinement. Data cleaning and feature preparation included:
 * Missing Values*: Missing values in the Injury column were filled with zero and converted to floating-point format. 
 
@@ -427,10 +429,10 @@ The Neural Network Regression model was constructed to predict the count of cons
 
 Additional regularization terms were excluded to avoid further underfitting, given the inherent sparsity of the dataset.
 #v(1em)
-=== 3.5.2 Feature Standardization
+=== 4.4.2 Feature Standardization
 Input features consisted of Average Temperature, Average Precipitation, Heat Vulnerability Index, NoncompliantCount, IssueNumber, Month, and the one-hot encoded borough columns. All variables were standardized to improve gradient stability. The target variable (Injury) was normalized using mean and standard deviation scaling. The dataset was divided into training (80 percent) and validation (20 percent) subsets.
 #v(1em)
-=== 3.5.3 Model Architecture
+=== 4.4.3 Model Architecture
 The InjuryRegressor neural network used a multilayer nonlinear structure defined by:
 
 * Input Layer*: Corresponds to all processed input features.
@@ -449,10 +451,10 @@ The LeakyReLU activation function supports non-zero gradient flow for negative i
 #v(1em)
 Regularization mechanisms were omitted because the model did not show signs of overfitting and was unable to extract high-complexity patterns from the dataset.
 #v(1em)
-=== 3.5.4 Loss Function and Optimizer
+=== 4.4.4 Loss Function and Optimizer
 The model uses Mean Squared Error (MSE) as the loss function. The Adam optimizer was selected with a learning rate of $3*10^"-4"$, balancing convergence speed and stability through automatic learning rate adjustment. Training and validation losses were recorded to monitor convergence trends and generalization performance. Note: Traditional nonlinear count models (e.g., Poisson and Negative Binomial) were tested but excluded due to convergence failures during training.
 #v(1em)
-=== 3.5.5 Training and Validation 
+=== 4.4.5 Training and Validation 
 erformance was evaluated using multiple error-based metrics:
 * $R^2$ (Coefficient of Determination)*: Measures the proportion of variance explained by the model. An $R^2 < 0$ indicates the model failed to learn effectively.
 
@@ -462,7 +464,7 @@ erformance was evaluated using multiple error-based metrics:
 
 Scatter plots comparing actual versus predicted values were generated to visually assess accuracy, where ideal performance would align predicted points along the diagonal.
 #v(1em)
-=== 3.5.6 Model Improvements
+=== 4.4.6 Model Improvements
 Two improvement strategies were explored:
 *Approach 1: Hybrid Lag and Group Bias Linear Model*
 
@@ -485,23 +487,23 @@ Two improvement strategies were explored:
 * Results*: The classification stage achieved high accuracy (0.8–0.9), effectively identifying high-risk months. However, while the regression stage showed a slight improvement in $R^2$ over single-stage models, overall predictive capability remained unsatisfactory due to the limited volume of data.
 #v(1em)
 
-= 4 Results and Discussion
+= 5 Results and Discussion
 #v(1em)
-== 4.1 Introduction 
+== 5.1 Introduction 
 
 This section presents the performance and interpretive results of the four modeling methodologies introduced previously. The evaluation focuses on the predictive capabilities, structural characteristics, and limitations of each model. The discussion also considers the practical implications of the outputs in the context of construction safety analysis and risk assessment.
 
 #v(1em)
-== 4.2 K-Means Classification Models
+== 5.2 K-Means Classification Models
 #v(1em)
-=== 4.2.1 Models 
+=== 5.2.1 Models 
 #figure(image("figures/injury_scattermap_zs.jpg", width: 80%), caption: [Spatial Distribution of Injuries from Each Borough])
 
 #figure(image("figures/injury_scattermap_kmeans_zs.jpg", width: 80%), caption: [K-Means Model w/ Centroids])
 #v(1em)
 
 #v(1em)
-=== 4.2.2 Discussion
+=== 5.2.2 Discussion
 The spatial distributions display varying concentrations of injuries across the four boroughs of New York City. The visual patterns indicate that incidents are heavily clustered in Manhattan, particularly around the Times Square area. As this region is densely populated and characterized by high real estate value, frequent construction activities are expected. The elevated concentration of injuries appearing in Brooklyn and Queens occurs near the same central region, suggesting that construction incidents are more prevalent within the most populated and commercially intensive zones of the city.
 #v(1em)
 These patterns imply the potential necessity for strengthened Occupational Safety and Health Administration (OSHA) oversight within these high-risk regions. Consideration may also be given to subdividing boroughs into smaller administrative districts, enabling more localized regulatory strategies intended to reduce the likelihood of construction-related injuries and fatalities.
@@ -511,9 +513,9 @@ The weighted centroids illustrated by the star markers highlight areas with the 
 In contrast, the centroid locations in Queens and the Bronx provide less definitive insight due to broader spatial dispersion. Injury cases in these boroughs are more evenly distributed, rather than concentrated around a central location, reflecting the larger geographical size and more dispersed construction activities. This also emphasizes a primary limitation within this model structure: differences in borough area introduce bias that affects centroid interpretation. Manhattan registers the highest incident count largely because it represents the most densely populated and development-intensive area.
 Overall, these results suggest that additional contextual features, such as the number of active construction projects over time, would strengthen the predictive capacity of this model and support more accurate clustering interpretations.
 #v(1em)
-== 4.3 Decision Tree Classification Models
+== 5.3 Decision Tree Classification Models
 #v(1em)
-=== 4.3.1 Models 
+=== 5.3.1 Models 
 #figure(image("figures/manhattan_tree_zs.jpg", width: 80%), caption: [Manhattan Injury Classification Tree])
 
 #figure(image("figures/brooklyn_tree_zs.jpg", width: 80%), caption: [Brooklyn Injury Classification Tree])
@@ -524,7 +526,7 @@ Overall, these results suggest that additional contextual features, such as the 
 
 #figure(image("figures/nyc_tree_zs.jpg", width: 80%), caption: [Four Boroughs Total Injury Classification Tree])
 #v(1em)
-=== 4.3.2 Discussion
+=== 5.3.2 Discussion
 
 *Model Interpretability and Structure:* 
 Unlike the Neural Network models discussed in Section 4.4, which provide probabilistic outputs, the Decision Tree Classification models offer a transparent, white-box visualization of risk factors. As shown in Figures 15 through 19, the models successfully hierarchized the data, utilizing Incident Type as the primary splitting criterion at the internal nodes. This structural arrangement confirms that while the borough determines the baseline environment, the specific nature of the incident—such as is the most critical determinant of injury severity.
@@ -539,9 +541,9 @@ A critical insight from the leaf nodes is the identification of high-probability
 While the Neural Network provided higher predictive accuracy through non-linear feature combination, the Decision Trees provide actionable safety rules. The *If-Then* logic derived from these trees supports the development of targeted regulatory checklists. This complements the *Conservative Prediction Strategy* discussed in Section 4.4.2 by providing clear interpretability for on-site safety officers, allowing them to identify high-risk scenarios before they escalate into actual injuries.
 
 #v(1em)
-== 4.4 Neural Network Classification Models
+== 5.4 Neural Network Classification Models
 #v(1em)
-=== 4.4.1 Models
+=== 5.4.1 Models
 #figure(
   image("figures/accuracy.png", width: 80%),
   caption: [Validation Accuracy Over Training Epochs],
@@ -561,12 +563,6 @@ While the Neural Network provided higher predictive accuracy through non-linear 
 #v(2em)
 
 #figure(
-  image("figures/ROC.png", width: 80%),
-  caption: [ROC curve with AUC = 0.411],
-)
-#v(2em)
-
-#figure(
   image("figures/precision.png", width: 80%),
   caption: [Precision, recall, and F1 score across decision thresholds],
 )
@@ -574,11 +570,9 @@ While the Neural Network provided higher predictive accuracy through non-linear 
 #v(1em)
 
 #v(1em)
-=== 4.4.2 Discussion
+=== 5.4.2 Discussion
 
-As illustrated in the results, the validation accuracy exhibited significant fluctuation during the initial training phase but demonstrated a steady upward trend overall, rising from approximately 0.28 to nearly 0.45. This indicates that the model progressively learned effective relationships between features, leading to improved validation performance. While there is room for further accuracy improvement, the absence of significant overfitting suggests that the network architecture and regularization settings (Dropout=0.1) are reasonable and provide good generalization capability.
-
-At the default threshold of 0.50, the model's identification of "Injury" (positive class) showed high recall but slightly lower precision. The confusion matrix results are as follows:
+As illustrated in the results, the validation accuracy exhibited significant fluctuation during the initial training phase but demonstrated a steady upward trend overall, rising from approximately 0.28 to nearly 0.45. At the default threshold of 0.50, the model's identification of "Injury" (positive class) showed high recall but slightly lower precision. The confusion matrix results are as follows:
 
 
 * True Positives (TP)* = 31 (Correctly identified injuries)
@@ -594,8 +588,6 @@ At the default threshold of 0.50, the model's identification of "Injury" (positi
 
 
 These results suggest a conservative prediction strategy (preferring false alarms over missed detections). In the context of accident analysis, this bias is acceptable, as false negatives (missed injury predictions) typically carry a higher safety cost than false positives.
-
-Applying the optimal threshold of 0.49, determined by Youden's J statistic, significantly improved the model's recognition capability:
 
 * TP* increased to 46, and *FN* decreased to 28.
 
@@ -617,9 +609,9 @@ Analysis of the metrics is defined as follows:
 
 The plotted curves show the relationship between these metrics and the threshold. In the 0.1–0.49 range, all three metrics remain high: Recall stays near 1.0, Precision stabilizes around 0.8, and the F1 score approaches 0.9. However, beyond the 0.5 threshold, all metrics decline rapidly, indicating that an excessively high threshold makes the model overly conservative, resulting in missed positive samples. Consequently, 0.49 was selected as the optimal threshold, achieving an ideal balance between Recall and Precision and maximizing the F1 score.
 #v(1em)
-== 4.5 Neural Network Regression Models
+== 5.5 Neural Network Regression Models
 #v(1em)
-=== 4.5.1 Models
+=== 5.5.1 Models
 #figure(
   image("figures/regression1.png", width: 80%),
   caption: [Baseline model performance—predicted vs. true injury counts],
@@ -637,7 +629,7 @@ The plotted curves show the relationship between these metrics and the threshold
   caption: [Two-Stage Hybrid Model—predicted vs. true injury counts],
 )
 #v(1em)
-=== 4.5.2 Discussion
+=== 5.5.2 Discussion
 As illustrated in the regression results, the predictive performance of the count-based models stood in stark contrast to the classification models. While the classification approach successfully identified high-risk scenarios, the regression models struggled to quantify the exact number of injuries, yielding suboptimal $R^2$ values across all three experimental setups.
 
 *Baseline and Hybrid Models Performance:*
@@ -651,7 +643,7 @@ Most notably, the Two-Stage Hybrid Model (Figure 27), which was designed to miti
 *Summary of Regression Challenges:*
 The poor performance across these models reinforces the findings from the preliminary methodology section: predicting the exact magnitude of construction accidents is significantly harder than predicting their probability. The high sparsity (zero-inflation) and the stochastic nature of accidents mean that the signal-to-noise ratio is too low for standard regression loss functions  to converge effectively. Future improvements would likely require a significantly larger dataset to support complex architectures or the use of specialized loss functions like Zero-Inflated Poisson loss, provided that convergence issues can be overcome.
 #pagebreak()
-= 5. References
+= 6. References
 [1]Tixier, A. J.-P., Hallowell, M. R., Rajagopalan, B., & Bowman, D. (2016). Application of machine learning to construction injury prediction. Automation in Construction, 69, 102-114. https://doi.org/10.1016/j.autcon.2016.05.016\
 [2]NYCOSH. (2022, February 10). Deadly Skyline: An annual report on construction fatalities in New York State (2022 ed.). https://nycosh.org/wp-content/uploads/2022/02/NYCOSH_Deadly-Skyline-Report_2022.pdf\
 [3]Office of the New York State Comptroller. (2025, July). The construction sector in New York City: Post-pandemic trends (Report No. 8-2026). https://www.osc.ny.gov/files/reports/pdf/report-8-2026.pdf\
