@@ -339,12 +339,7 @@ To enhance representation of incident density within the clustering results, a w
 #v(1em)
 Rows containing missing values were removed to improve data reliability. Point locations and associated weights, defined by recorded injury counts, were then used to generate centroid positions. The resulting centroids were visualized within the clustering plot to illustrate spatial concentration patterns.
 #v(1em)
-=== 4.1.4 Model Evaluation
 
-Model performance was evaluated through scatter map visualizations that display four cluster groups corresponding to the four boroughs included in the dataset. The spatial distribution of the clusters closely aligns with the geographic layout of New York City, demonstrating that the clustering structure is consistent with real-world urban boundaries. A supplementary visualization presents the weighted centroids as star markers, highlighting areas with the highest proportional burden of injury-related incidents.
-#v(1em)
-These visual outcomes indicate that the weighted K-means method produces clusters that reflect spatial variation in incident concentration and support interpretation of localized construction safety patterns.
-#v(2em)
 == 4.2 Decision Tree Classification Models Methodology
 #v(1em)
 === 4.2.1 Data Preparation
@@ -368,9 +363,8 @@ For each leaf node, both the number and percentage of injuries were calculated t
 The dataset was grouped by borough, and summary statistics for injury counts were calculated using Microsoft Excel. The structure and graphical representation of the decision tree models were constructed in Microsoft PowerPoint to support visual interpretability and comparative analysis across boroughs.
 
 #v(1em)
-=== 4.2.4 Model Evaluation
 
-The decision tree model outputs illustrate the branching structure described in the model architecture. Nodes appear as rectangular blocks, while directional arrows indicate hierarchical decision paths. This visual format facilitates identification of incident categories associated with higher injury risk across different boroughs.
+
 == 4.3 Neural Network Classification Models Methodology
 #v(1em)
 === 4.3.1 Data Preparation
@@ -405,12 +399,8 @@ Given the significant class imbalance (where "No Injury" cases far exceed "Injur
 
 The model was trained for 300 epochs. Loss and accuracy metrics for both training and validation sets were computed at each epoch. Dropout was applied during training to improve generalization. Convergence trends were monitored by logging performance metrics every 50 epochs, followed by visual inspection of loss and accuracy curves.
 #v(1em)
-=== 4.3.5 Model Evaluation
-* ROC Curve & AUC*: The Receiver Operating Characteristic (ROC) curve was plotted[15] using validation results, and the Area Under the Curve (AUC) was calculated to quantify overall classification performance. Youden's J statistic ($"TPR" - "FPR"$) was utilized to determine the optimal classification threshold.
 
-* Confusion Matrix*: Matrices were generated for both the default threshold (0.5) and the optimal threshold to visualize classification accuracy, false positive rates, and false negative rates.
 
-* Precision-Recall-F1 Analysis*: Precision, Recall, and F1 scores were calculated across a threshold range of [0.1, 0.9] with a step size of 0.05. Curves were plotted to evaluate trade-offs under different judgment criteria, identifying the threshold that maximizes the F1 score. 
 
 #v(1em)
 
@@ -428,7 +418,6 @@ The Neural Network Regression model was constructed to predict the count of cons
 
 * Log Smoothing*: Logarithmic smoothing was applied to high-variance features (Noncompliant Count, Issue Number, Precipitation) to prevent dominance by single variables. 
 
-Additional regularization terms were excluded to avoid further underfitting, given the inherent sparsity of the dataset.
 #v(1em)
 === 4.4.2 Feature Standardization
 Input features consisted of Average Temperature, Average Precipitation, Heat Vulnerability Index, NoncompliantCount, IssueNumber, Month, and the one-hot encoded borough columns. All variables were standardized to improve gradient stability. The target variable (Injury) was normalized using mean and standard deviation scaling. The dataset was divided into training (80 percent) and validation (20 percent) subsets.
@@ -475,7 +464,6 @@ Two improvement strategies were explored:
 
 *Structure*: Includes global linear weights and regional bias terms to reflect baseline risks across boroughs.
 
-* Results*: While the model demonstrated some capacity to explain regional differences, overall $R^2$, RMSE, and MAE metrics remained poor, indicating limited fit.
 
 *Approach 2: Two-Stage Hybrid Model (No Lag, Strict Denoising)*
 
@@ -485,7 +473,6 @@ Two improvement strategies were explored:
 
 * Stage 2 (Regression)*: For confirmed injury samples, estimates the actual count using a linear model with borough biases. 
 
-* Results*: The classification stage achieved high accuracy (0.8–0.9), effectively identifying high-risk months. However, while the regression stage showed a slight improvement in $R^2$ over single-stage models, overall predictive capability remained unsatisfactory due to the limited volume of data.
 #v(1em)
 
 = 5 Results and Discussion
@@ -498,6 +485,10 @@ This section presents the performance and interpretive results of the four model
 == 5.2 K-Means Classification Models
 #v(1em)
 === 5.2.1 Models 
+Model performance was evaluated through scatter map visualizations that display four cluster groups corresponding to the four boroughs included in the dataset. The spatial distribution of the clusters closely aligns with the geographic layout of New York City, demonstrating that the clustering structure is consistent with real-world urban boundaries. A supplementary visualization presents the weighted centroids as star markers, highlighting areas with the highest proportional burden of injury-related incidents.
+#v(1em)
+These visual outcomes indicate that the weighted K-means method produces clusters that reflect spatial variation in incident concentration and support interpretation of localized construction safety patterns.
+#v(2em)
 #figure(image("figures/injury_scattermap_zs.jpg", width: 80%), caption: [Spatial Distribution of Injuries from Each Borough])
 
 #figure(image("figures/injury_scattermap_kmeans_zs.jpg", width: 80%), caption: [K-Means Model w/ Centroids])
@@ -517,6 +508,8 @@ Overall, these results suggest that additional contextual features, such as the 
 == 5.3 Decision Tree Classification Models
 #v(1em)
 === 5.3.1 Models 
+The decision tree model outputs illustrate the branching structure described in the model architecture. Nodes appear as rectangular blocks, while directional arrows indicate hierarchical decision paths. This visual format facilitates identification of incident categories associated with higher injury risk across different boroughs.
+
 #figure(image("figures/manhattan_tree_zs.jpg", width: 80%), caption: [Manhattan Injury Classification Tree])
 
 #figure(image("figures/brooklyn_tree_zs.jpg", width: 80%), caption: [Brooklyn Injury Classification Tree])
@@ -545,6 +538,9 @@ While the Neural Network provided higher predictive accuracy through non-linear 
 == 5.4 Neural Network Classification Models
 #v(1em)
 === 5.4.1 Models
+* Confusion Matrix*: Matrices were generated for both the default threshold (0.5) and the optimal threshold to visualize classification accuracy, false positive rates, and false negative rates.
+
+* Precision-Recall-F1 Analysis*: Precision, Recall, and F1 scores were calculated across a threshold range of [0.1, 0.9] with a step size of 0.05. Curves were plotted to evaluate trade-offs under different judgment criteria, identifying the threshold that maximizes the F1 score. 
 #figure(
   image("figures/accuracy.png", width: 80%),
   caption: [Validation Accuracy Over Training Epochs],
@@ -605,12 +601,12 @@ Overall, the classification model has clear limitations due to limited features 
 As illustrated in the regression results, the predictive performance of the count-based models stood in stark contrast to the classification models. While the classification approach successfully identified high-risk scenarios, the regression models struggled to quantify the exact number of injuries, yielding suboptimal $R^2$ values across all three experimental setups.
 
 *Baseline and Hybrid Models Performance:*
-The Baseline Neural Network Regressor (Figure 25) achieved an $R^2$ of only 0.021. A visual inspection of the scatter plot reveals a distinct regression to the mean phenomenon: while the true injury counts range from 0 to 4, the model’s predictions cluster tightly in the narrow range of 0.5 to 1.5. This indicates that the model, unable to find strong signal patterns in the sparse data, defaulted to predicting the average injury rate to minimize the global loss function.
+The Baseline Neural Network Regressor (Figure 24) achieved an $R^2$ of only 0.021. A visual inspection of the scatter plot reveals a distinct regression to the mean phenomenon: while the true injury counts range from 0 to 4, the model’s predictions cluster tightly in the narrow range of 0.5 to 1.5. This indicates that the model, unable to find strong signal patterns in the sparse data, defaulted to predicting the average injury rate to minimize the global loss function.
 
-The introduction of temporal features in the Hybrid Lag and Group Bias Linear Model (Figure 26) resulted in a marginal improvement, raising the $R^2$ to 0.045. Although the scatter points show a slightly wider distribution compared to the baseline, the improvement is negligible. This suggests that construction injury events in this dataset lack significant temporal autocorrelation; the occurrence of an injury in the previous month does not strongly predict the magnitude of injuries in the subsequent month.
+The introduction of temporal features in the Hybrid Lag and Group Bias Linear Model (Figure 25) resulted in a marginal improvement, raising the $R^2$ to 0.045. Although the scatter points show a slightly wider distribution compared to the baseline, the improvement is negligible. This suggests that construction injury events in this dataset lack significant temporal autocorrelation; the occurrence of an injury in the previous month does not strongly predict the magnitude of injuries in the subsequent month.
 
 *Two-Stage Model Limitations:*
-Most notably, the Two-Stage Hybrid Model (Figure 27), which was designed to mitigate sparsity by first classifying injury occurrence and then regressing the count, resulted in a negative $R^2$ of -0.301. While the classification stage (Stage 1) showed promise in filtering out zero-event months, the subsequent regression stage (Stage 2) suffered critically from data scarcity. After filtering for only positive-injury samples and applying strict denoising, the effective sample size became too small for the regressor to generalize. The negative $R^2$ implies that the model's predictions were worse than simply using the horizontal mean of the test data, highlighting the dangers of aggressive data segmentation on small datasets.
+Most notably, the Two-Stage Hybrid Model (Figure 26), which was designed to mitigate sparsity by first classifying injury occurrence and then regressing the count, resulted in a negative $R^2$ of -0.301. While the classification stage (Stage 1) showed promise in filtering out zero-event months, the subsequent regression stage (Stage 2) suffered critically from data scarcity. After filtering for only positive-injury samples and applying strict denoising, the effective sample size became too small for the regressor to generalize. The negative $R^2$ implies that the model's predictions were worse than simply using the horizontal mean of the test data, highlighting the dangers of aggressive data segmentation on small datasets.
 
 *Summary of Regression Challenges:*
 The poor performance across these models reinforces the findings from the preliminary methodology section: predicting the exact magnitude of construction accidents is significantly harder than predicting their probability. The high sparsity (zero-inflation) and the stochastic nature of accidents mean that the signal-to-noise ratio is too low for standard regression loss functions  to converge effectively. Future improvements would likely require a significantly larger dataset to support complex architectures or the use of specialized loss functions like Zero-Inflated Poisson loss, provided that convergence issues can be overcome.
