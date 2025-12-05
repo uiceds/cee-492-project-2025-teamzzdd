@@ -89,11 +89,10 @@ Following the regression analysis, the study implements machine learning approac
 = 2. Exploratory Data Analysis
 This section presents a descriptive examination of the dataset and outlines the initial analytical procedures conducted to understand incident characteristics, spatial and temporal distribution patterns, and relationships between key variables. The exploratory findings provide the foundation for determining appropriate modeling strategies and evaluating the feasibility of predictive approaches.
 #v(1em)
-== 2.1. Basic Information
+== 2.1. Preliminary Plotting
 The dataset consists of construction-related incidents and accidents at New York City in each of the five boroughs. It provides a large-scale CSV file suitable for predictive analysis.[6]
 The dataset includes approximately 958 rows, each representing an accident or incident record, and 20 columns containing attribute fields of these records.
-#v(2em)
-== 2.2 Attributes
+#v(1em)
 The dataset includes twenty primary attributes describing incident characteristics, spatial features, and safety outcomes. These variables encompass unique identifiers (Record ID), regulatory and administrative descriptors (BIN, block, lot), event classifications (Record Type, Check2), and severity indicators (Injury, Fatality). Spatial metadata such as Borough and Council District enables geographic aggregation and comparative analysis. This structure supports the development of both statistical and machine-learning-based models that assess relationships among incident attributes and risk outcomes.
 #v(1em)
 #align(center, [Table 1. Attribute Definitions and Descriptions
@@ -126,56 +125,10 @@ The dataset includes twenty primary attributes describing incident characteristi
   [Neighborhood Tabulation Area (NTA) (2020)], [Text], [Neighborhood Tabulation Area (NTA) code from 2020],
 )])
 #v(1em)
-== 2.3 Correlation Mapping
-To enhance predictive capability and incorporate contextual influences, external variables were merged with the dataset. The Heat Vulnerability Index (HVI) 
-and monthly climate variables such as average temperature and precipitation were integrated to examine potential environmental links to construction safety outcomes. A weighted averaging procedure was applied to HVI data to address uneven distribution across boroughs.
-#align(center, [Table 2. Integrated Dataset with Climate and HVI Variables
-#table(
-  columns: 9,
-  align: (left, right, right, right, right, right, right, right, right),
-  inset: 4pt,
-  stroke: 0.5pt,
-  [Borough], [Postcode], [YearMonth], [IncidentCount], [Fatality], [Injury], [AvgTemp], [AvgPrecip], [HVI],
-  [Bronx], [10451], [Jun-24], [3], [1], [2], [71.7], [4.4], [5],
-)])
-Preliminary inspection indicates that higher-HVI areas (typically in the Bronx and parts of Brooklyn) correspond to marginally elevated injury counts, hinting at interactions between heat exposure and worker safety.
-
-Some other parameter will be added such as Noncomplaint Count and IssueNumber (in section 6) in order to solve the regression model problems. 
+=== 2.1.1 Plots for the Initial Dataset
 #v(1em)
-=== 2.3.1 Weighted HVI
-Weighted averaging is used when different observations contribute unequally to an aggregate measure. In another word it will directly contain the information about the borough.
-#v(1em)
-=== 2.3.2 Global Correlation
-A global correlation analysis was conducted among key variables: TotalIncidents, Fatality, Injury, AvgTemp, AvgPrecip, and HVI.
-#align(center, [Table 3. Correlation Matrix of Incident, Climate, and Vulnerability Variables
-#table(
-  columns: 6,
-  align: (left, right, right, right, right, right),
-  inset: 4pt,
-  stroke: 0.5pt,
-  [ ], [TotalIncidents], [Fatality], [Injury], [AvgTemp], [AvgPrecip],
-  [TotalIncidents], [1.000], [0.120], [0.958], [0.025], [0.023],
-  [Fatality], [0.120], [1.000], [0.075], [-0.007], [-0.153],
-)])
-A global correlation analysis was conducted to examine linear relationships among the primary variables in the dataset. The results, summarized in Table 1, indicate several notable patterns. The strongest association occurred between TotalIncidents and Injury, reflected by a Pearson correlation coefficient of approximately 0.958. This relationship is expected, since the majority of reported incidents involved at least one injury. In contrast, Fatality exhibited very limited correlation with other variables. The correlation with TotalIncidents was low at approximately 0.120, and the relationship with Injury was even weaker at approximately 0.075, which aligns with the sparse distribution of fatal events.
-#v(1em)
-Environmental variables exhibit similarly weak relationships with safety outcomes. Average temperature (r=-0.57) show negligible correlation with fatality counts. Analysis of the Heat Vulnerability Index (HVI) produces a moderate negative correlation with both TotalIncidents and Injury, with values ranging approximately from r = -0.57 to r=-0.606. This pattern suggests that areas with higher vulnerability scores may be associated with fewer reported incidents within this dataset. The counterintuitive relationship indicates the possibility of confounding factors and highlights the need for more comprehensive analysis in future work. 
-#v(1em)
-=== 2.3.3 Log-scaled Correlation
-#figure(
-  image("figures/log_scaled_correlation_heatmap.jpg", width: 80%),
-  caption: [Correlation heatmap after log scaling],
-)
-#v(1em)
-Results show a strong positive correlation between TotalIncidents and Injury (r ≈ 0.96) and a negative correlation between HVI and Fatality (r ≈ –0.57). Although counterintuitive at first glance, this may reflect underreporting or mitigation interventions in high-vulnerability areas.
-These relationships were visualized using a log-scaled correlation heatmap, emphasizing nonlinear dependencies that justify the use of both Poisson and Negative Binomial regression models in the next section.
-#v(1em)
-== 2.4 Preprocessing
-#v(1em)
-=== 2.4.1 Data Integration and Cohort
 The initial dataset of construction-related incidents was filtered to remove incomplete and inconsistent records to establish the analytic cohort. Group-by operations were then performed to extract and aggregate key attributes. Aggregation was conducted based on borough (Area), month, and postcode. The postcode variable functions as a critical spatial key because it enables direct linkage to external datasets, including the Heat Vulnerability Index (HVI) [7]. Integrating the HVI dataset provides an additional environmental and demographic dimension that enhances contextual interpretation of incident locations.
 #v(1em)
-=== 2.4.2 Borough × Month Aggregation
 To examine temporal trends in incident activity, records were aggregated at the borough–month level. The results indicate distinct seasonal patterns, with incident frequency increasing during spring and summer periods, which generally align with intensified construction activity and workforce presence. This seasonal clustering provides an initial indication of time-dependent variation in construction risk that is relevant for subsequent modeling stages. 
 #v(1em)
 Table 2 presents an excerpt of the monthly aggregation output for selected borough–postcode combinations, including incident count, injury count, and fatality count. The full dataset is available in the file monthly_borough.csv.
@@ -192,7 +145,7 @@ Table 2 presents an excerpt of the monthly aggregation output for selected borou
   [Bronx], [10451], [Jun-24], [3], [1], [2],
 )])
 Excerpt shown above; full panel saved as `monthly_borough.csv`.
-== 2.5 Results for Preprocessing
+#v(1em)
 The early plots mainly show where the injuries and fatalities happened in the boroughs and districts, and they also give a rough view of how the numbers changed by month and in total from Jan 2024 to Oct 2025.
 These results establish a foundational understanding of spatial and temporal variation in incident 
 patterns and support further analysis through borough-specific and district-specific modeling 
@@ -214,7 +167,8 @@ approaches.
 
 #figure(image("figures/cumul_injury_zs.jpg", width: 80%), caption: [Fatalities Each Month])
 #v(1em)
-=== 2.5.1 Averaging the Data
+The table below contains the averages of the data obtained from these plots.
+#v(1em)
 #align(center, [Table 5. Average Incident and Injury Rates by Borough
 #table(
   columns: 6,
@@ -232,20 +186,58 @@ incident severity. These results suggest that incident frequency alone may not f
 that borough-level proportional measures provide a more informative perspective on relative safety 
 outcomes.
 #v(1em)
-== 2.6 Discussion
+=== 2.1.2 Correlation Mapping
+To enhance predictive capability and incorporate contextual influences, external variables were merged with the dataset. The Heat Vulnerability Index (HVI) 
+and monthly climate variables such as average temperature and precipitation were integrated to examine potential environmental links to construction safety outcomes. A weighted averaging procedure was applied to HVI data to address uneven distribution across boroughs.
+#align(center, [Table 2. Integrated Dataset with Climate and HVI Variables
+#table(
+  columns: 9,
+  align: (left, right, right, right, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [Borough], [Postcode], [YearMonth], [IncidentCount], [Fatality], [Injury], [AvgTemp], [AvgPrecip], [HVI],
+  [Bronx], [10451], [Jun-24], [3], [1], [2], [71.7], [4.4], [5],
+)])
+Preliminary inspection indicates that higher-HVI areas (typically in the Bronx and parts of Brooklyn) correspond to marginally elevated injury counts, hinting at interactions between heat exposure and worker safety.
+
+Some other parameter will be added such as Noncomplaint Count and IssueNumber (in section 6) in order to solve the regression model problems. 
+#v(1em)
+Weighted averaging is used when different observations contribute unequally to an aggregate measure. In another word it will directly contain the information about the borough.
+#v(1em)
+A global correlation analysis was conducted among key variables: TotalIncidents, Fatality, Injury, AvgTemp, AvgPrecip, and HVI.
+#align(center, [Table 3. Correlation Matrix of Incident, Climate, and Vulnerability Variables
+#table(
+  columns: 6,
+  align: (left, right, right, right, right, right),
+  inset: 4pt,
+  stroke: 0.5pt,
+  [ ], [TotalIncidents], [Fatality], [Injury], [AvgTemp], [AvgPrecip],
+  [TotalIncidents], [1.000], [0.120], [0.958], [0.025], [0.023],
+  [Fatality], [0.120], [1.000], [0.075], [-0.007], [-0.153],
+)])
+A global correlation analysis was conducted to examine linear relationships among the primary variables in the dataset. The results, summarized in Table 1, indicate several notable patterns. The strongest association occurred between TotalIncidents and Injury, reflected by a Pearson correlation coefficient of approximately 0.958. This relationship is expected, since the majority of reported incidents involved at least one injury. In contrast, Fatality exhibited very limited correlation with other variables. The correlation with TotalIncidents was low at approximately 0.120, and the relationship with Injury was even weaker at approximately 0.075, which aligns with the sparse distribution of fatal events.
+#v(1em)
+Environmental variables exhibit similarly weak relationships with safety outcomes. Average temperature (r=-0.57) show negligible correlation with fatality counts. Analysis of the Heat Vulnerability Index (HVI) produces a moderate negative correlation with both TotalIncidents and Injury, with values ranging approximately from r = -0.57 to r=-0.606. This pattern suggests that areas with higher vulnerability scores may be associated with fewer reported incidents within this dataset. The counterintuitive relationship indicates the possibility of confounding factors and highlights the need for more comprehensive analysis in future work. 
+#v(1em)
+#figure(
+  image("figures/log_scaled_correlation_heatmap.jpg", width: 80%),
+  caption: [Correlation heatmap after log scaling],
+)
+#v(1em)
+Results show a strong positive correlation between TotalIncidents and Injury (r ≈ 0.96) and a negative correlation between HVI and Fatality (r ≈ –0.57). Although counterintuitive at first glance, this may reflect underreporting or mitigation interventions in high-vulnerability areas.
+These relationships were visualized using a log-scaled correlation heatmap, emphasizing nonlinear dependencies that justify the use of both Poisson and Negative Binomial regression models in the next section.
+#v(1em)
+=== 2.1.3 Discussion
 The exploratory analysis highlights several important characteristics of the dataset that inform subsequent modeling. Borough-level aggregation revealed substantial disparities in injury prevalence, with the Bronx and Brooklyn experiencing the highest proportional injury rates relative to total incident counts. Temporal analysis demonstrated clustering during warmer months, suggesting that seasonal workforce expansion and construction volume may influence incident trends.
 #v(1em)
 Descriptive statistics further emphasized that injuries constitute the dominant outcome within the dataset, whereas fatalities occur infrequently and exhibit limited variability. This imbalance introduces challenges for predictive modeling based on traditional regression approaches, given the small number of positive fatality observations relative to the dataset size. The preliminary findings therefore underscore the importance of focusing on injury prediction and spatial-temporal risk differentiation rather than fatality forecasting.
 #v(1em)
 The results also indicate that proportional measures and aggregated perspectives reveal patterns not visible through raw incident counts alone. These insights establish foundational context for the methodological approaches introduced in Section 3 and guide feature selection priorities for classification-based modeling frameworks.
 #v(2em)
-== 2.7 Preliminary Regression Attemps 
-== 2.7.1 Preliminary Predictive Modeling & Model Limitation 
-#v(1em)
-=== 2.7.1.1 Explaination
+== 2.2 Preliminary Regression Attempts 
 Initial model development applied several traditional statistical prediction approaches to assess the suitability of the dataset and to diagnose structural limitations for downstream modeling. These preliminary models provide insight into sparsity, imbalance, and the distributional characteristics of the injury and fatality outcomes.
 #v(1em)
-=== 2.7.1.2 Poisson Model (Injury)
+=== 2.2.1 Poisson Model (Injury)
 #align(center, [Table 6. Poisson Regression Model Results for Injury Counts
 #table(
   columns: 7,
@@ -259,7 +251,7 @@ Initial model development applied several traditional statistical prediction app
 #v(1em)
 The Poisson model was selected due to the non-negative count nature of the injury variable and its suitability for modeling frequency-based outcomes. However, the regression output indicates weak statistical significance for most predictors, including borough dummy variables, meteorological features, and the Heat Vulnerability Index (HVI). Coefficient patterns also demonstrate instability, particularly for Staten Island, which exhibits wide confidence intervals and irregular magnitudes. These issues are consistent with the sparse distribution of non-zero values and the heavy concentration of zeros across the dataset.
 #v(1em)
-=== 2.7.1.3 Negative Binomial Model (Fatality) 
+=== 2.2.2 Negative Binomial Model (Fatality) 
 
 #align(center, [Table 7. Negative Binomial Regression Model Results for Fatalities
 #table(
@@ -273,7 +265,7 @@ The Poisson model was selected due to the non-negative count nature of the injur
 #figure(image("figures/neg_bin_fatality_coefficients.jpg", width: 80%), caption: [Negative binomial fatality model coefficients])
 The Negative Binomial approach was intended to address over-dispersion induced by the rarity of fatality events [8][9]. However, the resulting coefficients remain statistically insignificant, and the intercept estimate is excessively large relative to expected outcome scales. Visual inspection of coefficient distributions further indicates minimal model learning, confirming that the available fatality data provide insufficient signal for reliable regression-based inference.
 #v(1em)
-=== 2.7.1.4 Logistic Model[10]
+=== 2.2.3 Logistic Model[10]
 #align(center, [Table 8. Logistic Regression Results for Binary Fatality Events
 #table(
   columns: 7,
@@ -286,29 +278,29 @@ The Negative Binomial approach was intended to address over-dispersion induced b
 #v(1em)
 Fatality was modeled as a binary response due to the 0/1 nature of the variable. Logistic regression produced unstable and extreme coefficient values, particularly for borough and month indicators. The abnormal magnitude of coefficients and inflated confidence intervals reflect quasi-complete separation, a condition in which certain groups contain almost exclusively non-fatal outcomes. Under such circumstances, logistic regression attempts to push parameter values toward infinity in order to fit sparse patterns, producing unreliable predictions.
 #v(1em)
-=== 2.7.1.5 Visualization 
+=== 2.2.4 Three Model Comparison 
 Figure-based comparison of model coefficients illustrates that both the Poisson and Negative Binomial models generate coefficient estimates clustered closely around zero with limited variation. In contrast, the logistic model produces extreme values driven by sparsity and imbalance, reinforcing concerns regarding model validity.
 #v(1em)
 #figure(image("figures/coef_comparison.jpg", width: 80%), caption: [Coefficient comparison])
 #v(1em)
-=== 2.7.1.6 Disccusion the Limitation of Data for Preliminary Regression Model
+=== 2.2.5 Discussion the Limitation of Data for Preliminary Regression Model
 Poisson, Negative Binomial, and logistic regression models were selected based on the statistical characteristics of the dataset. The incident data contain a substantial number of zero values, which introduces pronounced sparsity. Although the injury variable includes non-zero counts, the fatality variable appears exclusively as 0 or 1 throughout the dataset, indicating a rare-event structure. Under these conditions, Poisson regression is appropriate for modeling relationships between covariates and injury counts. To address over-dispersion associated with rare fatality events, the Negative Binomial model [8][9] relaxes the restrictive assumption that the variance must equal the mean. Additionally, because fatality is inherently binary, logistic regression provides a direct approach for modeling the probability of fatal events as a 0/1 response. The primary purpose of these preliminary regressions is to evaluate data sparsity and information content to guide subsequent methodological decisions and to determine a modeling direction suited to the underlying structure.
 #v(1em)
-Poisson Model
+*Poisson Model*
 #v(1em)
 Figure 10 illustrates that the significance levels of most predictors, including borough indicators, meteorological variables, and the Heat Vulnerability Index (HVI), are weak. Coefficient estimates demonstrate instability and wide confidence intervals, especially for Staten Island, which contributes very few observations. Although earlier correlation mapping indicated strong pairwise associations, these correlations rely solely on linear relationships and do not account for interdependencies among variables. For example, HVI correlates strongly with outcome variables but is also closely aligned with borough classification, suggesting that its apparent predictive strength may primarily reflect geographic clustering. Consequently, it is expected that multiple predictors fail to achieve statistical significance in Poisson and other count-based regression models. Sparse observations from Staten Island also intensify over-dispersion and reduce coefficient stability, limiting the interpretability and reliability of the model results.
 #v(1em)
-Negative Binomial Model
+*Negative Binomial Model*
 #v(1em)
 Figure 11 demonstrates that the Negative Binomial model, although theoretically more suitable for sparse data, produces results with little inferential validity. The intercept is excessively large, and neither z-values nor p-values indicate meaningful statistical significance. Sparsity in borough-level fatality records continues to distort model behavior, preventing meaningful learning despite relaxed variance assumptions.
 #v(1em)
-Three Model Comparison
+*Three Model Comparison*
 #v(1em)
 Figure 12 compares coefficients across the three models. In both the Poisson and Negative Binomial models, coefficients cluster near zero. In contrast, the logistic model exhibits extreme coefficient magnitudes, particularly for borough variables with very limited fatality observations. This outcome is characteristic of quasi-complete separation, a condition in which particular borough–month combinations contain almost exclusively nonfatal outcomes. Under such conditions, logistic regression drives coefficients toward infinity in an attempt to discriminate between nearly homogeneous groups. This behavior indicates that fatality prediction functions more appropriately as a rare-event classification task rather than a count-based regression problem.
 
 This kind of “coefficient blow-up” in the Logit model usually signals quasi-complete separation: within specific borough–month combinations, fatal events either almost never occur or never occur at all. In this casee, it is mostly the “almost never” situation. When that happens, logistic regression tends to push the associated coefficients toward ±∞ in an attempt to fit those extreme patterns. This indicates that fatality as a 0/1 outcome suffers from even stronger sparsity and imbalance than when treated as a count, reinforcing the idea that fatal events resemble a rare-event classification problem rather than a conventional regression target.
 #v(1em)
-Summary
+*Summary*
 #v(1em)
 Taken together, the sparsity and irregular structure of the data make standard regression models unsuitable unless additional, more informative predictors are introduced—such as the new parameters incorporated in Section 7.
 #v(2em)
@@ -319,7 +311,7 @@ According to Preliminary Regression Attemps, we decided to use classification as
 #v(1em)
 === 3.1.1 Data Preparation and Cleaning
 
-The K-means clustering analysis utilized four primary features from the dataset: longitude, latitude, number of injuries, and borough classification. The clustering procedure focused on four boroughs: Manhattan, Brooklyn, Queens, and the Bronx. Staten Island was excluded from the analysis because the available incident records were extremely limited, resulting in high sparsity that prevented reliable pattern identification.
+The K-means clustering analysis utilized four primary features from the dataset: longitude, latitude, number of injuries, and borough classification. The clustering procedure focused on four boroughs: Manhattan, Brooklyn, Queens, and the Bronx. Staten Island was excluded from the analysis because the available incident records were limited, resulting in high sparsity that prevented reliable pattern identification.
 #v(1em)
 To support spatial visualization and reduce coordinate noise, longitude and latitude values were rounded to three significant digits. Because injury counts frequently appeared as 0 or 1, values were aggregated by matched coordinate locations to consolidate observations representing nearby incident points. The cleaned dataset was then grouped by borough and combined into a unified file for plotting and cluster evaluation.
 #v(1em)
@@ -341,9 +333,8 @@ Rows containing missing values were removed to improve data reliability. Point l
 #v(1em)
 
 #v(1em)
-== 3.1.4 K-Means Classification Models
-#v(1em)
-=== 3.1.4.1 Models 
+=== 3.1.4 Models
+ 
 Model performance was evaluated through scatter map visualizations that display four cluster groups corresponding to the four boroughs included in the dataset. The spatial distribution of the clusters closely aligns with the geographic layout of New York City, demonstrating that the clustering structure is consistent with real-world urban boundaries. A supplementary visualization presents the weighted centroids as star markers, highlighting areas with the highest proportional burden of injury-related incidents.
 #v(1em)
 These visual outcomes indicate that the weighted K-means method produces clusters that reflect spatial variation in incident concentration and support interpretation of localized construction safety patterns.
@@ -380,15 +371,15 @@ The dataset was grouped by borough, and summary statistics for injury counts wer
 === 3.2.4 Models 
 The decision tree model outputs illustrate the branching structure described in the model architecture. Nodes appear as rectangular blocks, while directional arrows indicate hierarchical decision paths. This visual format facilitates identification of incident categories associated with higher injury risk across different boroughs.
 
-#figure(image("figures/manhattan_tree_zs.jpg", width: 80%), caption: [Manhattan Injury Classification Tree])
+#figure(image("figures/manhattan_tree_zs.jpg", width: 120%), caption: [Manhattan Injury Classification Tree])
 
-#figure(image("figures/brooklyn_tree_zs.jpg", width: 80%), caption: [Brooklyn Injury Classification Tree])
+#figure(image("figures/brooklyn_tree_zs.jpg", width: 120%), caption: [Brooklyn Injury Classification Tree])
 
-#figure(image("figures/queens_tree_zs.jpg", width: 80%), caption: [Queens Injury Classification Tree])
+#figure(image("figures/queens_tree_zs.jpg", width: 120%), caption: [Queens Injury Classification Tree])
 
-#figure(image("figures/bronx_tree_zs.jpg", width: 80%), caption: [Bronx Injury Classification Tree])
+#figure(image("figures/bronx_tree_zs.jpg", width: 120%), caption: [Bronx Injury Classification Tree])
 
-#figure(image("figures/nyc_tree_zs.jpg", width: 80%), caption: [Four Boroughs Total Injury Classification Tree])
+#figure(image("figures/nyc_tree_zs.jpg", width: 120%), caption: [Four Boroughs Total Injury Classification Tree])
 #v(1em)
 
 #v(1em)
@@ -622,6 +613,7 @@ The poor performance across these models reinforces the findings from the prelim
 [16] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
 [17] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
 [1NYC Maps. Maps of World. https://www.mapsofworld.com/usa/new-york-city-map.html#google_vignette
+
 
 
 
