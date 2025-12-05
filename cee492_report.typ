@@ -66,7 +66,7 @@ keywords:"Construction Safety", "Risk Prediction", "Accident Reports", "Regressi
 = 1. Introduction
 #v(1em)
 
-== 1.1 Background & Motivation
+== 1.1. Background & Motivation
 #v(1em)
 Construction safety remains a critical and persistent challenge within the civil engineering and infrastructure development sectors, particularly in dense urban environments such as New York City. Despite advancements in regulation and monitoring, construction continues to account for a disproportionately high share of workplace fatalities. According to the NYCOSH Deadly Skyline report, construction incidents represent more than 20% of statewide workplace deaths, many of which are associated with preventable safety failures and oversight deficiencies [2]. Recent analyses of post-pandemic conditions indicate that construction activity in New York City has accelerated, increasing labor exposure and highlighting the urgency of strengthening safety intervention strategies [3].
 #v(1em)
@@ -75,13 +75,12 @@ Researchers have increasingly explored the use of analytical and machine-learnin
 New York City offers a valuable context for evaluating predictive safety models due to the concentration of high-density development across its five boroughs and the strong geographic variability in project type, scale, and regulatory enforcement. Incidents are heavily clustered in regions such as Manhattan and the Bronx, while boroughs like Staten Island contribute minimal event frequency, intensifying statistical imbalance within the dataset. These characteristics motivate the development and comparison of complementary modeling approaches to determine their feasibility for real-world safety risk prediction.
 #v(1em)
 
-== 1.2 Objectives
+== 1.2. Objectives and Overview
 This study investigates construction incident and accident data from New York City to identify the factors associated with injury and fatality outcomes and evaluate the predictive capability of statistical and machine-learning-based models. The objectives are to:
 - Examine spatial and temporal distributions of incidents across boroughs,
 - Analyze the relationships among incident characteristics, contextual variables, and injury outcomes,
 - Assess the feasibility of predictive models to support proactive construction safety strategies.
 #v(1em)
-== 1.3 Overview of Analytical Plan
 The study begins with exploratory data analysis (EDA) to characterize the structure of the dataset and identify preliminary patterns in incident distribution and variable relationships. Conventional regression models, including Poisson, Negative Binomial, and logistic regression, are first evaluated to determine their suitability for predicting injury and fatality outcomes. These models provide a baseline for comparison and help identify the limitations arising from sparse and imbalanced data. 
 #v(1em)
 Following the regression analysis, the study implements machine learning approaches such as k-means clustering, decision tree classification, and neural network models to improve predictive performance and capture nonlinear relationships. The results from regression and machine learning models are synthesized to determine the most effective pathway for predictive incident modeling and to provide recommendations for future research and construction safety improvement.
@@ -125,7 +124,7 @@ The dataset includes twenty primary attributes describing incident characteristi
   [Neighborhood Tabulation Area (NTA) (2020)], [Text], [Neighborhood Tabulation Area (NTA) code from 2020],
 )])
 #v(1em)
-=== 2.1.1 Plots for the Initial Dataset
+=== 2.1.1. Plots for the Initial Dataset
 #v(1em)
 The initial dataset of construction-related incidents was filtered to remove incomplete and inconsistent records to establish the analytic cohort. Group-by operations were then performed to extract and aggregate key attributes. Aggregation was conducted based on borough (Area), month, and postcode. The postcode variable functions as a critical spatial key because it enables direct linkage to external datasets, including the Heat Vulnerability Index (HVI) [7]. Integrating the HVI dataset provides an additional environmental and demographic dimension that enhances contextual interpretation of incident locations.
 #v(1em)
@@ -178,15 +177,14 @@ The table below contains the averages of the data obtained from these plots.
   [Borough], [AvgFatality], [AvgInjury], [AvgIncident], [FatalityRate%], [InjuryRate%],
   [Bronx], [0.019], [1.10], [1.31], [1.47], [83.82],
 )])
-Table 4 shows the average numbers for fatalities, injuries, and total incidents in each borough. In general, around 83.8% of the cases ended up having at least one injury reported，
-while fatal events represented only about 1.5 percent of total cases. The Bronx reported the highest 
+Table 4 shows the average numbers for fatalities, injuries, and total incidents in each borough. In general, around 83.8% of the cases ended up having at least one injury reported, while fatal events represented only about 1.5 percent of total cases. The Bronx reported the highest 
 12
 average injury rate, followed closely by Brooklyn, indicating a spatial concentration of elevated 
 incident severity. These results suggest that incident frequency alone may not fully capture risk and 
 that borough-level proportional measures provide a more informative perspective on relative safety 
 outcomes.
 #v(1em)
-=== 2.1.2 Correlation Mapping
+=== 2.1.2. Correlation Mapping
 To enhance predictive capability and incorporate contextual influences, external variables were merged with the dataset. The Heat Vulnerability Index (HVI) 
 and monthly climate variables such as average temperature and precipitation were integrated to examine potential environmental links to construction safety outcomes. A weighted averaging procedure was applied to HVI data to address uneven distribution across boroughs.
 #align(center, [Table 2. Integrated Dataset with Climate and HVI Variables
@@ -227,17 +225,17 @@ Environmental variables exhibit similarly weak relationships with safety outcome
 Results show a strong positive correlation between TotalIncidents and Injury (r ≈ 0.96) and a negative correlation between HVI and Fatality (r ≈ –0.57). Although counterintuitive at first glance, this may reflect underreporting or mitigation interventions in high-vulnerability areas.
 These relationships were visualized using a log-scaled correlation heatmap, emphasizing nonlinear dependencies that justify the use of both Poisson and Negative Binomial regression models in the next section.
 #v(1em)
-=== 2.1.3 Discussion
+=== 2.1.3. Discussion
 The exploratory analysis highlights several important characteristics of the dataset that inform subsequent modeling. Borough-level aggregation revealed substantial disparities in injury prevalence, with the Bronx and Brooklyn experiencing the highest proportional injury rates relative to total incident counts. Temporal analysis demonstrated clustering during warmer months, suggesting that seasonal workforce expansion and construction volume may influence incident trends.
 #v(1em)
 Descriptive statistics further emphasized that injuries constitute the dominant outcome within the dataset, whereas fatalities occur infrequently and exhibit limited variability. This imbalance introduces challenges for predictive modeling based on traditional regression approaches, given the small number of positive fatality observations relative to the dataset size. The preliminary findings therefore underscore the importance of focusing on injury prediction and spatial-temporal risk differentiation rather than fatality forecasting.
 #v(1em)
 The results also indicate that proportional measures and aggregated perspectives reveal patterns not visible through raw incident counts alone. These insights establish foundational context for the methodological approaches introduced in Section 3 and guide feature selection priorities for classification-based modeling frameworks.
 #v(2em)
-== 2.2 Preliminary Regression Attempts 
+== 2.2. Preliminary Regressions 
 Initial model development applied several traditional statistical prediction approaches to assess the suitability of the dataset and to diagnose structural limitations for downstream modeling. These preliminary models provide insight into sparsity, imbalance, and the distributional characteristics of the injury and fatality outcomes.
 #v(1em)
-=== 2.2.1 Poisson Model (Injury)
+=== 2.2.1. Poisson Model (Injury)
 #align(center, [Table 6. Poisson Regression Model Results for Injury Counts
 #table(
   columns: 7,
@@ -251,7 +249,7 @@ Initial model development applied several traditional statistical prediction app
 #v(1em)
 The Poisson model was selected due to the non-negative count nature of the injury variable and its suitability for modeling frequency-based outcomes. However, the regression output indicates weak statistical significance for most predictors, including borough dummy variables, meteorological features, and the Heat Vulnerability Index (HVI). Coefficient patterns also demonstrate instability, particularly for Staten Island, which exhibits wide confidence intervals and irregular magnitudes. These issues are consistent with the sparse distribution of non-zero values and the heavy concentration of zeros across the dataset.
 #v(1em)
-=== 2.2.2 Negative Binomial Model (Fatality) 
+=== 2.2.2. Negative Binomial Model (Fatality) 
 
 #align(center, [Table 7. Negative Binomial Regression Model Results for Fatalities
 #table(
@@ -265,7 +263,7 @@ The Poisson model was selected due to the non-negative count nature of the injur
 #figure(image("figures/neg_bin_fatality_coefficients.jpg", width: 80%), caption: [Negative binomial fatality model coefficients])
 The Negative Binomial approach was intended to address over-dispersion induced by the rarity of fatality events [8][9]. However, the resulting coefficients remain statistically insignificant, and the intercept estimate is excessively large relative to expected outcome scales. Visual inspection of coefficient distributions further indicates minimal model learning, confirming that the available fatality data provide insufficient signal for reliable regression-based inference.
 #v(1em)
-=== 2.2.3 Logistic Model[10]
+=== 2.2.3. Logistic Model[10]
 #align(center, [Table 8. Logistic Regression Results for Binary Fatality Events
 #table(
   columns: 7,
@@ -278,12 +276,12 @@ The Negative Binomial approach was intended to address over-dispersion induced b
 #v(1em)
 Fatality was modeled as a binary response due to the 0/1 nature of the variable. Logistic regression produced unstable and extreme coefficient values, particularly for borough and month indicators. The abnormal magnitude of coefficients and inflated confidence intervals reflect quasi-complete separation, a condition in which certain groups contain almost exclusively non-fatal outcomes. Under such circumstances, logistic regression attempts to push parameter values toward infinity in order to fit sparse patterns, producing unreliable predictions.
 #v(1em)
-=== 2.2.4 Three Model Comparison 
+=== 2.2.4. Three Model Comparison 
 Figure-based comparison of model coefficients illustrates that both the Poisson and Negative Binomial models generate coefficient estimates clustered closely around zero with limited variation. In contrast, the logistic model produces extreme values driven by sparsity and imbalance, reinforcing concerns regarding model validity.
 #v(1em)
 #figure(image("figures/coef_comparison.jpg", width: 80%), caption: [Coefficient comparison])
 #v(1em)
-=== 2.2.5 Discussion the Limitation of Data for Preliminary Regression Model
+=== 2.2.5. Discussion
 Poisson, Negative Binomial, and logistic regression models were selected based on the statistical characteristics of the dataset. The incident data contain a substantial number of zero values, which introduces pronounced sparsity. Although the injury variable includes non-zero counts, the fatality variable appears exclusively as 0 or 1 throughout the dataset, indicating a rare-event structure. Under these conditions, Poisson regression is appropriate for modeling relationships between covariates and injury counts. To address over-dispersion associated with rare fatality events, the Negative Binomial model [8][9] relaxes the restrictive assumption that the variance must equal the mean. Additionally, because fatality is inherently binary, logistic regression provides a direct approach for modeling the probability of fatal events as a 0/1 response. The primary purpose of these preliminary regressions is to evaluate data sparsity and information content to guide subsequent methodological decisions and to determine a modeling direction suited to the underlying structure.
 #v(1em)
 *Poisson Model*
@@ -298,18 +296,18 @@ Figure 11 demonstrates that the Negative Binomial model, although theoretically 
 #v(1em)
 Figure 12 compares coefficients across the three models. In both the Poisson and Negative Binomial models, coefficients cluster near zero. In contrast, the logistic model exhibits extreme coefficient magnitudes, particularly for borough variables with very limited fatality observations. This outcome is characteristic of quasi-complete separation, a condition in which particular borough–month combinations contain almost exclusively nonfatal outcomes. Under such conditions, logistic regression drives coefficients toward infinity in an attempt to discriminate between nearly homogeneous groups. This behavior indicates that fatality prediction functions more appropriately as a rare-event classification task rather than a count-based regression problem.
 
-This kind of “coefficient blow-up” in the Logit model usually signals quasi-complete separation: within specific borough–month combinations, fatal events either almost never occur or never occur at all. In this casee, it is mostly the “almost never” situation. When that happens, logistic regression tends to push the associated coefficients toward ±∞ in an attempt to fit those extreme patterns. This indicates that fatality as a 0/1 outcome suffers from even stronger sparsity and imbalance than when treated as a count, reinforcing the idea that fatal events resemble a rare-event classification problem rather than a conventional regression target.
+This kind of “coefficient blow-up” in the Logit model usually signals quasi-complete separation: within specific borough–month combinations, fatal events either almost never occur or never occur at all. In this case, it is mostly the “almost never” situation. When that happens, logistic regression tends to push the associated coefficients toward ±∞ in an attempt to fit those extreme patterns. This indicates that fatality as a 0/1 outcome suffers from even stronger sparsity and imbalance than when treated as a count, reinforcing the idea that fatal events resemble a rare-event classification problem rather than a conventional regression target.
 #v(1em)
 *Summary*
 #v(1em)
 Taken together, the sparsity and irregular structure of the data make standard regression models unsuitable unless additional, more informative predictors are introduced—such as the new parameters incorporated in Section 7.
 #v(2em)
-= 3.Predictive modeling
+= 3. Predictive modeling
 According to Preliminary Regression Attemps, we decided to use classification as our main task. However, in order to claim the limatation of regression model, we also developed NN regression model in section 5.5.
 
-== 3.1 K-Means Classification Models Methodology
+== 3.1. K-Means Classification Models Methodology
 #v(1em)
-=== 3.1.1 Data Preparation and Cleaning
+=== 3.1.1. Data Preparation and Cleaning
 
 The K-means clustering analysis utilized four primary features from the dataset: longitude, latitude, number of injuries, and borough classification. The clustering procedure focused on four boroughs: Manhattan, Brooklyn, Queens, and the Bronx. Staten Island was excluded from the analysis because the available incident records were limited, resulting in high sparsity that prevented reliable pattern identification.
 #v(1em)
@@ -317,7 +315,7 @@ To support spatial visualization and reduce coordinate noise, longitude and lati
 #v(1em)
 After preprocessing, the data were imported into Julia, and the selected variables were separated and formatted for clustering and spatial visualization. This preparation enabled borough-level comparison and supported the identification of geographically concentrated injury patterns.
 #v(1em)
-=== 3.1.2 Model Architecture
+=== 3.1.2. Model Architecture
 
 The K-means model architecture utilized four independent variables: longitude, latitude, number of injuries, and borough identification. These features represent spatial and contextual attributes necessary to form geographically meaningful clusters. City and neighborhood locations were not included directly within the dataset but were inferred based on interpolated coordinate values from longitude and latitude. This process enabled estimation of the highest concentration of incidents at the sub-borough level.
 
@@ -326,14 +324,14 @@ The K-means model architecture utilized four independent variables: longitude, l
 *Output Selection*: Cities/counties with the highest concentration
 
 #v(1em)
-=== 3.1.3 Weighted K-Means Function
+=== 3.1.3. Weighted K-Means Function
 To enhance representation of incident density within the clustering results, a weighted K-means approach was implemented. Weighted centroids were constructed to emphasize cluster influence in areas with greater injury frequency. Prior to applying the weighted K-means algorithm, four supporting functions were developed to initialize the model and ensure iterative consistency: init_centroids, calc_distances, calc_groups, and update_centroids!. These functions collectively enabled the construction of a functional weighted clustering routine.
 #v(1em)
 Rows containing missing values were removed to improve data reliability. Point locations and associated weights, defined by recorded injury counts, were then used to generate centroid positions. The resulting centroids were visualized within the clustering plot to illustrate spatial concentration patterns.
 #v(1em)
 
 #v(1em)
-=== 3.1.4 Models
+=== 3.1.4. Models
  
 Model performance was evaluated through scatter map visualizations that display four cluster groups corresponding to the four boroughs included in the dataset. The spatial distribution of the clusters closely aligns with the geographic layout of New York City, demonstrating that the clustering structure is consistent with real-world urban boundaries. A supplementary visualization presents the weighted centroids as star markers, highlighting areas with the highest proportional burden of injury-related incidents.
 #v(1em)
@@ -345,14 +343,14 @@ These visual outcomes indicate that the weighted K-means method produces cluster
 #v(1em)
 
 #v(1em)
-== 3.2 Decision Tree Classification Models Methodology
+== 3.2. Decision Tree Classification Models Methodology
 #v(1em)
-=== 3.2.1 Data Preparation
+=== 3.2.1. Data Preparation
 
 The decision tree model was developed using three features from the dataset: Borough, Check Description, and Injuries. Consistent with the K-means clustering methodology, Staten Island was excluded due to insufficient sample size, which would otherwise limit interpretive reliability. The Check Description field identifies the reported cause of each construction incident. For this model, the categories included "Worker Fell," "Mechanical Construction Equipment," "Material Failure," "Scaffold/Shoring Installations," and "Excavation/Soil Work." The category "Other Construction" was removed due to its ambiguous classification and limited analytical value.
 
 #v(1em)
-=== 3.2.2 Model Architecture
+=== 3.2.2. Model Architecture
 
 The model utilized two independent variables, Borough and Check Description, and one dependent variable, Injury Count. Five decision trees were produced: four representing each individual borough and one displaying the aggregated results across the four boroughs. The structure of the decision tree consists of a hierarchical arrangement that includes root nodes, internal nodes, branches, and leaf nodes.
 For each leaf node, both the number and percentage of injuries were calculated to show incident severity distribution. 
@@ -363,12 +361,12 @@ For each leaf node, both the number and percentage of injuries were calculated t
 
 *Leaf Nodes*: Injuries
 #v(1em)
-=== 3.2.3 Classification & Grouping of Data
+=== 3.2.3. Classification & Grouping of Data
 
 The dataset was grouped by borough, and summary statistics for injury counts were calculated using Microsoft Excel. The structure and graphical representation of the decision tree models were constructed in Microsoft PowerPoint to support visual interpretability and comparative analysis across boroughs.
 
 #v(1em)
-=== 3.2.4 Models 
+=== 3.2.4. Models 
 The decision tree model outputs illustrate the branching structure described in the model architecture. Nodes appear as rectangular blocks, while directional arrows indicate hierarchical decision paths. This visual format facilitates identification of incident categories associated with higher injury risk across different boroughs.
 
 #figure(image("figures/manhattan_tree_zs.jpg", width: 120%), caption: [Manhattan Injury Classification Tree])
@@ -384,16 +382,16 @@ The decision tree model outputs illustrate the branching structure described in 
 
 #v(1em)
 
-== 3.3 Neural Network Classification Models Methodology
+== 3.3. Neural Network Classification Models Methodology
 #v(1em)
-=== 3.3.1 Data Preparation
+=== 3.3.1. Data Preparation
 Two additional parameters were integrated to enhance model performance:
 *NoncompliantCount*, representing the frequency of non-compliant behaviors , [16]
 *IssueNumber*, representing the volume of active construction projects in a specific area and month, allowing for temporal lags[17]
 
 Five input variables were selected from the final dataset: Average Temperature (AvgTemp), Average Precipitation (AvgPrecip), Weighted Heat Vulnerability Index (HVI_w), NoncompliantCount, and IssueNumber. The target variable, Injury, was binarized by assigning a label of 1 to observations with at least one injury and 0 otherwise. A StandardScaler was applied to standardize input features, and the dataset was divided into training (80 percent) and validation (20 percent) partitions.
 #v(1em)
-=== 3.3.2 Model Architecture
+=== 3.3.2. Model Architecture
 A three-layer Feedforward Neural Network (FNN) was utilized as the predictive framework. The model architecture included:
 
 *Input Layer*: Corresponds to the five input features.
@@ -410,15 +408,15 @@ This configuration provides nonlinear capacity required for representing complex
 
 
 #v(1em)
-=== 3.3.3 Loss Function and Optimization
+=== 3.3.3. Loss Function and Optimization
 
 Given the significant class imbalance (where "No Injury" cases far exceed "Injury" cases), the model utilizes a Weighted Binary Cross-Entropy with Logits Loss function. A positive weight, calculated as $"pos"_"weight" = N_"neg" / N_"pos"$, is automatically applied to balance the classes. The Adam optimizer[14], with a learning rate of $1 *10^"-4"$, is employed to update network parameters and minimize the loss function during each iteration.
 #v(1em)
-=== 3.3.4 Training and Validation
+=== 3.3.4. Training and Validation
 
 The model was trained for 300 epochs. Loss and accuracy metrics for both training and validation sets were computed at each epoch. Dropout was applied during training to improve generalization. Convergence trends were monitored by logging performance metrics every 50 epochs, followed by visual inspection of loss and accuracy curves.
 #v(1em)
-=== 3.3.5 Models
+=== 3.3.5. Models
 * Confusion Matrix*: Matrices were generated for both the default threshold (0.5) and the optimal threshold to visualize classification accuracy, false positive rates, and false negative rates.
 
 * Precision-Recall-F1 Analysis*: Precision, Recall, and F1 scores were calculated across a threshold range of [0.1, 0.9] with a step size of 0.05. Curves were plotted to evaluate trade-offs under different judgment criteria, identifying the threshold that maximizes the F1 score. 
@@ -452,9 +450,9 @@ The model was trained for 300 epochs. Loss and accuracy metrics for both trainin
 
 
 #v(2em)
-== 3.4 Neural Network Regression Models Methodology
+== 3.4. Neural Network Regression Models Methodology
 #v(1em)
-=== 3.4.1 Data Preparation and Cleaning
+=== 3.4.1. Data Preparation and Cleaning
 The Neural Network Regression model was constructed to predict the count of construction-related injuries. To improve stability and robustness, several preprocessing procedures were applied, including denoising, feature engineering, and nonlinear feature refinement. Data cleaning and feature preparation included:
 * Missing Values*: Missing values in the Injury column were filled with zero and converted to floating-point format. 
 
@@ -465,10 +463,10 @@ The Neural Network Regression model was constructed to predict the count of cons
 * Log Smoothing*: Logarithmic smoothing was applied to high-variance features (Noncompliant Count, Issue Number, Precipitation) to prevent dominance by single variables. 
 
 #v(1em)
-=== 3.4.2 Feature Standardization
+=== 3.4.2. Feature Standardization
 Input features consisted of Average Temperature, Average Precipitation, Heat Vulnerability Index, NoncompliantCount, IssueNumber, Month, and the one-hot encoded borough columns. All variables were standardized to improve gradient stability. The target variable (Injury) was normalized using mean and standard deviation scaling. The dataset was divided into training (80 percent) and validation (20 percent) subsets.
 #v(1em)
-=== 3.4.3 Model Architecture
+=== 3.4.3. Model Architecture
 The InjuryRegressor neural network used a multilayer nonlinear structure defined by:
 
 * Input Layer*: Corresponds to all processed input features.
@@ -487,11 +485,11 @@ The LeakyReLU activation function supports non-zero gradient flow for negative i
 #v(1em)
 Regularization mechanisms were omitted because the model did not show signs of overfitting and was unable to extract high-complexity patterns from the dataset.
 #v(1em)
-=== 3.4.4 Loss Function and Optimizer
+=== 3.4.4. Loss Function and Optimizer
 The model uses Mean Squared Error (MSE) as the loss function. The Adam optimizer was selected with a learning rate of $3*10^"-4"$, balancing convergence speed and stability through automatic learning rate adjustment. Training and validation losses were recorded to monitor convergence trends and generalization performance. Note: Traditional nonlinear count models (e.g., Poisson and Negative Binomial) were tested but excluded due to convergence failures during training.
 #v(1em)
-=== 3.4.5 Training and Validation 
-erformance was evaluated using multiple error-based metrics:
+=== 3.4.5. Training and Validation 
+Performance was evaluated using multiple error-based metrics:
 * $R^2$ (Coefficient of Determination)*: Measures the proportion of variance explained by the model. An $R^2 < 0$ indicates the model failed to learn effectively.
 
 * RMSE (Root Mean Square Error)*: Reflects the average magnitude of prediction error. 
@@ -500,7 +498,7 @@ erformance was evaluated using multiple error-based metrics:
 
 Scatter plots comparing actual versus predicted values were generated to visually assess accuracy, where ideal performance would align predicted points along the diagonal.
 #v(1em)
-=== 3.4.6 Models
+=== 3.4.6. Models
 #figure(
   image("figures/regression1.png", width: 80%),
   caption: [Baseline model performance—predicted vs. true injury counts],
@@ -518,7 +516,7 @@ Scatter plots comparing actual versus predicted values were generated to visuall
   caption: [Two-Stage Hybrid Model—predicted vs. true injury counts],
 )
 #v(1em)
-=== 3.4.7 Model Improvements
+=== 3.4.7. Model Improvements
 Two improvement strategies were explored:
 *Approach 1: Hybrid Lag and Group Bias Linear Model*
 
@@ -539,10 +537,10 @@ Two improvement strategies were explored:
 
 #v(1em)
 
-= 4 Discussion
+= 4. Discussion
 #v(1em)
 
-== 4.1 K-means Classification Models
+== 4.1. K-means Classification Models
 The spatial distributions display varying concentrations of injuries across the four boroughs of New York City. The visual patterns indicate that incidents are heavily clustered in Manhattan, particularly around the Times Square area. As this region is densely populated and characterized by high real estate value, frequent construction activities are expected. The elevated concentration of injuries appearing in Brooklyn and Queens occurs near the same central region, suggesting that construction incidents are more prevalent within the most populated and commercially intensive zones of the city.
 #v(1em)
 These patterns imply the potential necessity for strengthened Occupational Safety and Health Administration (OSHA) oversight within these high-risk regions. Consideration may also be given to subdividing boroughs into smaller administrative districts, enabling more localized regulatory strategies intended to reduce the likelihood of construction-related injuries and fatalities.
@@ -552,46 +550,43 @@ The weighted centroids illustrated by the star markers highlight areas with the 
 In contrast, the centroid locations in Queens and the Bronx provide less definitive insight due to broader spatial dispersion. Injury cases in these boroughs are more evenly distributed, rather than concentrated around a central location, reflecting the larger geographical size and more dispersed construction activities. This also emphasizes a primary limitation within this model structure: differences in borough area introduce bias that affects centroid interpretation. Manhattan registers the highest incident count largely because it represents the most densely populated and development-intensive area.
 Overall, these results suggest that additional contextual features, such as the number of active construction projects over time, would strengthen the predictive capacity of this model and support more accurate clustering interpretations.
 #v(1em)
-== 4.2 Decision Tree Classification Models
+== 4.2. Decision Tree Classification Models
 #v(1em)
 
-*Model Interpretability and Structure:* 
 Unlike the Neural Network models discussed in Section 4.4, which provide probabilistic outputs, the Decision Tree Classification models offer a transparent, white-box visualization of risk factors. As shown in Figures 15 through 19, the models successfully hierarchized the data, utilizing Incident Type as the primary splitting criterion at the internal nodes. This structural arrangement confirms that while the borough determines the baseline environment, the specific nature of the incident—such as is the most critical determinant of injury severity.
-
-*Borough-Specific Risk Pathways:* 
-The topology of the decision trees reveals distinct risk profiles across the boroughs. The Manhattan tree (Figure 15) and Brooklyn tree (Figure 16)  exhibit more complex branching structures compared to Queens and the Bronx. This complexity likely reflects the higher density and variety of construction projects in these core boroughs, where risks are multifaceted. Specifically, in Manhattan, branches related to *Material Failure* and *Mechanical Construction Equipment* are prominent, suggesting that infrastructure-heavy projects in dense urban environments carry specific equipment-related risks. In contrast, the trees for Queens and the Bronx (Figures 17-18)  show a more streamlined structure, where *Worker Fall* remains the dominant predictor of injury outcomes.
-
-*Risk Hierarchy and Classification Logic:*
-A critical insight from the leaf nodes is the identification of high-probability injury pathways. Across the aggregate model (Figure 19), incidents categorized as *Worker Fall* and *Scaffold/Shoring Installations* consistently lead to leaf nodes associated with injury occurrences. This aligns with the finding in Section 4.2 that certain incident types are inherently more dangerous regardless of location. The decision trees effectively function as a rule-based classifier: if an accident involves a fall or excavation, the probability of it being an injury-causing event is statistically maximized.
-
-*Operational Implications:*
-While the Neural Network provided higher predictive accuracy through non-linear feature combination, the Decision Trees provide actionable safety rules. The *If-Then* logic derived from these trees supports the development of targeted regulatory checklists. This complements the *Conservative Prediction Strategy* discussed in Section 4.4.2 by providing clear interpretability for on-site safety officers, allowing them to identify high-risk scenarios before they escalate into actual injuries.
+#v(1em)
+The topology of the decision trees reveals distinct risk profiles across the boroughs. The Manhattan tree (Figure 15) and Brooklyn tree (Figure 16)  exhibit more complex branching structures compared to Queens and the Bronx. This complexity likely reflects the higher density and variety of construction projects in these core boroughs, where risks are multifaceted. Specifically, in Manhattan, branches related to Material Failure and Mechanical Construction Equipment are prominent, suggesting that infrastructure-heavy projects in dense urban environments carry specific equipment-related risks. In contrast, the trees for Queens and the Bronx (Figures 17-18)  show a more streamlined structure, where Worker Fall remains the dominant predictor of injury outcomes.
+#v(1em)
+A critical insight from the leaf nodes is the identification of high-probability injury pathways. Across the aggregate model (Figure 19), incidents categorized as Worker Fall and Scaffold/Shoring Installations consistently lead to leaf nodes associated with injury occurrences. This aligns with the finding in Section 4.2 that certain incident types are inherently more dangerous regardless of location. The decision trees effectively function as a rule-based classifier: if an accident involves a fall or excavation, the probability of it being an injury-causing event is statistically maximized.
+#v(1em)
+While the Neural Network provided higher predictive accuracy through non-linear feature combination, the Decision Trees provide actionable safety rules. The If-Then logic derived from these trees supports the development of targeted regulatory checklists. This complements the Conservative Prediction Strategy discussed in Section 4.4.2 by providing clear interpretability for on-site safety officers, allowing them to identify high-risk scenarios before they escalate into actual injuries.
 
 #v(1em)
-== 4.3 Neural Network Classification Models
+== 4.3. Neural Network Classification Models
 #v(1em)
+
 As shown in Figures 20 to 23, the validation accuracy fluctuates noticeably during the early training stages but still shows a slight upward trend. Although the model's predictive ability is limited, it captures some basic patterns in the data.\
+#v(1em)
 The threshold will be the cutoff to help transform the output, like probability from the NN, into a classification result. For instance, if the threshold is 0.5, then a result of 0.52 is considered an injury. In practice, lowering the threshold will help to analyze the sensitivity analysis and decrease the FN(false negatives).\ 
+#v(1em)
 The confusion matrix at the default threshold of 0.50 shows a large number of false negatives (FN=43), meaning many injury cases were missed. This leads to low recall and directly affects overall accuracy. After moving the threshold to 0.49, the model catches more injury cases and misses fewer. So the change does matter, especially since the data itself is uneven.
+#v(1em)
 Looking at the precision, recall, and F1 curves, the model reacts differently depending on the threshold. It shows a bit of a pattern, but the features we use are too simple, so the results are still not steady.
-
+#v(1em)
 Overall, the classification model has clear limitations due to limited features and dataset imbalance. Even so, the threshold comparison indicates that the model’s predictions can be slightly improved, and better performance may be possible if more informative features are added.
 
 #v(1em)
-== 4.4 Neural Network Regression Models
+== 4.4. Neural Network Regression Models
 #v(1em)
 
 As illustrated in the regression results, the predictive performance of the count-based models stood in stark contrast to the classification models. While the classification approach successfully identified high-risk scenarios, the regression models struggled to quantify the exact number of injuries, yielding suboptimal $R^2$ values across all three experimental setups.
-
-*Baseline and Hybrid Models Performance:*
+#v(1em)
 The Baseline Neural Network Regressor (Figure 24) achieved an $R^2$ of only 0.021. A visual inspection of the scatter plot reveals a distinct regression to the mean phenomenon: while the true injury counts range from 0 to 4, the model’s predictions cluster tightly in the narrow range of 0.5 to 1.5. This indicates that the model, unable to find strong signal patterns in the sparse data, defaulted to predicting the average injury rate to minimize the global loss function.
-
+#v(1em)
 The introduction of temporal features in the Hybrid Lag and Group Bias Linear Model (Figure 25) resulted in a marginal improvement, raising the $R^2$ to 0.045. Although the scatter points show a slightly wider distribution compared to the baseline, the improvement is negligible. This suggests that construction injury events in this dataset lack significant temporal autocorrelation; the occurrence of an injury in the previous month does not strongly predict the magnitude of injuries in the subsequent month.
-
-*Two-Stage Model Limitations:*
+#v(1em)
 Most notably, the Two-Stage Hybrid Model (Figure 26), which was designed to mitigate sparsity by first classifying injury occurrence and then regressing the count, resulted in a negative $R^2$ of -0.301. While the classification stage (Stage 1) showed promise in filtering out zero-event months, the subsequent regression stage (Stage 2) suffered critically from data scarcity. After filtering for only positive-injury samples and applying strict denoising, the effective sample size became too small for the regressor to generalize. The negative $R^2$ implies that the model's predictions were worse than simply using the horizontal mean of the test data, highlighting the dangers of aggressive data segmentation on small datasets.
-
-*Summary of Regression Challenges:*
+#v(1em)
 The poor performance across these models reinforces the findings from the preliminary methodology section: predicting the exact magnitude of construction accidents is significantly harder than predicting their probability. The high sparsity (zero-inflation) and the stochastic nature of accidents mean that the signal-to-noise ratio is too low for standard regression loss functions  to converge effectively. Future improvements would likely require a significantly larger dataset to support complex architectures or the use of specialized loss functions like Zero-Inflated Poisson loss, provided that convergence issues can be overcome.
 #pagebreak()
 = 5. References
@@ -613,6 +608,7 @@ The poor performance across these models reinforces the findings from the prelim
 [16] City of New York. (2025). _Official website of the City of New York_. Retrieved November 11, 2025, from https://www.nyc.gov/main \ 
 [17] City of New York. (n.d.). _DOB Job Application Filings_ [Data set]. NYC Open Data. Retrieved November 11, 2025, from https://data.cityofnewyork.us/Housing-Development/DOB-Job-Application-Filings/ic3t-wcy2
 [1NYC Maps. Maps of World. https://www.mapsofworld.com/usa/new-york-city-map.html#google_vignette
+
 
 
 
